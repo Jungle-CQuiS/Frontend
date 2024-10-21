@@ -9,7 +9,7 @@ import MultiPage from './pages/multi/multi';
 function App() {
   return (
     <>
-      <GlobalStyle /> {/* 글로벌 스타일은 최상단에서 적용 */}
+      <GlobalStyle />
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
