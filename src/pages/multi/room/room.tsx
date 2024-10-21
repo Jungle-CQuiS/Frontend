@@ -6,6 +6,15 @@ import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 
+export interface Room {
+  id: string;
+  name: string;
+  isLocked: boolean;
+  currentUsers: number; 
+  maxUser: number;
+}
+
+
 export default function Room() {
   const { state } = useLocation();
   

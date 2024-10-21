@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MainPageTableTbody ,MainPageTableTbodyIcon, MainPageTableTbodyTd, MainPageTableTbodyTr} from "./styled";
 import { useNavigate } from "react-router-dom";
-
-interface Room {
-    id: string;
-    name: string;
-    isLocked: boolean;
-    currentUsers: number; 
-    maxUser: number;
-}
-
+import { Room } from "../room/room"
 
 //임시 방 정보 하드코딩
 const testrooms = [
