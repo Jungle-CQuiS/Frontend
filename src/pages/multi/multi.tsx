@@ -9,6 +9,8 @@ import RoomList from './roomlist/roomlist';
 
 export default function MultiPage(){
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+
     const navigate = useNavigate();
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -16,9 +18,12 @@ export default function MultiPage(){
     const handleCloseModal = () => {
         setIsModalOpen(false);
       };
-      const handleDone = () => {
+    const handleDone = () => {
         setIsModalOpen(false);
-      };
+    };
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
 
     return(
         <>
@@ -29,7 +34,10 @@ export default function MultiPage(){
                     <MainPageTitleText>MULTI MODE</MainPageTitleText>
                 </MultiPageTitle>
                 <MainPageSearchBarWrap>
-                    <MainPageSearchBar placeholder="방 이름으로 검색하기"/>
+                    <MainPageSearchBar 
+                        placeholder="방 이름으로 검색하기"
+                        value={searchTerm}
+                        onChange={handleSearch}/>
                     <PrimaryButtonMedium onClick={handleOpenModal}>방 만들기</PrimaryButtonMedium>
                 </MainPageSearchBarWrap>
                 <MainPageTable>
@@ -41,7 +49,7 @@ export default function MultiPage(){
                         </MainPageTableTheadTr>
                     </MainPageTableThead>
                     
-                    <RoomList/>
+                    <RoomList searchTerm={searchTerm} />
 
                 </MainPageTable>
             </Background>

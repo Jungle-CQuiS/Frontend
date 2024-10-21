@@ -18,54 +18,61 @@ const testrooms = [
     { id: "room3", name: "우승 팀", isLocked: true, currentUsers: "5", maxUser: "10" },
 ];
 
-const RoomList: React.FC = () => {
+interface RoomListProps {
+  searchTerm: string;
+}
+
+const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  /*
+  useEffect(() => {
+      const fetchRooms = async (): Promise<void> => {
+          try {
+              const response = await fetch("/quiz/multi/rooms");
+              if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              const data: Room[] = await response.json();
+              setRooms(data);
+              setIsLoading(false);
+          } catch (e) {
+              const errorMessage = e instanceof Error ? e.message : String(e);
+              console.error("Fetching rooms failed:", errorMessage);
+              setError(errorMessage);
+              setIsLoading(false);
+          }
+      };
+
+      fetchRooms();
+  }, []);*/
+
   const handleRowClick = (roomId: string, roomName: string) => {
-    navigate(`/room/${roomId}`, { state: { roomName } });
-    }
-  /*useEffect(() => {
-    const fetchRooms = async (): Promise<void> => {
-      try {
-        const response = await fetch("/quiz/multi/rooms");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data: Room[] = await response.json();
-        setRooms(data);
-        setIsLoading(false);
-      } catch (e) {
-        const errorMessage = e instanceof Error ? e.message : String(e);
-        console.error("Fetching rooms failed:", errorMessage);
-        setError(errorMessage);
-        setIsLoading(false);
-      }
-    };
+      navigate(`/room/${roomId}`, { state: { roomName } });
+  };
 
-    fetchRooms();
-  }, []);
+    //rooms로 변경해야함. API 받으면
+  const filteredRooms = testrooms.filter(room =>
+      room.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  if (isLoading) return <div>Loading rooms...</div>;
-  if (error) return <div>Error: {error}</div>;*/
-    
- 
+  //if (isLoading) return <div>Loading rooms...</div>;
+  //if (error) return <div>Error: {error}</div>;
 
   return (
-    <MainPageTableTbody>
-      {testrooms.map((room) => (
-            <MainPageTableTbodyTr key={room.id} onClick={() => handleRowClick(room.id, room.name)}>
-                <MainPageTableTbodyTd>{room.name}</MainPageTableTbodyTd>
-                    <MainPageTableTbodyTd>
-                        {room.isLocked ? (
-                            <MainPageTableTbodyIcon src="/icons/lock.svg" alt="Lock" />
-                            ) : null}
-                            </MainPageTableTbodyTd>
-                            <MainPageTableTbodyTd>{room.currentUsers}/{room.maxUser}</MainPageTableTbodyTd>
-                    </MainPageTableTbodyTr>
-        ))}
-    </MainPageTableTbody>
+      <MainPageTableTbody>
+          {filteredRooms.map((room) => (
+              <MainPageTableTbodyTr key={room.id} onClick={() => handleRowClick(room.id, room.name)}>
+                  <MainPageTableTbodyTd>{room.name}</MainPageTableTbodyTd>
+                  <MainPageTableTbodyTd>
+                      {room.isLocked && <MainPageTableTbodyIcon src="/icons/lock.svg" alt="Lock" />}
+                  </MainPageTableTbodyTd>
+                  <MainPageTableTbodyTd>{room.currentUsers}/{room.maxUser}</MainPageTableTbodyTd>
+              </MainPageTableTbodyTr>
+          ))}
+      </MainPageTableTbody>
   );
 };
 
