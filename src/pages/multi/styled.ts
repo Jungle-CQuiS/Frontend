@@ -1,22 +1,6 @@
 import styled from "styled-components";
 import { defaultTransition } from "../../css";
 
-export const MultiPageContainer = styled.div`
-  width: 100%;
-  height: calc(100vh - 32px);
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  gap: 32px;
-  padding-top: 32px;
-  background-image: url('/images/game-background.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  overflow: hidden;
-`;
-
 export const MultiPageTitle = styled.div`
     display: flex;
     gap: 10px;
@@ -36,6 +20,7 @@ export const MainPageSearchBarWrap = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-top: 32px;
 `;
 
 export const MainPageSearchBar = styled.input`
@@ -59,6 +44,7 @@ export const MainPageSearchBar = styled.input`
 export const MainPageTable = styled.table`
     width: 1336px;
     border-collapse: collapse;
+    margin-top: 16px;
 `;
 
 export const MainPageTableThead = styled.thead`
