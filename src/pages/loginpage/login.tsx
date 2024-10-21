@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Background } from "../../components/background/styled";
+import { Link, useNavigate } from "react-router-dom";
+import { LoginBackground, LoginBottomWrap, LoginContainer, LoginDividerWrap, LoginInput, LoginInputWrap, LoginLine, LoginLink, LoginLinkWrap, LoginText, LoginTitle, LoginWithGoogle, LoginWrap } from "./styled";
+import NavBar from "../../components/navbar/navbar";
+import { PrimaryButtonLong } from "../../components/buttons/styled";
 
-// uuid 생성 함수
 const generateUUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0;
-    const v = (c === 'x') ? r : ((r & 0x3) | 0x8);  // 괄호로 연산 순서 명확히
+    const v = (c === 'x') ? r : ((r & 0x3) | 0x8); 
     return v.toString(16);
   });
 };
@@ -29,15 +30,40 @@ export default function LoginPage() {
   };
 
   return (
-    <Background>
-      <h1>Login</h1>
-      <input
-        type="text"
-        placeholder="Enter your username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
-    </Background>
+    <>
+      <NavBar />
+      <LoginBackground>
+        <LoginContainer>
+          <LoginTitle>Log In</LoginTitle>
+          <LoginWrap>
+            <LoginWithGoogle><img src="/icons/google.svg" alt="Google" />구글 계정으로 로그인</LoginWithGoogle>
+            <LoginDividerWrap>
+              <LoginLine></LoginLine>
+              <LoginText>OR</LoginText>
+              <LoginLine></LoginLine>
+            </LoginDividerWrap>
+            <LoginInputWrap>
+              <LoginInput
+                type="text"
+                placeholder="닉네임"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <LoginInput placeholder="비밀번호"/>
+            </LoginInputWrap>
+            <LoginBottomWrap>
+              <PrimaryButtonLong onClick={handleLogin}>로그인</PrimaryButtonLong>
+              <LoginLinkWrap>
+                <LoginLink>비밀번호 찾기</LoginLink>
+                <LoginLink>|</LoginLink>
+                <Link to="/signup" style={{textDecoration: "none"}}>
+                  <LoginLink>회원가입</LoginLink>
+                </Link>
+              </LoginLinkWrap>
+            </LoginBottomWrap>
+          </LoginWrap>
+        </LoginContainer>
+      </LoginBackground>
+    </>
   );
 }
