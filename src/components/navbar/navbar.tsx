@@ -5,7 +5,9 @@ import { NavBarButtonWrap, NavBarContainer, NavBarLogo } from "./styled";
 export default function NavBar(){
     return (
         <NavBarContainer>
-            <NavBarLogo src="/images/logo.png"/>
+            <Link to="/">
+                <NavBarLogo src="/images/logo.png"/>
+            </Link>
             <NavBarButtonWrap>
                 <PrimaryButtonMedium>MY PAGE</PrimaryButtonMedium>
                 <Link to="/login">
