@@ -26,6 +26,12 @@ export const CreateRoomModal = ({
       setValue(Number(e.target.value));
     };
 
+    //TODO: 방 만들기
+    const handleCreateRoom = () => {
+        const userUuid = localStorage.getItem("uuid");
+
+    }
+
 
     return(
         <Modal {...props} >
@@ -77,7 +83,7 @@ export const CreateRoomModal = ({
                 </CreateRoomModalRowContainer>
                 <CreateRoomModalButtonWrap>
                     <SecondaryButton onClick={props.onClose}>취소하기</SecondaryButton>
-                    <PrimaryButtonMedium>방만들기</PrimaryButtonMedium>
+                    <PrimaryButtonMedium onClick={handleCreateRoom}>방만들기</PrimaryButtonMedium>
                 </CreateRoomModalButtonWrap>
             </CreateRoomModalBodyWrap>
         </Modal>
