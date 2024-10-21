@@ -7,6 +7,7 @@ import LoginPage from './pages/loginpage/login';
 import MultiPage from './pages/multi/multi';
 import Room from './pages/multi/room/room';
 import ProtectedRoute from './pages/loginpage/protected';
+import SignupPage from './pages/signup/signup';
 
 function App() {
   return (
@@ -14,11 +15,9 @@ function App() {
       <GlobalStyle />
       <Router>
         <Routes>
-          {/* / 페이지는 자유롭게 접근 가능 */}
           <Route path="/" element={<LandingPage />} />
-
-          {/* 로그인 페이지 */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
 
           {/* 보호된 경로들 */}
           <Route
