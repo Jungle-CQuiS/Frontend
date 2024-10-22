@@ -14,12 +14,24 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Copy files via SSH
+        env:
+          EC2_KEY: ${{ secrets.EC2_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
         run: |
-          scp -i ~/.ssh/id_rsa -r * ubuntu@${{ secrets.EC2_HOST }}:/var/www/cquis/
+          echo "$EC2_KEY" > /tmp/id_rsa
+          chmod 600 /tmp/id_rsa
+          scp -i /tmp/id_rsa -o StrictHostKeyChecking=no -r * $EC2_USER@$EC2_HOST:/var/www/cquis/
 
       - name: Install dependencies on EC2 and restart Nginx
+        env:
+          EC2_KEY: ${{ secrets.EC2_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          echo "$EC2_KEY" > /tmp/id_rsa
+          chmod 600 /tmp/id_rsa
+          ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
             cd /var/www/cquis
             npm install
             npm run build
