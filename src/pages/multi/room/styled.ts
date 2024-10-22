@@ -245,9 +245,9 @@ export const RoomButtonWrap = styled.div`
 `;
 
 export const RoomHostIcon = styled.img`
-
+    margin : 5px;
 `;
 
 export const RoomTeamLeaderIcon = styled.img`
-
+    margin : 5px;
 `;

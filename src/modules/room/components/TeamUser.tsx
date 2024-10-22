@@ -9,6 +9,7 @@ import {
   RoomTeamOnebackground,
   RoomTeamTwoUser,
   RoomTeamTwoUserHonorWrap,
+  RoomTeamTwoUserProfile,
   RoomTeamTwoUserHonor,
   RoomTeamTwoUserHonorIcon,
   RoomTeamTwobackground,
@@ -50,9 +51,9 @@ export const TeamUserComponent = ({ user, onClick, teamType }: TeamUserProps) =>
       {user ? (
         <>
           <RoomTeamOneUserName>
-            {isHost && <RoomHostIcon src="/icons/crown.svg" alt="Badge" />}
-            {user.name}
             {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
+            {user.name}
+            {isHost && <RoomHostIcon src="/icons/crown.svg" alt="Badge" />}
           </RoomTeamOneUserName>
           <RoomTeamOneUserProfile src={user.profileImage} alt={user.name} />
           <RoomTeamOneUserHonorWrap>
@@ -75,15 +76,16 @@ export const TeamUserComponent = ({ user, onClick, teamType }: TeamUserProps) =>
           <RoomTeamTwobackground />
           <RoomTeamTwoUserHonorWrap>
             <RoomTeamTwoUserHonor>
-              {isHost && <RoomHostIcon src="/icons/crown.svg" alt="Badge" />}
-              {user.name}
-              {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
+              <RoomTeamTwoUserHonor>{user.honor}</RoomTeamTwoUserHonor>
+              <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />
             </RoomTeamTwoUserHonor>
-            <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />
-            {isHost && <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />}
           </RoomTeamTwoUserHonorWrap>
-          <RoomTeamOneUserProfile src={user.profileImage} alt={user.name} />
-          <RoomTeamTwoUserName>{user.name}</RoomTeamTwoUserName>
+          <RoomTeamTwoUserProfile src={user.profileImage} alt={user.name} />
+          <RoomTeamTwoUserName>
+            {isHost && <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />}
+            {user.name}
+            {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
+          </RoomTeamTwoUserName>
 
         </>
       ) : (
