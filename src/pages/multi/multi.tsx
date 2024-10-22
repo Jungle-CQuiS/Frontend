@@ -3,7 +3,6 @@ import { CreateRoomModal } from "../../components/modal/room";
 import NavBar from "../../components/navbar/navbar";
 import { MainPageSearchBar, MainPageSearchBarWrap, MainPageTable, MainPageTableThead, MainPageTableTheadTh, MainPageTableTheadTr, MainPageTitleText, MultiPageTitle, MultiPageTitleIcon } from "./styled";
 import { PrimaryButtonMedium } from "../../components/buttons/styled";
-import { useNavigate } from "react-router-dom";
 import { Background } from "../../components/background/styled";
 import RoomList from './roomlist/roomlist';
 
@@ -11,7 +10,6 @@ export default function MultiPage(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const navigate = useNavigate();
     const handleOpenModal = () => {
         setIsModalOpen(true);
       };

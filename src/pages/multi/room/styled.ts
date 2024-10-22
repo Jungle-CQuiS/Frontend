@@ -243,3 +243,11 @@ export const RoomButtonWrap = styled.div`
     gap: 8px;
     margin-top: 90px;
 `;
+
+export const RoomHostIcon = styled.img`
+
+`;
+
+export const RoomTeamLeaderIcon = styled.img`
+
+`;
