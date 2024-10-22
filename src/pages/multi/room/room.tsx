@@ -181,14 +181,14 @@ export default function Room() {
       <RoomTitleComponent roomName={state?.roomName} />
       <RoomTeamContainer>
         <TeamComponent 
-          team="blue팀" 
+          team="1팀" 
           teamUsers={testOneUsers} 
           handleTeamClick={handleTeamClick} 
           teamType="blue" 
         />
         <img src='/icons/VS.svg' alt='VS' />
         <TeamComponent 
-          team="red팀" 
+          team="2팀" 
           teamUsers={testTwoUsers} 
           handleTeamClick={handleTeamClick} 
           teamType="red" 
