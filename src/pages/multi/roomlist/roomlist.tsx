@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MainPageTableTbody ,MainPageTableTbodyIcon, MainPageTableTbodyTd, MainPageTableTbodyTr} from "./styled";
 import { useNavigate } from "react-router-dom";
-import { Room } from "../room/room"
+import { Room } from "../../../types/room"
 
 //임시 방 정보 하드코딩
 const testrooms = [
@@ -42,7 +42,12 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
   }, []);*/
 
   const handleRowClick = (roomId: string, roomName: string) => {
-      navigate(`/room/${roomId}`, { state: { roomName } });
+    navigate(`/room/${roomId}`, { 
+        state: { 
+            roomId,  // roomId도 state에 포함
+            roomName
+        } 
+    });
   };
 
     //rooms로 변경해야함. API 받으면
