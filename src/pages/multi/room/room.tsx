@@ -12,11 +12,13 @@ import { RoomTeamContainer } from './styled';
 const testOneUsers = [
   {
     id: 1, name: "흑화해버린담곰", honor: 54, profileImage: "/images/profile_image.png",
+
     role: "host", isLeader: 'member', team: "blue"
   },
   {
     id: 2, name: "톱들고다니는담곰", honor: 67, profileImage: "/images/profile_image.png",
     role: "guest", isLeader: 'leader', team: "blue"
+
   }, null, null, null,
 ]
 
@@ -182,6 +184,7 @@ export default function Room() {
           handleTeamClick={handleTeamClick} 
           teamType="red" 
         />
+
       </RoomTeamContainer>
       <RoomButtons />
     </Background>
