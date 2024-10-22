@@ -75,10 +75,8 @@ export const TeamUserComponent = ({ user, onClick, teamType }: TeamUserProps) =>
         <>
           <RoomTeamTwobackground />
           <RoomTeamTwoUserHonorWrap>
-            <RoomTeamTwoUserHonor>
               <RoomTeamTwoUserHonor>{user.honor}</RoomTeamTwoUserHonor>
               <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />
-            </RoomTeamTwoUserHonor>
           </RoomTeamTwoUserHonorWrap>
           <RoomTeamTwoUserProfile src={user.profileImage} alt={user.name} />
           <RoomTeamTwoUserName>
