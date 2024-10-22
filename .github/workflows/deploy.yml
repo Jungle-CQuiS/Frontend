@@ -1,0 +1,27 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Copy files via SSH
+        run: |
+          scp -i ~/.ssh/id_rsa -r * ubuntu@${{ secrets.EC2_HOST }}:/var/www/cquis/
+
+      - name: Install dependencies on EC2 and restart Nginx
+        run: |
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            cd /var/www/cquis
+            npm install
+            npm run build
+            sudo systemctl restart nginx
+          EOF
