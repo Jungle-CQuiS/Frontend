@@ -23,7 +23,16 @@ const testOneUsers = [
 ]
 
 const testTwoUsers = [
-  null, null, null, null, null,
+  {
+    id: 3, name: "현우오빠가데려온악마담곰", honor: 54, profileImage: "/images/profile_image.png",
+
+    role: "guest", isLeader: 'leader', team: "red"
+  },
+  {
+    id: 4, name: "머리만있는담곰", honor: 67, profileImage: "/images/profile_image.png",
+    role: "guest", isLeader: 'member', team: "red"
+
+  }, null, null, null,
 ]
 
 export default function Room() {
@@ -172,14 +181,14 @@ export default function Room() {
       <RoomTitleComponent roomName={state?.roomName} />
       <RoomTeamContainer>
         <TeamComponent 
-          team="blue팀" 
+          team="1팀" 
           teamUsers={testOneUsers} 
           handleTeamClick={handleTeamClick} 
           teamType="blue" 
         />
         <img src='/icons/VS.svg' alt='VS' />
         <TeamComponent 
-          team="red팀" 
+          team="2팀" 
           teamUsers={testTwoUsers} 
           handleTeamClick={handleTeamClick} 
           teamType="red" 
