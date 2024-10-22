@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SecondaryButtonShort } from "../../../../components/buttons/styled"
+import { SecondaryButtonShort } from "../../../buttons/styled"
 export const UserControlWrap = styled.div`
 
 `;
