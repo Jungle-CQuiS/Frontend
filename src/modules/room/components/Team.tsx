@@ -8,10 +8,13 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
 
-  const handleOpenModal = (user:any) => {
+  const handleOpenModal = (user:any, e: React.MouseEvent<HTMLDivElement>) => {
     setIsModalOpen(true);
     setSelectedUser(user);
+    console.log({ x: e.clientX, y: e.clientY });
+    setModalPosition({ x: e.clientX, y: e.clientY });
   };
 
   const handleCloseModal = () => {
@@ -33,7 +36,7 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
       <RoomTeamOneUserWrap>
         
         {teamUsers.map((user: any, index: number) => (
-          <div  onClick={() => handleOpenModal(user)}>
+          <div  onClick={(e) => handleOpenModal(user, e)}>
           <TeamUserComponent
             key={index}
             user={user}
@@ -45,6 +48,7 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
         
         <UserControlInRoom
         user = {selectedUser}
+        modalPosition = {modalPosition}
         open={isModalOpen}
         onClose={handleCloseModal}
         onDone={handleDone}
@@ -60,7 +64,7 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
       <RoomTeamTwoUserWrap>
         
         {teamUsers.map((user: any, index: number) => (
-          <div onClick={() => handleOpenModal(user)}>
+          <div onClick={(e) => handleOpenModal(user, e)}>
           <TeamUserComponent
             key={index}
             user={user}
@@ -72,6 +76,7 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
         
         <UserControlInRoom
         user = {selectedUser}
+        modalPosition = {modalPosition}
         open={isModalOpen}
         onClose={handleCloseModal}
         onDone={handleDone}

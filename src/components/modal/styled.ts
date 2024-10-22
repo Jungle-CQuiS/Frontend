@@ -15,15 +15,22 @@ export const ModalBackdrop = styled.div<{ $open: boolean ; $backdropcolor :boole
   display: ${({ $open }) => ($open ? "block" : "none")};
 `;
 
-export const ModalBase = styled.div<{ $open: boolean; $width?: string; $height?: string }>`
-  position: fixed;
+export const ModalBase = styled.div<{ 
+  $open: boolean; 
+  $width?: string; 
+  $height?: string ;
+  $position?: 'fixed' | 'absolute';
+  $top?: number | string;
+  $left?: number | string;
+  $transform?: string;}>`
+  position:  ${({ $position }) => $position || 'fixed'};
   width: ${({ $width }) => $width || 'fit-content'};
   min-width: ${({ $width }) => $width || '711px'};
   height: ${({ $height }) => $height || 'auto'};
   /* min-height: 196px; */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: ${({ $top }) => $top ?? '50%'};
+  left: ${({ $left }) => $left ?? '50%'};
+  transform: ${({ $transform }) => $transform || 'translate(-50%, -50%)'};
   border-radius: 24px;
   background-color: #fff;
   z-index: 901;
