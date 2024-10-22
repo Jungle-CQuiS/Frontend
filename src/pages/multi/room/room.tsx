@@ -19,11 +19,11 @@ export interface Room {
 const testOneUsers = [
   {
     id: 1, name: "흑화해버린담곰", honor: 54, profileImage: "/images/profile_image.png",
-    role: "host", teamRole: 'member', team: "red"
+    role: "host", teamRole: 'member', team: "blue"
   },
   {
     id: 2, name: "톱들고다니는담곰", honor: 67, profileImage: "/images/profile_image.png",
-    role: "guest", teamRole: 'leader', team: "red"
+    role: "guest", teamRole: 'leader', team: "blue"
   }, null, null, null,
 ]
 
@@ -59,15 +59,16 @@ export default function Room() {
         const users: User[] = await response.json();
 
         // 팀별로 유저 분류
-        const redTeamUsers = users.filter(user => user.team === 'red');
         const blueTeamUsers = users.filter(user => user.team === 'blue');
+        const redTeamUsers = users.filter(user => user.team === 'red');
 
         // 각 팀 배열을 5개 슬롯으로 만들기 (빈 자리는 null로 채움)
-        const filledRedTeam = [...redTeamUsers, ...Array(5 - redTeamUsers.length).fill(null)].slice(0, 5);
         const filledBlueTeam = [...blueTeamUsers, ...Array(5 - blueTeamUsers.length).fill(null)].slice(0, 5);
-
-        setTeamOneUsers(filledRedTeam);
+        const filledRedTeam = [...redTeamUsers, ...Array(5 - redTeamUsers.length).fill(null)].slice(0, 5);
+        
         setTeamTwoUsers(filledBlueTeam);
+        setTeamOneUsers(filledRedTeam);
+        
         setIsLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -89,9 +90,9 @@ export default function Room() {
     <Background>
       <RoomTitleComponent roomName={state?.roomName} />
       <RoomTeamContainer>
-        <TeamComponent team="1팀" teamUsers={testOneUsers} handleTeamClick={handleTeamClick} teamType="red" />
+        <TeamComponent team="blue팀" teamUsers={testOneUsers} handleTeamClick={handleTeamClick} teamType="blue" />
         <img src='/icons/VS.svg' alt='VS' />
-        <TeamComponent team="2팀" teamUsers={testTwoUsers} handleTeamClick={handleTeamClick} teamType="blue" />
+        <TeamComponent team="red팀" teamUsers={testTwoUsers} handleTeamClick={handleTeamClick} teamType="red" />
       </RoomTeamContainer>
       <RoomButtons />
     </Background>

@@ -3,7 +3,7 @@ import { TeamUserComponent } from "./TeamUser";
 
 
 export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: any) => {
-  const isTeamOne = teamType === 'red';
+  const isTeamOne = teamType === 'blue';
 
   return isTeamOne ? (
     <RoomTeamOne>
@@ -16,8 +16,8 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
           <TeamUserComponent
             key={index}
             user={user}
-            onClick={() => !user && handleTeamClick('red')}
-            teamType="red"
+            onClick={() => !user && handleTeamClick('blue')}
+            teamType="blue"
           />
         ))}
       </RoomTeamOneUserWrap>
@@ -33,8 +33,8 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
           <TeamUserComponent
             key={index}
             user={user}
-            onClick={() => !user && handleTeamClick('blue')}
-            teamType="blue"
+            onClick={() => !user && handleTeamClick('red')}
+            teamType="red"
           />
         ))}
       </RoomTeamTwoUserWrap>
