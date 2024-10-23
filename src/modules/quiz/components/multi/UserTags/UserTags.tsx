@@ -1,6 +1,7 @@
+import { TeamUserTagProps } from "../../../../../types/room";
 import { UserTag, UserTagImg, UserTagsContainer } from "./styled";
 
-export default function UserTagsComponent() {
+export const UserTagsComponent = ({teamId }: TeamUserTagProps) => {
 
     return(
         <UserTagsContainer>

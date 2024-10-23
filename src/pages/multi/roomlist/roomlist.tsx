@@ -19,7 +19,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  /*
+
   useEffect(() => {
       const fetchRooms = async (): Promise<void> => {
           try {
@@ -39,7 +39,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
       };
 
       fetchRooms();
-  }, []);*/
+  }, []);
 
   const handleRowClick = (roomId: string, roomName: string) => {
     navigate(`/room/${roomId}`, { 
