@@ -1,12 +1,9 @@
-import { Client } from '@stomp/stompjs';
-import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
-import { User } from '../../../modules/room/components/TeamUser';
-
+import { useWebSocket } from '../../../hook/useWebSocket';
 import { RoomTeamContainer } from './styled';
 
 const testOneUsers = [
@@ -36,87 +33,15 @@ const testTwoUsers = [
 ]
 
 export default function Room() {
-  // 방 입장 시 전달받은 정보 (URL 파라미터나 navigation state로부터)
   const { roomId } = useLocation().state;
   const { state } = useLocation();
-  const [teamOneUsers, setTeamOneUsers] = useState<(User | null)[]>(Array(5).fill(null));
-  const [teamTwoUsers, setTeamTwoUsers] = useState<(User | null)[]>(Array(5).fill(null));
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { isLoading, error, stompClient,teamOneUsers,teamTwoUsers} = useWebSocket(roomId);
 
-  // STOMP 클라이언트 참조 유지
-  const stompClient = useRef<Client | null>(null);
-
-  useEffect(() => {
-    // STOMP 클라이언트 생성 및 설정
-    
-    const client = new Client({
-      brokerURL: 'ws://cquis.net/ws',  // 이렇게 하는게 맞는지 잘 모르겠음! ㅠㅠ
-      onConnect: () => {
-        console.log('Connected to WebSocket');
-        setIsLoading(false);
-
-        // 방 정보 변경시.
-        client.subscribe(`/quiz/multi/rooms/${roomId}`, (message) => {
-          try {
-            const response = JSON.parse(message.body);
-            updateTeams(response.users);
-          } catch (err) {
-            console.error('Error processing message:', err);
-          }
-        });
-
-        // 초기 방 정보 요청
-        client.publish({
-          destination: '/quiz/multi/rooms/join',
-          body: JSON.stringify({ roomId })
-        });
-      },
-      onDisconnect: () => {
-        console.log('Disconnected from WebSocket');
-      },
-      onStompError: (error) => {
-        console.error('WebSocket Error:', error);
-        setError('Failed to connect to the game server');
-        setIsLoading(false);
-      }
-    });
-
-    // 연결 시작
-    client.activate();
-    stompClient.current = client;
-
-    // cleanup
-    return () => {
-      if (client.active) {
-        client.deactivate();
-      }
-    };
-  }, [roomId]);
-
-  // 팀 데이터 업데이트 함수
-  const updateTeams = (users: User[]) => {
-    const blueTeamUsers = users.filter(user => user.team === 'blue');
-    const redTeamUsers = users.filter(user => user.team === 'red');
-
-    const filledBlueTeam = [
-      ...blueTeamUsers,
-      ...Array(5 - blueTeamUsers.length).fill(null)
-    ].slice(0, 5);
-
-    const filledRedTeam = [
-      ...redTeamUsers,
-      ...Array(5 - redTeamUsers.length).fill(null)
-    ].slice(0, 5);
-    
-    setTeamTwoUsers(filledBlueTeam);
-    setTeamOneUsers(filledRedTeam);
-  };
 
   const handleTeamClick = (clickedTeam: string) => {
     const userUuid = localStorage.getItem('userUuid');
     if (!userUuid || !stompClient.current?.active) return;
-    
+
     // 현재 사용자 찾기
     const currentUser = [...teamOneUsers, ...teamTwoUsers].find(user =>
       user?.id.toString() === userUuid
@@ -180,18 +105,18 @@ export default function Room() {
     <Background>
       <RoomTitleComponent roomName={state?.roomName} />
       <RoomTeamContainer>
-        <TeamComponent 
-          team="1팀" 
-          teamUsers={testOneUsers} 
-          handleTeamClick={handleTeamClick} 
-          teamType="blue" 
+        <TeamComponent
+          team="1팀"
+          teamUsers={testOneUsers}
+          handleTeamClick={handleTeamClick}
+          teamType="blue"
         />
         <img src='/icons/VS.svg' alt='VS' />
-        <TeamComponent 
-          team="2팀" 
-          teamUsers={testTwoUsers} 
-          handleTeamClick={handleTeamClick} 
-          teamType="red" 
+        <TeamComponent
+          team="2팀"
+          teamUsers={testTwoUsers}
+          handleTeamClick={handleTeamClick}
+          teamType="red"
         />
 
       </RoomTeamContainer>
