@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ModalBackdrop = styled.div<{ $open: boolean }>`
+export const ModalBackdrop = styled.div<{ $open: boolean ; $backdropcolor :boolean}>`
   position: fixed;
   width: 100%;
   top: 0;
@@ -8,27 +8,47 @@ export const ModalBackdrop = styled.div<{ $open: boolean }>`
   min-width: 100dvw;
   height: 100%;
   min-height: 100dvh;
-  background-color: darkgray;
+  background-color: ${({ $backdropcolor }) => ($backdropcolor ? "darkgray" : "transparent")};
   opacity: 0.8;
-  backdrop-filter: blur(12px);
+  backdrop-filter: ${({ $backdropcolor }) => ($backdropcolor ? "blur(12px)" : "none")};
   z-index: 900;
   display: ${({ $open }) => ($open ? "block" : "none")};
 `;
 
-export const ModalBase = styled.div<{ $open: boolean }>`
-  position: fixed;
-  width: fit-content;
-  min-width: 711px;
-  height: auto;
+export const ModalBase = styled.div<{ 
+  $open: boolean; 
+  $width?: string; 
+  $height?: string ;
+  $position?: 'fixed' | 'absolute';
+  $top?: number | string;
+  $left?: number | string;
+  $round ?:string;
+  $border ?: string;
+  $transform?: string;
+  $padding?: string;  
+  }>`
+  position:  ${({ $position }) => $position || 'fixed'};
+  width: ${({ $width }) => $width || 'fit-content'};
+  min-width: ${({ $width }) => $width || '711px'};
+  height: ${({ $height }) => $height || 'auto'};
   /* min-height: 196px; */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 24px;
+  top: ${({ $top }) => 
+    typeof $top === 'number' 
+      ? `${$top}px`   
+      : $top ?? '50%'
+  };
+  left: ${({ $left }) => 
+    typeof $left === 'number' 
+      ? `${$left}px` 
+      : $left ?? '50%'
+  };
+  transform: ${({ $transform }) => $transform || 'translate(-50%, -50%)'};
+  border: ${({$border}) => $border || 'none'};
+  border-radius: ${({$round}) => $round || '24px'};
   background-color: #fff;
   z-index: 901;
-  padding: 40px 56px;
-  display: ${({ $open }) => ($open ? "block" : "none")};
+  padding: ${({ $padding }) => $padding || '40px 56px'};
+  display: ${({ $open }) => ($open ? 'block' : 'none')};
 `;
 
 export const ModalTitleWrap = styled.div`
