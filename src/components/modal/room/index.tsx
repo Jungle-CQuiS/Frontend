@@ -67,7 +67,7 @@ export const CreateRoomModal = ({
         };
 
         try {
-            const response = await fetch("/quiz/multi/rooms", {
+            const response = await fetch("api/quiz/multi/rooms", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

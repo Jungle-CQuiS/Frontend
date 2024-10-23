@@ -39,7 +39,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
     useEffect(() => {
         const fetchRooms = async (): Promise<void> => {
             try {
-                const response = await fetch("/quiz/multi/rooms");
+                const response = await fetch("api/quiz/multi/rooms");
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

@@ -35,9 +35,11 @@ const testTwoUsers = [
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
-  const { isLoading, error, stompClient,teamOneUsers,teamTwoUsers} = useWebSocket(roomId);
-
+  //web socket 관련 비활성화 시켜놓음.
+  //const { isLoading, error, stompClient,teamOneUsers,teamTwoUsers} = useWebSocket(roomId);
+  
   const handleTeamClick = (clickedTeam: string) => {
+    /*
     const userUuid = localStorage.getItem('userUuid');
     if (!userUuid || !stompClient.current?.active) return;
 
@@ -94,8 +96,8 @@ export default function Room() {
         roomId,
         userId: currentUser.id
       })
-    });
-  };
+    });*/
+  }
 
   /*if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;*/

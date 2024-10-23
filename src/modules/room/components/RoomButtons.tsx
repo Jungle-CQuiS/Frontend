@@ -9,7 +9,7 @@ interface RoomButtonsProps {
 
 export const RoomButtons = ({ roomId }: RoomButtonsProps) => {
   const { user } = useUser(); // storage에서 로그인된 유저 정보 가져오기.
-  const { updateUserStatus } = useWebSocket(roomId);
+  //const { updateUserStatus } = useWebSocket(roomId);
 
   const MultiReadyButton = () => {
     // 해당 유저 READY상태로 API 요청 보내기.
@@ -25,7 +25,7 @@ export const RoomButtons = ({ roomId }: RoomButtonsProps) => {
 
 
     try {
-      const response = await fetch("/quiz/multi/exit", {
+      const response = await fetch("api/quiz/multi/exit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
