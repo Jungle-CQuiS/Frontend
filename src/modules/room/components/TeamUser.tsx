@@ -18,17 +18,20 @@ import {
   RoomTeamLeaderIcon
 } from "../../../pages/multi/room/styled";
 import { User } from "../../../hook/user";
+import {ReadyText} from "./styled"
 
 // 공통으로 사용할 타입들을 먼저 정의
 export type UserRole = 'host' | 'guest';
 export type TeamRole = 'leader' | 'member';
 export type TeamType = 'red' | 'blue';
+export type UserState = 'ready' | 'notready';
 
 // Member 인터페이스 정의
 export interface TeamUser extends User {
   role: UserRole;
   isLeader: TeamRole;
   team: TeamType;
+  state: UserState;
 }
 
 // TeamUserProps는 Member를 활용하여 정의
@@ -36,18 +39,21 @@ export interface TeamUserProps {
   user: TeamUser | null;
   onClick: () => void;
   teamType: TeamType;
+  state: UserState;
 }
 
-export const TeamUserComponent = ({ user, onClick, teamType }: TeamUserProps) => {
+export const TeamUserComponent = ({ user, onClick, teamType, state }: TeamUserProps) => {
   const isRedTeam = teamType === 'blue';
   const isHost = user?.role === 'host'; // null 일수도 있어서 ?로 
   const isLeader = user?.isLeader === 'leader';
+  const isReady = state === 'ready';
 
   return isRedTeam ? (
     <RoomTeamOneUser onClick={onClick}>
       {user ? (
         <>
           <RoomTeamOneUserName>
+            {isReady && <ReadyText $align = 'left'>READY</ReadyText>}
             {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
             {user.name}
             {isHost && <RoomHostIcon src="/icons/crown.svg" alt="Badge" />}
@@ -72,11 +78,12 @@ export const TeamUserComponent = ({ user, onClick, teamType }: TeamUserProps) =>
         <>
           <RoomTeamTwobackground />
           <RoomTeamTwoUserHonorWrap>
-              <RoomTeamTwoUserHonor>{user.honor}</RoomTeamTwoUserHonor>
-              <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />
+            <RoomTeamTwoUserHonor>{user.honor}</RoomTeamTwoUserHonor>
+            <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />
           </RoomTeamTwoUserHonorWrap>
           <RoomTeamTwoUserProfile src={user.profileImage} alt={user.name} />
           <RoomTeamTwoUserName>
+            {isReady && <ReadyText $align = 'right'>READY</ReadyText>}
             {isHost && <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />}
             {user.name}
             {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}

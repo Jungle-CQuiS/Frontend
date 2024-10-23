@@ -8,11 +8,11 @@ export const useWebSocket = (roomId: string) => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    
+
 
     const [teamOneUsers, setTeamOneUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
     const [teamTwoUsers, setTeamTwoUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
-   
+
     // STOMP 클라이언트 설정 함수
     const setupStompClient = useCallback(() => {
         const client = new Client({
@@ -75,6 +75,20 @@ export const useWebSocket = (roomId: string) => {
         setTeamTwoUsers(filledRedTeam);
     };
 
+    // 유저 상태 변경 함수 추가
+    const updateUserStatus = (userId: string, status: 'READY' | 'NOT_READY') => {
+        if (!stompClient.current?.active) return;
+
+        stompClient.current.publish({
+            destination: '/quiz/multi/rooms/status', // 서버의 엔드포인트에 맞게 수정
+            body: JSON.stringify({
+                roomId,
+                userId,
+                status
+            })
+        });
+    };
+
     useEffect(() => {
         const client = setupStompClient();
         client.activate();
@@ -87,7 +101,7 @@ export const useWebSocket = (roomId: string) => {
         };
     }, [roomId, setupStompClient]);
 
-    return { isLoading, error, stompClient ,teamOneUsers,teamTwoUsers};
+    return { isLoading, error, stompClient, teamOneUsers, teamTwoUsers , updateUserStatus};
 };
 
 
