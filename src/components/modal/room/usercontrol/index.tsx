@@ -25,7 +25,7 @@ export const UserControlInRoom = ({
     <Modal {...props} width="100px" height="auto" backdropcolor={false} position="absolute"
       $top={modalPosition.y}
       $left={modalPosition.x}
-      $transform="translate(-50%, -50%)"
+      $transform="translate(0, 0)" 
     >
       <UserControlWrap>
         <div>{user?.name}</div>

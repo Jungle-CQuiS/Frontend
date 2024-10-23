@@ -28,8 +28,16 @@ export const ModalBase = styled.div<{
   min-width: ${({ $width }) => $width || '711px'};
   height: ${({ $height }) => $height || 'auto'};
   /* min-height: 196px; */
-  top: ${({ $top }) => $top ?? '50%'};
-  left: ${({ $left }) => $left ?? '50%'};
+  top: ${({ $top }) => 
+    typeof $top === 'number' 
+      ? `${$top}px` 
+      : $top ?? '50%'
+  };
+  left: ${({ $left }) => 
+    typeof $left === 'number' 
+      ? `${$left}px` 
+      : $left ?? '50%'
+  };
   transform: ${({ $transform }) => $transform || 'translate(-50%, -50%)'};
   border-radius: 24px;
   background-color: #fff;

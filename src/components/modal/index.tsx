@@ -24,7 +24,7 @@ export const Modal = ({
   height,
   position = 'fixed',
   backdrop = true, // 기본값은 true
-  backdropcolor = true,
+  backdropcolor = true, // true일 경우 gray
   $top,
   $left,
   $transform,
