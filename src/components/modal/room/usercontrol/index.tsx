@@ -1,5 +1,6 @@
 import { Modal, IModalProps } from "../..";
 import { UserControlWrap, UserControlBtn, UserControlKickBtn } from "./styled";
+import { useState } from "react";
 
 interface UserControlInRoomProps extends IModalProps {
   user: any; // 유저 정보 타입
@@ -21,6 +22,8 @@ export const UserControlInRoom = ({
     console.log('팀장 위임하기');
   };
 
+  const [volume, setVolume] = useState<number>(0.5);
+
   return (
     <Modal {...props} width="130px" height="auto" backdropcolor={false} position="absolute"
       $top={modalPosition.y}
@@ -32,6 +35,7 @@ export const UserControlInRoom = ({
     >
       <UserControlWrap>
         <div style={{ fontWeight: 'bold' }}>{user?.name}</div>
+        <input type="range" min={0} max={1} step={0.01} value={volume} onChange={(event) =>{ setVolume(event.target.valueAsNumber);}} />
         {<UserControlBtn onClick={handleTeamLeaderDelegation}>팀장 위임하기</UserControlBtn>}
         {<UserControlBtn onClick={handleTeamLeaderDelegation}>방장 위임하기</UserControlBtn>}
         <UserControlKickBtn onClick={handleKick}>강퇴</UserControlKickBtn>
