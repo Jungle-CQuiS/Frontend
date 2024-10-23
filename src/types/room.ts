@@ -5,3 +5,8 @@ export interface Room {
     currentUsers: number;
     maxUser: number;
 }
+
+export interface TeamHeaderProps {
+    teamId: number;
+    isAttackTeam: boolean;
+}
