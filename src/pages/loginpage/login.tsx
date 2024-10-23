@@ -14,7 +14,7 @@ export default function LoginPage() {
       try {
         // 유저가 입력한 username과 password를 URL 경로에 추가
         const response = await fetch(`/auth/login/${username}/${password}`, {
-          method: "POST",
+          method: "POST", 
           headers: {
             "Content-Type": "application/json",
           },
