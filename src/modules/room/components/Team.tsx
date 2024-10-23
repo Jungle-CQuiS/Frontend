@@ -11,6 +11,8 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
 
   const handleOpenModal = (user:any, e: React.MouseEvent<HTMLDivElement>) => {
+    // Exception
+    if(user == null) return;
     setIsModalOpen(true);
     setSelectedUser(user);
     console.log({ x: e.clientX, y: e.clientY });
