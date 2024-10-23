@@ -1,51 +1,47 @@
 import { useState } from "react";
 import { Background } from "../../../components/background/styled";
-import { PrimaryButtonMedium, SecondaryButtonShort } from "../../../components/buttons/styled";
-import { MultiCenterBox, MultiGameButton, MultiGameChoice, MultiGameContainer, MultiGameFooter, MultiGameHeader, MultiGameInventory, MultiGameQuestionCheckbox, MultiGameTeam, MultiGameTitle, MultiQuestionBox, MultiTimeLeft } from "./styled";
+import { TeamHeaderComponent } from "../../../modules/quiz/components/multi/TeamHeader/TeamHeader";
+import { Timer } from "../../../components/timer/timer";
+import { PrimaryButtonMedium, SecondaryButtonSmall } from "../../../components/buttons/styled";
+import CategoryComponent from "../../../components/Category";
+import QuizProblemsComponent from "../../../components/quiz";
+import { MultiGameAttackContainer, MutliGameAttackTimerWrap, MultiGameAttackTimer, MultiGameAttackTimerText, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameAttackQuiz, MultiGameAttackButtonWrap, MultiGameAttackQuizCheckbox, MultiGameBackground } from "./styled";
+import UserTagsComponent from "../../../modules/quiz/components/multi/UserTags/UserTags";
 
 export default function AttackPage() {
-    const [isQuestionChecked, setIsQuestionChecked] = useState(false);
-    
-    const handleQuestionCheckbox = () => {
-        setIsQuestionChecked(prevState => !prevState);
-    };
-
+    const [teamId, setTeamId] = useState(1);
+    const [isAttackTeam, setIsAttackTeam] = useState(true);
 
     return (
         <Background>
-            <MultiGameHeader>
-                <MultiGameTeam>1팀</MultiGameTeam>
-                <MultiGameTitle>주제를 선택하세요</MultiGameTitle>
-            </MultiGameHeader>
-            <MultiGameContainer>
-                <MultiTimeLeft>초 남았습니다!!</MultiTimeLeft>
-                <MultiCenterBox>
-                    <MultiGameInventory>
-                        <div className="menu-item active">OS</div>
-                        <div className="menu-item">자료구조</div>
-                        <div className="menu-item">알고리즘</div>
-                        <div className="menu-item">네트워크</div>
-                        <div className="menu-item">데이터베이스</div>
-                    </MultiGameInventory>
-                    <MultiQuestionBox onClick={handleQuestionCheckbox}>
-                        <MultiGameQuestionCheckbox src="/icons/checkbox_base.svg" />
-                        <MultiGameQuestionCheckbox src="/icons/checkbox_base.svg" />
-                    </MultiQuestionBox>
-                </MultiCenterBox>
-                <MultiGameChoice>
-                    <SecondaryButtonShort>나가기</SecondaryButtonShort>
-                    <PrimaryButtonMedium>선택완료</PrimaryButtonMedium>
-                </MultiGameChoice>
-            </MultiGameContainer>
-            <MultiGameFooter>
-                <MultiGameButton>흑화해버린담곰</MultiGameButton>
-                <MultiGameButton>메타몽주인님</MultiGameButton>
-                <MultiGameButton>드래곤캐슬</MultiGameButton>
-                <MultiGameButton>정글깡패</MultiGameButton>
-                <MultiGameButton>스몰애기</MultiGameButton>
-            </MultiGameFooter>
+            <MultiGameBackground>
+                <TeamHeaderComponent teamId={teamId} isAttackTeam={isAttackTeam} />
+                <MultiGameAttackContainer>
+                    <MutliGameAttackTimerWrap>
+                        <Timer />
+                        <MultiGameAttackTimer>30초&nbsp;</MultiGameAttackTimer>
+                        <MultiGameAttackTimerText>남았습니다!!</MultiGameAttackTimerText>
+                    </MutliGameAttackTimerWrap>
+                    <MultiGameAttackQuizContainer>
+                        <CategoryComponent />
+                        <MultiGameAttackQuizWrap>
+                            <MultiGameAttackQuiz>
+                                <MultiGameAttackQuizCheckbox src="/icons/checkbox_base.svg"/>
+                                <QuizProblemsComponent />
+                            </MultiGameAttackQuiz>
+                            <MultiGameAttackQuiz>
+                                <MultiGameAttackQuizCheckbox src="/icons/checkbox_base.svg"/>
+                                <QuizProblemsComponent />
+                            </MultiGameAttackQuiz>
+                        </MultiGameAttackQuizWrap>
+                    </MultiGameAttackQuizContainer>
+                    <MultiGameAttackButtonWrap>
+                        <SecondaryButtonSmall>나가기</SecondaryButtonSmall>
+                        <PrimaryButtonMedium>선택완료</PrimaryButtonMedium>
+                    </MultiGameAttackButtonWrap>
+                </MultiGameAttackContainer>
+                <UserTagsComponent />
+            </MultiGameBackground>
         </Background>
-        
-
     )
 }

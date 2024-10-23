@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+export const MultiGameBackground = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+`;
+
 export const MultiGameHeader = styled.div`
     display: flex;
     flex-direction: column;
@@ -8,97 +14,71 @@ export const MultiGameHeader = styled.div`
     font-weight: bold;
 `;
 
-export const MultiGameTeam = styled.div`
-    text-align: center;    
-    padding: 6px 13px;
-    margin: 0 55px;
-    background-color: #2F69FF;
-    color: #FFF;
-    border-radius: 8px;
-    font-size: 18px;
-`;
-
-export const MultiGameTitle = styled.div`
-    text-align: center;
-    margin-top: 30px;
-    font-size: 24px;
-`;
-
-export const MultiGameContainer = styled.div`
+export const MultiGameAttackContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 8px;
+`;
+
+export const MutliGameAttackTimerWrap = styled.div`
+    display: flex;
     align-items: center;
-    width: 100%;
+    justify-content: flex-end;
 `;
 
-export const MultiTimeLeft = styled.div`
-    text-align: right;
-    height: 32px;    
-    width: 100%;
-    text-align: right;
-    font-size: 13px;
-    font-weight: bold;
-    color: #000;
-    margin-bottom: 20px;
-    padding-right: 200px;
+export const MultiGameAttackTimer = styled.div`
+    color: #DB4453;
+    font-size: 16px;
+    font-weight: 600;
+    padding-left: 8px;
 `;
 
-export const MultiCenterBox = styled.div`
+export const MultiGameAttackTimerText = styled.div`
+    font-size: 16px;
+    font-weight: 600;
+`;
+
+export const MultiGameAttackQuizContainer = styled.div`
     display: flex;
-    flex-direction: row;
-    width: 90%;
-    justify-content: space-between;
-    gap: 20px;
-`
+    max-height: 450px;
+`;
 
-export const MultiGameInventory = styled.div`
-    width: 25%;
+export const MultiGameAttackQuizWrap = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    border-radius: 10px;
-    gap: 10px;
-`
-
-export const MultiQuestionBox = styled.div`
-    width: 70%;
-    display: flex;
-    gap: 15px;
-    padding: 20px;
-    flex-direction: column;   
-    float:right;
-    border: 1px solid #ddd;
+    border: 1px solid #D3D3D3;
+    border-radius: 0px 16px 16px 16px;
+    padding: 0px 40px 0px 40px;
+    align-items: center;
+    overflow-y: scroll;
 `;
 
-export const MultiGameQuestionCheckbox = styled.img`
-    width: 16px;
-    height: 16px;
-    -webkit-user-drag: none;
+export const MultiGameAttackQuiz = styled.div`
+    display: flex;
+    align-items: start;
+    gap: 36px;
+    border-bottom: 1px solid #D3D3D3;
+    padding: 56px 0px 56px 0px;
+    &:nth-child(2){
+        border: none;
+    }
+`;
+
+export const MultiGameAttackQuizCheckbox = styled.img`
+    width: 24px;
+    height: 24px;
     cursor: pointer;
 `;
 
-export const MultiGameChoice = styled.div`
-    align-items: center;
-    display: flex;
-    width: 100%;
-    gap: 20px;
-    padding: 20px;
-    justify-content: space-evenly;
+export const MultiGameAttackQuizDivider = styled.div`
+    height: 1px;
+    width: 400px;
+    background-color: #D3D3D3;
 `;
 
-export const MultiGameFooter = styled.div`
+export const MultiGameAttackButtonWrap = styled.div`
     display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 20px;
-`;
-
-export const MultiGameButton = styled.div`
-    padding: 10px 20px;
-    background-color: #2F69FF;
-    color: white;
-    border-radius: 10px;
-    font-size: 16px;
-    text-align: center;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-top: 8px;
 `;
