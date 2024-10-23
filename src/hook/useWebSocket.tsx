@@ -1,6 +1,6 @@
 import { Client } from '@stomp/stompjs';
 import { useState, useEffect, useRef, useCallback } from "react";
-import { User } from '../modules/room/components/TeamUser';
+import { TeamUser } from '../modules/room/components/TeamUser';
 
 
 export const useWebSocket = (roomId: string) => {
@@ -10,8 +10,8 @@ export const useWebSocket = (roomId: string) => {
     const [error, setError] = useState<string | null>(null);
     
 
-    const [teamOneUsers, setTeamOneUsers] = useState<(User | null)[]>(Array(5).fill(null));
-    const [teamTwoUsers, setTeamTwoUsers] = useState<(User | null)[]>(Array(5).fill(null));
+    const [teamOneUsers, setTeamOneUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
+    const [teamTwoUsers, setTeamTwoUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
    
     // STOMP 클라이언트 설정 함수
     const setupStompClient = useCallback(() => {
@@ -57,7 +57,7 @@ export const useWebSocket = (roomId: string) => {
     };
 
     // 팀 데이터 업데이트 함수
-    const updateTeams = (users: User[]) => {
+    const updateTeams = (users: TeamUser[]) => {
         const blueTeamUsers = users.filter(user => user.team === 'blue');
         const redTeamUsers = users.filter(user => user.team === 'red');
 

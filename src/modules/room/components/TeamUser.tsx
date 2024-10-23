@@ -17,6 +17,7 @@ import {
   RoomHostIcon,
   RoomTeamLeaderIcon
 } from "../../../pages/multi/room/styled";
+import { User } from "../../../hook/user";
 
 // 공통으로 사용할 타입들을 먼저 정의
 export type UserRole = 'host' | 'guest';
@@ -24,11 +25,7 @@ export type TeamRole = 'leader' | 'member';
 export type TeamType = 'red' | 'blue';
 
 // Member 인터페이스 정의
-export interface User {
-  id: number;
-  name: string;
-  honor: number;
-  profileImage: string;
+export interface TeamUser extends User {
   role: UserRole;
   isLeader: TeamRole;
   team: TeamType;
@@ -36,7 +33,7 @@ export interface User {
 
 // TeamUserProps는 Member를 활용하여 정의
 export interface TeamUserProps {
-  user: User | null;
+  user: TeamUser | null;
   onClick: () => void;
   teamType: TeamType;
 }

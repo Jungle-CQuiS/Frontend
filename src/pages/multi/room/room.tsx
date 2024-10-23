@@ -37,6 +37,7 @@ export default function Room() {
   const { state } = useLocation();
   const { isLoading, error, stompClient,teamOneUsers,teamTwoUsers} = useWebSocket(roomId);
 
+  
 
   const handleTeamClick = (clickedTeam: string) => {
     const userUuid = localStorage.getItem('userUuid');
