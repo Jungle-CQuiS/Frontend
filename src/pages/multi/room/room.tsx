@@ -37,8 +37,6 @@ export default function Room() {
   const { state } = useLocation();
   const { isLoading, error, stompClient,teamOneUsers,teamTwoUsers} = useWebSocket(roomId);
 
-  
-
   const handleTeamClick = (clickedTeam: string) => {
     const userUuid = localStorage.getItem('userUuid');
     if (!userUuid || !stompClient.current?.active) return;
@@ -108,7 +106,7 @@ export default function Room() {
       <RoomTeamContainer>
         <TeamComponent
           team="1팀"
-          teamUsers={testOneUsers}
+          teamUsers={testOneUsers} // 여기 있는 팀이 실시간 통신으로 업데이트 되어야함.
           handleTeamClick={handleTeamClick}
           teamType="blue"
         />
@@ -121,7 +119,7 @@ export default function Room() {
         />
 
       </RoomTeamContainer>
-      <RoomButtons />
+      <RoomButtons roomId = {roomId} />
     </Background>
   );
 }

@@ -44,6 +44,7 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
             user={user}
             onClick={() => !user && handleTeamClick('blue')}
             teamType="blue"
+            state= {user?.state}
           />
           </div>
         ))}
@@ -72,6 +73,7 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
             user={user}
             onClick={() => !user && handleTeamClick('red')}
             teamType="red"
+            state= {user?.state}
           />
           </div>
         ))}
