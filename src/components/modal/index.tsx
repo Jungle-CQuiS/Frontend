@@ -12,6 +12,7 @@ export interface IModalProps {
   position?: 'fixed' | 'absolute'; // 새로 추가된 prop
   $top?: number | string;
   $left?: number | string;
+  $round?: string;
   $border?: string;
   $transform?: string;
   $padding ?:string;
@@ -29,6 +30,7 @@ export const Modal = ({
   backdropcolor = true, // true일 경우 gray
   $top,
   $left,
+  $round,
   $border,
   $transform,
   $padding,
@@ -45,6 +47,7 @@ export const Modal = ({
         $position={position}
         $top={$top}
         $left={$left}
+        $round = {$round}
         $border = {$border}
         $transform={$transform}
         $padding = {$padding}

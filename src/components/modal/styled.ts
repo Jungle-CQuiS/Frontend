@@ -22,7 +22,8 @@ export const ModalBase = styled.div<{
   $position?: 'fixed' | 'absolute';
   $top?: number | string;
   $left?: number | string;
-  $border ?:string;
+  $round ?:string;
+  $border ?: string;
   $transform?: string;
   $padding?: string;  
   }>`
@@ -42,7 +43,8 @@ export const ModalBase = styled.div<{
       : $left ?? '50%'
   };
   transform: ${({ $transform }) => $transform || 'translate(-50%, -50%)'};
-  border-radius: ${({$border}) => $border || '24px'};
+  border: ${({$border}) => $border || 'none'};
+  border-radius: ${({$round}) => $round || '24px'};
   background-color: #fff;
   z-index: 901;
   padding: ${({ $padding }) => $padding || '40px 56px'};

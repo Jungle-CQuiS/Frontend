@@ -26,7 +26,8 @@ export const UserControlInRoom = ({
       $top={modalPosition.y}
       $left={modalPosition.x}
       $transform="translate(0, 0)" 
-      $border = "0px"
+      $round = "0px"
+      $border = "1px solid #333"
       $padding = "10px 10px"
     >
       <UserControlWrap>
