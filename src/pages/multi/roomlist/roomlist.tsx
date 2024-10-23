@@ -62,7 +62,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
   return (
       <MainPageTableTbody>
           {filteredRooms.map((room) => (
-              <MainPageTableTbodyTr key={room.id} onClick={() => handleRowClick(room.id, room.name)}>
+              <MainPageTableTbodyTr key={room.gameRoomId} onClick={() => handleRowClick(room.gameRoomId, room.name)}>
                   <MainPageTableTbodyTd>{room.name}</MainPageTableTbodyTd>
                   <MainPageTableTbodyTd>
                       {room.isLocked && <MainPageTableTbodyIcon src="/icons/lock.svg" alt="Lock" />}

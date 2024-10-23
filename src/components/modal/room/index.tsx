@@ -90,7 +90,7 @@ export const CreateRoomModal = ({
     };   
     
     const moveToWaitingRoom = (roomId: number) => {
-        window.location.href= `/quiz/multi/rooms/join/{roomId}`;
+        window.location.href= `/quiz/multi/rooms/{roomId}`;
     };
 
 

@@ -1,5 +1,5 @@
 export interface Room {
-    id: string;
+    gameRoomId: string;
     name: string;
     isLocked: boolean;
     currentUsers: number;
