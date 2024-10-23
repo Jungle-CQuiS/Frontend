@@ -6,7 +6,7 @@ import { PrimaryButtonMedium, SecondaryButtonSmall } from "../../../components/b
 import CategoryComponent from "../../../components/Category";
 import QuizProblemsComponent from "../../../components/quiz";
 import { MultiGameAttackContainer, MutliGameAttackTimerWrap, MultiGameAttackTimer, MultiGameAttackTimerText, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameAttackQuiz, MultiGameAttackButtonWrap, MultiGameAttackQuizCheckbox, MultiGameBackground } from "./styled";
-import UserTagsComponent from "../../../modules/quiz/components/multi/UserTags/UserTags";
+import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
 
 export default function AttackPage() {
     const [teamId, setTeamId] = useState(1);
@@ -40,7 +40,7 @@ export default function AttackPage() {
                         <PrimaryButtonMedium>선택완료</PrimaryButtonMedium>
                     </MultiGameAttackButtonWrap>
                 </MultiGameAttackContainer>
-                <UserTagsComponent />
+                <UserTagsComponent teamId={teamId}/>
             </MultiGameBackground>
         </Background>
     )

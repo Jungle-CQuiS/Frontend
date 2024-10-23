@@ -10,3 +10,8 @@ export interface TeamHeaderProps {
     teamId: number;
     isAttackTeam: boolean;
 }
+
+
+export interface TeamUserTagProps {
+    teamId: number;
+}

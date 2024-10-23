@@ -8,8 +8,8 @@ export const TeamHeaderContainer = styled.div`
     align-items: center;
 `;
 
-export const TeamHeaderTag = styled.div`
-    background-color: #2F69FF;
+export const TeamHeaderTag = styled.div<{ teamId: number}>`
+    background-color: ${({ teamId }) => (teamId === 1 ? '#2F69FF' : '#EE5567')};
     color: #fff;
     font-size: 18px;
     font-weight: 600;

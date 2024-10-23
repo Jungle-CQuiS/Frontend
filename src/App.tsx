@@ -9,6 +9,7 @@ import Room from './pages/multi/room/room';
 import ProtectedRoute from './pages/loginpage/protected';
 import SignupPage from './pages/signup/signup';
 import AttackPage from './pages/multi/attack/attack';
+import DefendPage from './pages/multi/defend/defend';
 
 function App() {
   return (
@@ -50,6 +51,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AttackPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/multi/defend"
+            element={
+              <ProtectedRoute>
+                <DefendPage />
               </ProtectedRoute>
             }
           />

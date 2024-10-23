@@ -1,31 +1,43 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { LoginBackground, LoginBottomWrap, LoginContainer, LoginDividerWrap, LoginInput, LoginInputWrap, LoginLine, LoginLink, LoginLinkWrap, LoginText, LoginTitle, LoginWithGoogle, LoginWrap } from "./styled";
-import NavBar from "../../components/navbar/navbar";
+import { useNavigate, Link } from "react-router-dom";
 import { PrimaryButtonLong } from "../../components/buttons/styled";
-
-const generateUUID = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = (c === 'x') ? r : ((r & 0x3) | 0x8); 
-    return v.toString(16);
-  });
-};
-
+import NavBar from "../../components/navbar/navbar";
+import { LoginBackground, LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInputWrap, LoginInput, LoginBottomWrap, LoginLinkWrap, LoginLink } from "./styled";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (username) {
-      // 임시로 uuid 생성 후 로컬 스토리지에 저장
-      const userUuid = generateUUID();
-      localStorage.setItem("uuid", userUuid); // 유저의 uuid 저장
-      localStorage.setItem("username", username); // 유저 이름도 저장
-      
-      // 로그인 후 메인 페이지로 이동
-      navigate("/main");
+  const handleLogin = async () => {
+    if (username && password) {
+      try {
+        // 유저가 입력한 username과 password를 URL 경로에 추가
+        const response = await fetch(`/auth/login/${username}/${password}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("로그인에 실패했습니다.");
+        }
+
+        const data = await response.json();
+        
+        // 백엔드에서 받은 uuid와 username을 저장
+        localStorage.setItem("uuid", data.data); // 유저의 uuid 저장
+        localStorage.setItem("username", data.username); // 유저 이름도 저장
+        
+        // 로그인 후 메인 페이지로 이동
+        navigate("/main");
+      } catch (error) {
+        console.error("로그인 에러:", error);
+        alert("로그인에 실패했습니다.");
+      }
+    } else {
+      alert("닉네임과 비밀번호를 입력해주세요.");
     }
   };
 
@@ -49,7 +61,12 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
-              <LoginInput placeholder="비밀번호"/>
+              <LoginInput
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </LoginInputWrap>
             <LoginBottomWrap>
               <PrimaryButtonLong onClick={handleLogin}>로그인</PrimaryButtonLong>
