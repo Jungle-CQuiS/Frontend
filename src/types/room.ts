@@ -3,7 +3,7 @@ export interface Room {
     name: string;
     isLocked: boolean;
     currentUsers: number;
-    maxUser: number;
+    maxUsers: number;
 }
 
 export interface TeamHeaderProps {

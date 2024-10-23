@@ -27,8 +27,9 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
               if (!response.ok) {
                   throw new Error(`HTTP error! status: ${response.status}`);
               }
-              const data: Room[] = await response.json();
-              setRooms(data);
+              const data = await response.json();
+              
+              setRooms(data.data.rooms);
               setIsLoading(false);
           } catch (e) {
               const errorMessage = e instanceof Error ? e.message : String(e);
@@ -50,13 +51,13 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
     });
   };
 
-    //rooms로 변경해야함. API 받으면
-  const filteredRooms = testrooms.filter(room =>
+   //rooms로 변경해야함. API 받으면
+  const filteredRooms = rooms.filter(room =>
       room.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  //if (isLoading) return <div>Loading rooms...</div>;
-  //if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <div>Loading rooms...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
       <MainPageTableTbody>
@@ -66,7 +67,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                   <MainPageTableTbodyTd>
                       {room.isLocked && <MainPageTableTbodyIcon src="/icons/lock.svg" alt="Lock" />}
                   </MainPageTableTbodyTd>
-                  <MainPageTableTbodyTd>{room.currentUsers}/{room.maxUser}</MainPageTableTbodyTd>
+                  <MainPageTableTbodyTd>{room.currentUsers}/{room.maxUsers}</MainPageTableTbodyTd>
               </MainPageTableTbodyTr>
           ))}
       </MainPageTableTbody>
