@@ -22,7 +22,10 @@ export const ModalBase = styled.div<{
   $position?: 'fixed' | 'absolute';
   $top?: number | string;
   $left?: number | string;
-  $transform?: string;}>`
+  $border ?:string;
+  $transform?: string;
+  $padding?: string;  
+  }>`
   position:  ${({ $position }) => $position || 'fixed'};
   width: ${({ $width }) => $width || 'fit-content'};
   min-width: ${({ $width }) => $width || '711px'};
@@ -30,7 +33,7 @@ export const ModalBase = styled.div<{
   /* min-height: 196px; */
   top: ${({ $top }) => 
     typeof $top === 'number' 
-      ? `${$top}px` 
+      ? `${$top}px`   
       : $top ?? '50%'
   };
   left: ${({ $left }) => 
@@ -39,10 +42,10 @@ export const ModalBase = styled.div<{
       : $left ?? '50%'
   };
   transform: ${({ $transform }) => $transform || 'translate(-50%, -50%)'};
-  border-radius: 24px;
+  border-radius: ${({$border}) => $border || '24px'};
   background-color: #fff;
   z-index: 901;
-  padding: 40px 56px;
+  padding: ${({ $padding }) => $padding || '40px 56px'};
   display: ${({ $open }) => ($open ? 'block' : 'none')};
 `;
 

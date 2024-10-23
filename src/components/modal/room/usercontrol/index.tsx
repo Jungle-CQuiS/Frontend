@@ -1,5 +1,5 @@
 import { Modal, IModalProps } from "../..";
-import { UserControlWrap, UserControlBtn } from "./styled";
+import { UserControlWrap, UserControlBtn, UserControlKickBtn } from "./styled";
 
 interface UserControlInRoomProps extends IModalProps {
   user: any; // 유저 정보 타입
@@ -22,15 +22,18 @@ export const UserControlInRoom = ({
   };
 
   return (
-    <Modal {...props} width="100px" height="auto" backdropcolor={false} position="absolute"
+    <Modal {...props} width="130px" height="auto" backdropcolor={false} position="absolute"
       $top={modalPosition.y}
       $left={modalPosition.x}
       $transform="translate(0, 0)" 
+      $border = "0px"
+      $padding = "10px 10px"
     >
       <UserControlWrap>
-        <div>{user?.name}</div>
-        <UserControlBtn onClick={handleKick}>강퇴</UserControlBtn>
-        <UserControlBtn onClick={handleTeamLeaderDelegation}>팀장 넘겨주기</UserControlBtn>
+        <div style={{ fontWeight: 'bold' }}>{user?.name}</div>
+        {<UserControlBtn onClick={handleTeamLeaderDelegation}>팀장 위임하기</UserControlBtn>}
+        {<UserControlBtn onClick={handleTeamLeaderDelegation}>방장 위임하기</UserControlBtn>}
+        <UserControlKickBtn onClick={handleKick}>강퇴</UserControlKickBtn>
       </UserControlWrap>
     </Modal>
   );

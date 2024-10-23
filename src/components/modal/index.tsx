@@ -12,7 +12,9 @@ export interface IModalProps {
   position?: 'fixed' | 'absolute'; // 새로 추가된 prop
   $top?: number | string;
   $left?: number | string;
+  $border?: string;
   $transform?: string;
+  $padding ?:string;
 }
 
 export const Modal = ({
@@ -27,7 +29,9 @@ export const Modal = ({
   backdropcolor = true, // true일 경우 gray
   $top,
   $left,
+  $border,
   $transform,
+  $padding,
 }: IModalProps & { children: ReactNode }) => {
   return (
     <Fragment>
@@ -41,7 +45,9 @@ export const Modal = ({
         $position={position}
         $top={$top}
         $left={$left}
+        $border = {$border}
         $transform={$transform}
+        $padding = {$padding}
       >
         {children}
       </ModalBase>
