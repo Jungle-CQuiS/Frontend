@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}  # SSH 프라이빗 키
           port: 22
           script: |
-            cd /path/to/frontend/directory  # 프론트 프로젝트 디렉토리로 이동
+            cd /home/ubuntu/frontend # 프론트 프로젝트 디렉토리로 이동
             git pull origin main  # 최신 코드 가져오기
             npm install  # 의존성 설치
             npm run build  # 빌드
