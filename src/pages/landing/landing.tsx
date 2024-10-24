@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { PrimaryButtonLarge } from "../../components/buttons/styled";
 import NavBar from "../../components/navbar/navbar";
 import { LandingPageContainer, LandingPageText, LandingPageTextContainer, LandingPageTextPrimary, LandingPageTextSecondary, LandingPageTextWrap, LandingPageWrap } from "./styled";
+import { SERVICES } from "../../config/api/constants";
 
 export default function LandingPage(){
     return (
@@ -24,7 +25,7 @@ export default function LandingPage(){
                         <LandingPageText>을 확인하세요!</LandingPageText>
                     </LandingPageTextWrap>
                 </LandingPageTextContainer>
-                    <Link to="/main" >
+                    <Link to= {SERVICES.MAIN} >
                         <PrimaryButtonLarge>시작하기</PrimaryButtonLarge>
                     </Link>
             </LandingPageWrap>

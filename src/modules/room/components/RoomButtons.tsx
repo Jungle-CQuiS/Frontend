@@ -2,6 +2,7 @@ import { PrimaryButtonMiddle, SecondaryButtonShort } from "../../../components/b
 import { RoomButtonWrap } from "../../../pages/multi/room/styled";
 import { useUser } from "../../../hook/user";
 import { useWebSocket } from "../../../hook/useWebSocket";
+import { QUIZ_MULTI_ENDPOINTS } from "../../../config/api/endpoints/quiz-multi.endpoints";
 
 interface RoomButtonsProps {
   roomId: string;
@@ -25,7 +26,7 @@ export const RoomButtons = ({ roomId }: RoomButtonsProps) => {
 
 
     try {
-      const response = await fetch("api/quiz/multi/exit", {
+      const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOM.EXIT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

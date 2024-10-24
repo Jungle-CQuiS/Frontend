@@ -3,6 +3,8 @@ import { MainPageTableTbody, MainPageTableTbodyIcon, MainPageTableTbodyTd, MainP
 import { useNavigate } from "react-router-dom";
 import { Room } from "../../../types/room"
 import { PasswordCheckModal } from '../../../components/modal/roomlist/passwordCheck';
+import { QUIZ_MULTI_ENDPOINTS } from '../../../config/api/endpoints/quiz-multi.endpoints';
+
 //임시 방 정보 하드코딩
 const testrooms = [
     { id: "room1", name: "이기는 팀 우리 팀", isLocked: true, currentUsers: "7", maxUser: "8" },
@@ -39,7 +41,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
     useEffect(() => {
         const fetchRooms = async (): Promise<void> => {
             try {
-                const response = await fetch("api/quiz/multi/rooms");
+                const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOMS.LIST);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
