@@ -3,7 +3,7 @@ import { Modal, IModalProps } from ".."
 import { PrimaryButtonMedium, SecondaryButton } from "../../buttons/styled"
 import { ModalTitle, ModalTitleIcon, ModalTitleWrap } from "../styled"
 import { CreateRoomModalRow, CreateRoomModalLabel, CreateRoomModalInput, CreateRoomModalButtonWrap, CreateRoomModalRowContainer, CreateRoomModalNumber, CreateRoomModalNumberInfo, CreateRoomModalNumberInfoImg, CreateRoomModalNumberInfoText, CreateRoomModalPasswordCheckbox, CreateRoomModalPasswordInput, CreateRoomModalPasswordRow, CreateRoomModalPasswordWrap, CreateRoomModalText, CreateRoomModalNumberWrap, CreateRoomModalBodyWrap } from "./styled"
-
+import { QUIZ_MULTI_ENDPOINTS } from "../../../config/api/endpoints/quiz-multi.endpoints"
 
 export const CreateRoomModal = ({
     ...props
@@ -67,7 +67,7 @@ export const CreateRoomModal = ({
         };
 
         try {
-            const response = await fetch("api/quiz/multi/rooms", {
+            const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOM.CREATE, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -89,8 +89,8 @@ export const CreateRoomModal = ({
         }
     };   
     
-    const moveToWaitingRoom = (roomId: number) => {
-        window.location.href= `/quiz/multi/rooms/{roomId}`;
+    const moveToWaitingRoom = (roomId: string) => {
+        window.location.href= QUIZ_MULTI_ENDPOINTS.ROOMS.DETAIL(roomId);
     };
 
 
