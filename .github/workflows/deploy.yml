@@ -22,7 +22,7 @@ jobs:
         run: npm install  # npm으로 의존성 설치
 
       - name: Build project
-        run: npm run build  # npm으로 빌드
+        run: CI=false npm run build  # npm으로 빌드
 
       - name: Deploy to Frontend Server
         uses: appleboy/ssh-action@v0.1.4
