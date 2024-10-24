@@ -1,39 +1,39 @@
-name: Deploy to EC2
+name: Deploy Frontend
 
 on:
   push:
     branches:
-      - main
+      - main  # main 브랜치에 푸시될 때 실행
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Copy files via SSH
-        env:
-          EC2_KEY: ${{ secrets.EC2_KEY }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USER: ${{ secrets.EC2_USER }}
-        run: |
-          echo "$EC2_KEY" > /tmp/id_rsa
-          chmod 600 /tmp/id_rsa
-          scp -i /tmp/id_rsa -o StrictHostKeyChecking=no -r * $EC2_USER@$EC2_HOST:/var/www/your_project/
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # 사용 중인 Node.js 버전
 
-      - name: Install dependencies on EC2 and restart Nginx
-        env:
-          EC2_KEY: ${{ secrets.EC2_KEY }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USER: ${{ secrets.EC2_USER }}
-        run: |
-          echo "$EC2_KEY" > /tmp/id_rsa
-          chmod 600 /tmp/id_rsa
-          ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            cd /var/www/your_project
-            npm install
-            npm run build
-            sudo systemctl restart nginx
-          EOF
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build project
+        run: yarn build
+
+      - name: Deploy to Frontend Server
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.FRONTEND_SERVER_HOST }}  # 프론트 서버 IP
+          username: ${{ secrets.FRONTEND_SERVER_USER }}  # 사용자명
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # SSH 프라이빗 키
+          port: 22
+          script: |
+            cd /path/to/frontend/directory  # 프론트 프로젝트 디렉토리로 이동
+            git pull origin main  # 최신 코드 가져오기
+            yarn install  # 의존성 설치
+            yarn build  # 빌드
+            pm2 restart all  # PM2로 애플리케이션 재시작
