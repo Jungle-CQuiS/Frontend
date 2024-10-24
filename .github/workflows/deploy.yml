@@ -13,10 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install Node.js
-        uses: appleboy/ssh-action@v0.1.4
+      - name: Install Node.js  # Node.js 설치
+        uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '16'  # Node.js 버전 설정
 
       - name: Install dependencies
         run: npm install  # npm으로 의존성 설치
@@ -24,7 +24,7 @@ jobs:
       - name: Build project
         run: CI=false npm run build  # npm으로 빌드
 
-      - name: Deploy to Frontend Server
+      - name: Deploy to Frontend Server  # SSH를 통해 서버로 배포
         uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.FRONTEND_SERVER_HOST }}  # 프론트 서버 IP
@@ -32,8 +32,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}  # SSH 프라이빗 키
           port: 22
           script: |
-            cd /home/ubuntu/frontend
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart all
+            cd /home/ubuntu/frontend  # 프론트엔드 프로젝트 디렉토리로 이동
+            git pull origin main  # 최신 코드 가져오기
+            npm install  # 의존성 설치
+            npm run build  # 빌드
+            pm2 restart all  # PM2로 애플리케이션 재시작
