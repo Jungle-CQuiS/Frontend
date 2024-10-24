@@ -48,5 +48,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
-  }
+  },
+  "proxy": "http://dev.cquis.net"
 }
