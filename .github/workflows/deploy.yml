@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "$EC2_KEY" > /tmp/id_rsa
           chmod 600 /tmp/id_rsa
-          scp -i /tmp/id_rsa -o StrictHostKeyChecking=no -r * $EC2_USER@$EC2_HOST:/var/www/cquis/
+          scp -i /tmp/id_rsa -o StrictHostKeyChecking=no -r * $EC2_USER@$EC2_HOST:/var/www/your_project/
 
       - name: Install dependencies on EC2 and restart Nginx
         env:
@@ -32,7 +32,7 @@ jobs:
           echo "$EC2_KEY" > /tmp/id_rsa
           chmod 600 /tmp/id_rsa
           ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            cd /var/www/cquis
+            cd /var/www/your_project
             npm install
             npm run build
             sudo systemctl restart nginx
