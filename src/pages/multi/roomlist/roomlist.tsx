@@ -69,7 +69,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
         });
     };
 
-    //rooms로 변경해야함. API 받으면
+    
     const filteredRooms = rooms.filter(room =>
         room.name.toLowerCase().includes(searchTerm.toLowerCase())
     );

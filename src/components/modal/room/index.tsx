@@ -1,9 +1,11 @@
 import { useState } from "react"
+import { useNavigate } from 'react-router-dom';
 import { Modal, IModalProps } from ".."
 import { PrimaryButtonMedium, SecondaryButton } from "../../buttons/styled"
 import { ModalTitle, ModalTitleIcon, ModalTitleWrap } from "../styled"
 import { CreateRoomModalRow, CreateRoomModalLabel, CreateRoomModalInput, CreateRoomModalButtonWrap, CreateRoomModalRowContainer, CreateRoomModalNumber, CreateRoomModalNumberInfo, CreateRoomModalNumberInfoImg, CreateRoomModalNumberInfoText, CreateRoomModalPasswordCheckbox, CreateRoomModalPasswordInput, CreateRoomModalPasswordRow, CreateRoomModalPasswordWrap, CreateRoomModalText, CreateRoomModalNumberWrap, CreateRoomModalBodyWrap } from "./styled"
 import { QUIZ_MULTI_ENDPOINTS } from "../../../config/api/endpoints/quiz-multi.endpoints"
+import { UseWebSocket } from "../../../hook/useWebSocket"
 
 export const CreateRoomModal = ({
     ...props
@@ -11,6 +13,9 @@ export const CreateRoomModal = ({
     const [value, setValue] = useState(4);
     const [isPasswordChecked, setIsPasswordChecked] = useState(false);
     const [isNoPasswordChecked, setIsNoPasswordChecked] = useState(true);
+    const [roomId, setRoomId] = useState<string>('');
+    const {enterRoom} = UseWebSocket(roomId);
+    const navigate = useNavigate();
 
     const handleNoPasswordCheckbox = () => {
         setIsNoPasswordChecked(true);
@@ -32,7 +37,8 @@ export const CreateRoomModal = ({
         const roomName = (document.getElementById("roomName") as HTMLInputElement).value;
         const roomPassword = (document.getElementById("password") as HTMLInputElement).value;
         const participants = Number((document.getElementById("participants") as HTMLInputElement).value);
-
+        
+       
         if(!roomName){
             alert("방 이름을 입력하지 않았습니다. 입력해주세요.");
             return;
@@ -81,18 +87,21 @@ export const CreateRoomModal = ({
 
             const responseData = await response.json();
             console.log("성공");
-            moveToWaitingRoom(responseData.roomId);
+           
+            setRoomId(responseData.roomId);
+            enterRoom();
+            window.location.href= QUIZ_MULTI_ENDPOINTS.ROOMS.JOIN(responseData.roomId);
+
+            // navigate 사용
+            navigate(QUIZ_MULTI_ENDPOINTS.ROOMS.JOIN(responseData.roomId), {
+                state: { roomId: responseData.roomId }
+            });
         }
         catch (error){
             console.error("방 생성 에러", error);
             alert("방을 생성하지 못했습니다. 잠시후 다시 시도해주세요.")
         }
     };   
-    
-    const moveToWaitingRoom = (roomId: string) => {
-        window.location.href= QUIZ_MULTI_ENDPOINTS.ROOMS.DETAIL(roomId);
-    };
-
 
     return(
         <Modal {...props} >

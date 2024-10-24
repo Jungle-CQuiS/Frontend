@@ -3,7 +3,7 @@ import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
-import { useWebSocket } from '../../../hook/useWebSocket';
+import { UseWebSocket } from '../../../hook/useWebSocket';
 import { RoomTeamContainer } from './styled';
 
 const testOneUsers = [
@@ -36,7 +36,7 @@ export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
   //web socket 관련 비활성화 시켜놓음.
-  //const { isLoading, error, stompClient,teamOneUsers,teamTwoUsers} = useWebSocket(roomId);
+  const { isLoading, error, stompClient,teamOneUsers,teamTwoUsers} = UseWebSocket(roomId);
   
   const handleTeamClick = (clickedTeam: string) => {
     /*
@@ -99,8 +99,8 @@ export default function Room() {
     });*/
   }
 
-  /*if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;*/
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <Background>
@@ -108,14 +108,14 @@ export default function Room() {
       <RoomTeamContainer>
         <TeamComponent
           team="1팀"
-          teamUsers={testOneUsers} // 여기 있는 팀이 실시간 통신으로 업데이트 되어야함.
+          teamUsers={teamOneUsers} // 여기 있는 팀이 실시간 통신으로 업데이트 되어야함.
           handleTeamClick={handleTeamClick}
           teamType="blue"
         />
         <img src='/icons/VS.svg' alt='VS' />
         <TeamComponent
           team="2팀"
-          teamUsers={testTwoUsers}
+          teamUsers={teamTwoUsers}
           handleTeamClick={handleTeamClick}
           teamType="red"
         />

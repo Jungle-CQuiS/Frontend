@@ -1,7 +1,7 @@
 import { PrimaryButtonMiddle, SecondaryButtonShort } from "../../../components/buttons/styled";
 import { RoomButtonWrap } from "../../../pages/multi/room/styled";
 import { useUser } from "../../../hook/user";
-import { useWebSocket } from "../../../hook/useWebSocket";
+import { UseWebSocket } from "../../../hook/useWebSocket";
 import { QUIZ_MULTI_ENDPOINTS } from "../../../config/api/endpoints/quiz-multi.endpoints";
 
 interface RoomButtonsProps {
