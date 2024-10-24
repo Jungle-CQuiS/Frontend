@@ -46,7 +46,7 @@ export default function LoginPage() {
       <NavBar />
       <LoginBackground>
         <LoginContainer>
-          <LoginTitle>Log In</LoginTitle>
+          <LoginTitle>테스트!</LoginTitle>
           <LoginWrap>
             <LoginWithGoogle><img src="/icons/google.svg" alt="Google" />구글 계정으로 로그인</LoginWithGoogle>
             <LoginDividerWrap>
