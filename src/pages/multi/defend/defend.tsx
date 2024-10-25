@@ -6,13 +6,14 @@ import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTa
 
 
 export default function DefendPage() {
+    //수비팀 선택
     const [teamId, setTeamId] = useState(2);
     const [isAttackTeam, setIsAttackTeam] = useState(false);
     
     return(
         <Background>
             <TeamHeaderComponent teamId={teamId} isAttackTeam={isAttackTeam} />
-            <WaitingScreen />
+            <WaitingScreen teamId={teamId} />
             <UserTagsComponent teamId={teamId}/>
         </Background>
     )
