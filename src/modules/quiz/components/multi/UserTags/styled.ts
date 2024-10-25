@@ -7,8 +7,8 @@ export const UserTagsContainer = styled.div`
     justify-content: center;
 `;
 
-export const UserTag = styled.div`
-    background: linear-gradient(90deg, #2f69ff 2%, #2f69ff 60%, #2952bc 100%);
+export const UserTag = styled.div<{ teamId: number }>`
+    background: ${({ teamId }) => (teamId ===1 ? "linear-gradient(90deg, #2f69ff 2%, #2f69ff 60%, #2952bc 100%)" : "linear-gradient(90deg, #EE5567 2%, #EE5567 60%, #A82D3B 100%)")};
     color: #fff;
     font-size: 18px;
     font-weight: 600;
@@ -17,7 +17,7 @@ export const UserTag = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-`
+`;
 
 export const UserTagImg = styled.img`
     width: 19px;
