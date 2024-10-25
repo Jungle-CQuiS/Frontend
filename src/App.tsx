@@ -12,6 +12,7 @@ import AttackPage from './pages/multi/attack/attack';
 import DefendPage from './pages/multi/defend/defend';
 import { SolvingPage } from './pages/multi/defend/solving/solving';
 import { SelectAnswerPage } from './pages/multi/defend/select/select';
+import { MultiModeResultPage } from './pages/multi/result/multiResult';
 
 function App() {
   return (
@@ -77,6 +78,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SelectAnswerPage />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/multi/result"
+            element={
+              <ProtectedRoute>
+                <MultiModeResultPage />
               </ProtectedRoute>
             }
           />
