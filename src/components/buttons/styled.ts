@@ -113,4 +113,15 @@ export const SecondaryButtonSmall = styled(ButtonBase)`
   }
 `;
 
+export const BlackButtonSmall = styled(ButtonBase)`
+  color: #fff;
+  font-size: 16px;
+  background-color: #444;
+  padding: 8px 24px;
+  &:hover {
+    background-color: #969696;
+  }
+`;
+
+
 
