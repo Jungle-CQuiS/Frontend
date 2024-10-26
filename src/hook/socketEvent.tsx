@@ -1,5 +1,4 @@
 import { Client } from '@stomp/stompjs';
-import { useState, useEffect, useRef, useCallback } from "react";
 import { TeamUser } from '../modules/room/components/TeamUser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 
@@ -14,10 +13,10 @@ export const socketEvents = {
                 (message) => {
                     console.log('Received message:', message);
                     try {
-                        const response = JSON.parse(message.body);
+                        
                         
                         interface ServerUser {
-                            roomUserId: string;
+                            roomUserId: number;  // string이 아닌 number
                             username: string;
                             honorCount: number;
                             role: string;
@@ -26,18 +25,21 @@ export const socketEvents = {
                             isReady: boolean;
                         }
 
+                        const response = JSON.parse(message.body) ;
+
                         console.log(response);
 
                         const teamUsers: TeamUser[] = response.usersData.map((user:ServerUser) => ({
                             id: user.roomUserId ,
                             name: user.username,
                             honor: user.honorCount,
+                            profileImage : "/images/profile_image.png",
                             role: user.role,
                             team: user.team, 
                             isLeader: user.isLeader ? 'leader' : 'member', // bool?
                             state: user.isReady ? 'ready' : 'notready'// bool?
                         }));
-
+                        console.log(teamUsers);
                         updateTeams(teamUsers);
                     } catch (err) {
                         console.error('Error processing message:', err);
@@ -58,7 +60,7 @@ export const socketEvents = {
 
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
-            uuid: "341eb9d5-b8a9-4f35-9489-b13010ea01c8", // 수정 요!
+            uuid: "5e653b6c-865e-4d64-be12-12a355e39958", // 수정 요!
             roomId: roomId,
         };
 

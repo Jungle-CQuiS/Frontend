@@ -23,7 +23,7 @@ import {ReadyText} from "./styled"
 // 공통으로 사용할 타입들을 먼저 정의
 export type UserRole = 'host' | 'guest';
 export type TeamRole = 'leader' | 'member';
-export type TeamType = 'red' | 'blue';
+export type TeamType = 'RED' | 'BLUE';
 export type UserState = 'ready' | 'notready';
 
 // Member 인터페이스 정의
@@ -44,7 +44,7 @@ export interface TeamUserProps {
 }
 
 export const TeamUserComponent = ({ user, onClick, teamType, state }: TeamUserProps) => {
-  const isRedTeam = teamType === 'blue';
+  const isRedTeam = teamType === 'BLUE';
   const isHost = user?.role === 'host'; // null 일수도 있어서 ?로 
   const isLeader = user?.isLeader === 'leader';
   const isReady = state === 'ready';

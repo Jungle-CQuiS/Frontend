@@ -83,9 +83,10 @@ export const CreateRoomModal = ({
             }
 
             const responseData = await response.json();
+            console.log(responseData);
             console.log("성공");
            
-            setRoomId(responseData.roomId);
+            setRoomId(responseData.data.roomId); // 이거 응답 파싱 틀렸을수도있음
      
             // navigate 사용
             navigate(`/room/${roomId}`, {

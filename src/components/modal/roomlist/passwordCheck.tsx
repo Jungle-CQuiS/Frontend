@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal, IModalProps } from ".."
 import { ModalTitle, ModalTitleIcon, ModalTitleWrap } from "../styled"
 import { QUIZ_MULTI_ENDPOINTS } from "../../../config/api/endpoints/quiz-multi.endpoints";
-import { UseWebSocket } from "../../../hook/useWebSocket";
+
 interface PasswordCheckModalProps extends IModalProps {
     roomId: any; // room ID
     roomName: any;

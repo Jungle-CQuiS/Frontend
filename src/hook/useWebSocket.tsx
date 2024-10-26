@@ -1,6 +1,6 @@
 import { Client } from '@stomp/stompjs';
 import { useState, useEffect, useRef, useCallback } from "react";
-import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
+
 
 const CONSTANTS = {
     RECONNECT_DELAY: 5000,

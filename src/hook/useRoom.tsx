@@ -11,6 +11,7 @@ export const useRoom = (roomId: string) => {
 
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
+        console.log('Setting up room subscriptions');
         socketEvents.subscribeToRoom(client, roomId, updateTeams);
     }, [roomId, updateTeams]);
 
@@ -36,7 +37,7 @@ export const useRoom = (roomId: string) => {
 
     const exitRoom = async()=> {
         try{
-            await socketEvents.userExitRoom(stompClient, "2" ,roomId); // 수정 요!
+            await socketEvents.userExitRoom(stompClient, "17" ,roomId); // 수정 요!
         }catch(error){
             console.error('Room exit failed:', error);
             throw error;
@@ -53,6 +54,14 @@ export const useRoom = (roomId: string) => {
         };
     }, []);
 
+    // 디버깅을 위한 상태 변화 감지
+    useEffect(() => {
+        console.log('Team state updated:', {
+            teamOneUsers,
+            teamTwoUsers
+        });
+    }, [teamOneUsers, teamTwoUsers]);
+    
     return {
         teamOneUsers,
         teamTwoUsers,

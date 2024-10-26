@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { TeamUser } from "../modules/room/components/TeamUser";
 
 export const useTeamState = (roomId: string) => {
@@ -6,8 +6,8 @@ export const useTeamState = (roomId: string) => {
     const [teamTwoUsers, setTeamTwoUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
     
     const updateTeams = useCallback((users: TeamUser[]) => {
-        const blueTeamUsers = users.filter(user => user.team === 'blue');
-        const redTeamUsers = users.filter(user => user.team === 'red');
+        const blueTeamUsers = users.filter(user => user.team === 'BLUE');
+        const redTeamUsers = users.filter(user => user.team === 'RED');
 
         setTeamOneUsers([
             ...blueTeamUsers,
