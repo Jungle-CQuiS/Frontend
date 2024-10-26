@@ -60,7 +60,7 @@ export const socketEvents = {
 
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
-            uuid: "5e653b6c-865e-4d64-be12-12a355e39958", // 수정 요!
+            uuid: "8abd487f-6409-4e22-b101-942401c43d0d", // 수정 요!
             roomId: roomId,
         };
 
@@ -97,7 +97,6 @@ export const socketEvents = {
         stompClient: React.RefObject<Client>,
         userId: string,
         roomId: string,
-        status: 'READY' | 'NOT_READY'
     ) => {
         try {
             if (!stompClient.current?.active) {
@@ -106,7 +105,7 @@ export const socketEvents = {
             }
 
             stompClient.current.publish({
-                destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY(roomId),
+                destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY,
                 body: JSON.stringify({
                     "roomUserId": userId,
                     "roomId": roomId,
@@ -123,7 +122,6 @@ export const socketEvents = {
         stompClient: React.RefObject<Client>,
         userId: string,
         roomId: string,
-        team: 'red' | 'blue'
     ) => {
         try {
             if (!stompClient.current?.active) {
@@ -132,7 +130,7 @@ export const socketEvents = {
             }
 
             stompClient.current.publish({
-                destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH(roomId),
+                destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH,
                 body: JSON.stringify({
                     "roomUserId": userId,
                     "roomId": roomId

@@ -1,14 +1,15 @@
 import { Client } from '@stomp/stompjs';
-import { useEffect ,useCallback} from 'react';
+import { useEffect, useCallback } from 'react';
 import { socketEvents } from './socketEvent';
 import { useTeamState } from './useTeamState';
 import { UseWebSocket } from './useWebSocket';
-
+import { useNavigate } from 'react-router-dom';
+import { SERVICES } from '../config/api/constants';
 
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
-
+    const navigate = useNavigate();
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
         console.log('Setting up room subscriptions');
@@ -35,14 +36,25 @@ export const useRoom = (roomId: string) => {
         }
     }, [roomId, isConnected, connect, setupSubscriptions]);
 
-    const exitRoom = async()=> {
-        try{
-            await socketEvents.userExitRoom(stompClient, "17" ,roomId); // 수정 요!
-        }catch(error){
+    const exitRoom = async () => {
+        try {
+            await socketEvents.userExitRoom(stompClient, "13", roomId); // 수정 요!
+        } catch (error) {
             console.error('Room exit failed:', error);
             throw error;
         }
+
+        navigate(SERVICES.MULTI);
     };
+
+    const userReady = async () => {
+        try {
+            await socketEvents.updateUserState(stompClient, "13", roomId); // 수정 요!
+        } catch (error) {
+            console.error('User ready failed:', error);
+            throw error;
+        }
+    }
 
     useEffect(() => {
         enterRoom();
@@ -61,10 +73,11 @@ export const useRoom = (roomId: string) => {
             teamTwoUsers
         });
     }, [teamOneUsers, teamTwoUsers]);
-    
+
     return {
         teamOneUsers,
         teamTwoUsers,
         exitRoom,
+        userReady
     };
 };

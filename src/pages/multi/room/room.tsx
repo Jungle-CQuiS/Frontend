@@ -10,7 +10,7 @@ export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
 
-  const { teamOneUsers, teamTwoUsers , exitRoom} = useRoom(roomId);
+  const { teamOneUsers, teamTwoUsers , userReady , exitRoom} = useRoom(roomId);
 
   
   const handleTeamClick = (clickedTeam: string) => {
@@ -35,7 +35,7 @@ export default function Room() {
         />
 
       </RoomTeamContainer>
-      <RoomButtons roomId={roomId} MultiReadyButton = {exitRoom} MultiExitButton = {exitRoom}/>
+      <RoomButtons roomId={roomId} MultiReadyButton = {userReady} MultiExitButton = {exitRoom}/>
     </Background>
   );
 }
