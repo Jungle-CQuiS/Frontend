@@ -1,10 +1,14 @@
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
 import { UseWebSocket } from '../../../hook/useWebSocket';
 import { RoomTeamContainer } from './styled';
+
+
 
 const testOneUsers = [
   {
@@ -35,9 +39,13 @@ const testTwoUsers = [
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
+
   //web socket 관련 비활성화 시켜놓음.
-  const { isLoading, error, stompClient,teamOneUsers,teamTwoUsers} = UseWebSocket(roomId);
-  
+  const {
+    teamOneUsers,
+    teamTwoUsers,
+  } = UseWebSocket(roomId, true);  // 자동연결 비활성화
+
   const handleTeamClick = (clickedTeam: string) => {
     /*
     const userUuid = localStorage.getItem('userUuid');
@@ -79,16 +87,6 @@ export default function Room() {
       return;
     }
 
-    // 팀 인원 균형 체크 (선택적)
-    const currentTeamUsers = currentUser.team === 'blue' ? teamOneUsers : teamTwoUsers;
-    const currentTeamCount = currentTeamUsers.filter(user => user !== null).length;
-    const targetTeamCount = targetTeamUsers.filter(user => user !== null).length;
-
-    if (currentTeamCount - 1 < targetTeamCount) {
-      alert('팀 인원 균형을 위해 팀을 변경할 수 없습니다.');
-      return;
-    }
-
     // 모든 조건을 만족하면 팀 변경 요청
     stompClient.current.publish({
       destination: '/app/room/changeTeam',
@@ -98,9 +96,6 @@ export default function Room() {
       })
     });*/
   }
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <Background>
@@ -121,7 +116,7 @@ export default function Room() {
         />
 
       </RoomTeamContainer>
-      <RoomButtons roomId = {roomId} />
+      <RoomButtons roomId={roomId} />
     </Background>
   );
 }

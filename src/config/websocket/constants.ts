@@ -3,7 +3,7 @@ export const SOCKET_DESTINATIONS = {
         ROOMS: {
             // 구독할 토픽
             SUBSCRIBE: {
-                ROOM_INFO: (roomId: string) => `/topic/rooms/${roomId}`,
+                ROOM_INFO: (roomId: string) => `/topic/rooms/${roomId}/info`,
                 USER_ENTER: (roomId: string) => `/topic/rooms/${roomId}/enter`
             },
 

@@ -3,9 +3,29 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { TeamUser } from '../modules/room/components/TeamUser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 
-export const UseWebSocket = (roomId: string) => {
-    const stompClient = useRef<Client | null>(null);
+interface RoomMessage {
+    roomUserId: string;
+    roomId: string;
+}
 
+interface TeamChangeMessage extends RoomMessage {
+    team: 'red' | 'blue';
+}
+
+interface StatusMessage extends RoomMessage {
+    status: 'READY' | 'NOT_READY';
+}
+
+const CONSTANTS = {
+    RECONNECT_DELAY: 5000,
+    HEARTBEAT_INCOMING: 0,// 타임아웃 비활성화
+    HEARTBEAT_OUTGOING: 0,// 타임아웃 비활성화
+    MAX_TEAM_SIZE: 5
+} as const;
+
+export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
+    const stompClient = useRef<Client | null>(null);
+    const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -13,62 +33,160 @@ export const UseWebSocket = (roomId: string) => {
     const [teamOneUsers, setTeamOneUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
     const [teamTwoUsers, setTeamTwoUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
 
-    // STOMP 클라이언트 설정 함수
+ 
+    // 기본 STOMP 클라이언트 설정
     const setupStompClient = useCallback(() => {
-        const client = new Client({
-            brokerURL: 'ws://localhost:3000/ws',
+        return new Client({
+            brokerURL: 'ws://dev.cquis.net:8080/ws',
             connectHeaders: {
-                roomId: 'rommId',
-                userId: 'userId',
+                roomId: roomId,
             },
-            onConnect: () => { // Subscribe
-                console.log('Connected to WebSocket');
-                setIsLoading(false);
-                subscribeToRoom(client); //구독 함수 구현( 연결되면 실행된다 )
-                requestInitialRoomInfo(client);
+            debug: (str) => {
+                console.log('STOMP Debug:', str);
             },
+            // onConnect는 connect 함수에서 설정하므로 여기서는 제거
             onDisconnect: () => {
                 console.log('Disconnected from WebSocket');
+                setIsConnected(false)
             },
             onStompError: (error) => {
                 console.error('WebSocket Error:', error);
                 setError('Failed to connect to the game server');
                 setIsLoading(false);
             },
-
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
+            reconnectDelay: CONSTANTS.RECONNECT_DELAY,
+            heartbeatIncoming: CONSTANTS.HEARTBEAT_INCOMING,
+            heartbeatOutgoing: CONSTANTS.HEARTBEAT_OUTGOING,
         });
+    }, [roomId]);
 
-        return client;
+    const handleConnect = useCallback((client: Client) => {
+        console.log('Connected to WebSocket');
+        setIsLoading(false);
+        setIsConnected(true);
+
+        // 구독 설정
+        subscribeToRoom(client);
     }, []);
 
-    // 방 구독 함수
-    const subscribeToRoom = (client: Client) => {
-        client.subscribe(SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId), (message) => {
-            try {
-                const response = JSON.parse(message.body);
-                updateTeams(response.users);
-            } catch (err) {
-                console.error('Error processing message:', err);
+    // 연결 로직 
+    const connect = useCallback(() => {
+        return new Promise<void>((resolve, reject) => {
+            if (stompClient.current?.active && isConnected) {
+                console.log('Already connected');
+                resolve();
+                return;
             }
+
+            try {
+                const client = setupStompClient();
+
+                // 연결 되면 할 것.
+                client.onConnect = () => {
+                    console.log('Connection successful');
+
+                    handleConnect(client);
+                    stompClient.current = client;
+                    setIsConnected(true);
+                    resolve();
+                };
+
+                // 에러 핸들러 추가
+                client.onStompError = (error) => {
+
+                    reject(error);
+                };
+
+                client.onWebSocketError = (event) => {
+
+                    reject(new Error('WebSocket connection failed'));
+                };
+
+                console.log('Activating client');
+                stompClient.current = client;
+                client.activate();  // 여기서 activate 호출해야 함
+
+            } catch (error) {
+                console.error('Connection setup error:', error);
+                reject(error);
+            }
+        });
+    }, [setupStompClient, handleConnect]);
+
+    // 입장 메시지 전송 함수 - 유저가 입장 함을 알림
+    const sendJoinMessage = () => {
+        if (!stompClient.current?.active) {
+            throw new Error('No active connection');
+        }
+
+        const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
+        const message = {
+            uuid: "92a46f49-34fa-4c37-bf3f-09389468042a",
+            roomId: roomId,
+        };
+
+        console.log('Sending message:', {
+            destination,
+            message
+        });
+
+        stompClient.current.publish({
+            destination,
+            body: JSON.stringify(message)
         });
     };
 
-    // 0. 방 입장하기
-    const enterRoom = () => {
-        if (!stompClient.current?.active) {
-            console.error('STOMP connection is not active');
-            return;
+    // 방 구독 함수 -> 방 업데이트 구독중!
+    const subscribeToRoom = (client: Client) => {
+        try {
+            console.log('Attempting to subscribe to room:', roomId);
+            const subscription = client.subscribe(
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId),
+                (message) => {
+                    console.log('Received message:', message);  // 메시지 수신 로그
+                    try {
+                        const response = JSON.parse(message.body);
+                        updateTeams(response.data.usersData);
+                    } catch (err) {
+                        console.error('Error processing message:', err);
+                        setError('Failed to process room update');
+                    }
+                }
+            );
+            console.log('Subscription successful:', subscription);  // 구독 성공 로그
+        } catch (err) {
+            console.error('Subscription error:', err);
+            setError('Failed to subscribe room update');
         }
-        stompClient.current.publish({
-            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN,
-            body : JSON.stringify({
-                "uuid": "admin2",
-                "roomId": roomId,
-            })
-        })
+    };
+
+    // 소켓 이벤트 함수
+    // 0. 방 입장하기
+    const enterRoomSocketEvent = async () => {
+        try {
+            console.log('Starting room entry process');
+
+            // 연결 상태 체크 - 
+            if (!stompClient.current?.active || !isConnected) {
+                console.log('No active connection, connecting...');
+                await connect();
+            }
+
+            console.log('Connection status:', {
+                clientExists: !!stompClient.current,
+                isActive: stompClient.current?.active,
+                isConnected
+            });
+
+            // 입장 메시지 전송
+            console.log('Sending join message');
+            sendJoinMessage();
+            console.log('Join message sent successfully');
+
+        } catch (error) {
+            console.error('Enter room error:', error);
+            throw error;
+        }
     };
 
     // 1. 방의 정보 가져오기
@@ -100,40 +218,47 @@ export const UseWebSocket = (roomId: string) => {
 
     // 2. 준비하기
     const updateUserStatus = (userId: string, status: 'READY' | 'NOT_READY') => {
-        if (!stompClient.current?.active) return;
+        if (!stompClient.current?.active || !isConnected) {
+            console.error('STOMP connection is not active');
+            return;
+        }
 
         stompClient.current.publish({
-            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY(roomId), 
+            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY(roomId),
             body: JSON.stringify({
-                roomId,
-                userId,
-                status
+                "roomUserId": userId,
+                "roomId": roomId,
             })
         });
     };
 
     // 3. 팀 바꾸기
     const changeUserTeam = (userId: string, team: 'red' | 'blue') => {
-        if (!stompClient.current?.active) return;
+        if (!stompClient.current?.active || !isConnected) {
+            console.error('STOMP connection is not active');
+            return;
+        }
 
         stompClient.current.publish({
-            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH(roomId), 
+            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH(roomId),
             body: JSON.stringify({
-                roomId,
-                userId,
-                team
+                "roomUserId": userId,
+                "roomId": roomId
             })
         });
     }
     // 4. 방 나가기
-    const userExitRoom = (userId : string, roomId: string) => {
-        if (!stompClient.current?.active) return;
+    const userExitRoom = (userId: string, roomId: string) => {
+        if (!stompClient.current?.active || !isConnected) {
+            console.error('STOMP connection is not active');
+            return;
+        }
 
         stompClient.current.publish({
-            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.EXIT(roomId), 
+            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.EXIT(roomId),
             body: JSON.stringify({
-                roomId,
-                userId,
+                "roomUserId": userId,
+                "roomId": roomId,
             })
         });
     }
@@ -145,20 +270,22 @@ export const UseWebSocket = (roomId: string) => {
 
     // 7. 리더 위임하기(리더 권한)
 
+    // 초기 자동 연결
     useEffect(() => {
-        const client = setupStompClient(); // client 생성
-        client.activate(); // client 활성화.
-        stompClient.current = client;
+        if (!autoConnect) return;
+        enterRoomSocketEvent();
 
-        return () => { // clean up
-            if (client.active) {
-                client.deactivate();
+        return () => {
+            if (stompClient.current?.active) {
+                stompClient.current.deactivate();
             }
         };
-    }, [roomId, setupStompClient]); //다른 방으로 이동할 때 실행!
+    }, [autoConnect, connect]);
 
-    return { isLoading, error, stompClient, teamOneUsers, teamTwoUsers, 
-        enterRoom, updateUserStatus, changeUserTeam ,userExitRoom};
+    return {
+        isConnected, isLoading, error, stompClient, teamOneUsers, teamTwoUsers,
+        enterRoom: enterRoomSocketEvent, updateUserStatus, changeUserTeam, userExitRoom
+    };
 };
 
 

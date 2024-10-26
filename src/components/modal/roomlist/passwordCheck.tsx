@@ -4,7 +4,6 @@ import { Modal, IModalProps } from ".."
 import { ModalTitle, ModalTitleIcon, ModalTitleWrap } from "../styled"
 import { QUIZ_MULTI_ENDPOINTS } from "../../../config/api/endpoints/quiz-multi.endpoints";
 import { UseWebSocket } from "../../../hook/useWebSocket";
-
 interface PasswordCheckModalProps extends IModalProps {
     roomId: any; // room ID
     roomName: any;
@@ -19,7 +18,6 @@ export const PasswordCheckModal = ({
 }: PasswordCheckModalProps) => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const {enterRoom} = UseWebSocket(roomId);
 
     const checkRoomPasswordValid = async () => {
         try {
@@ -40,20 +38,18 @@ export const PasswordCheckModal = ({
                 throw new Error("비밀번호 확인이 실패했습니다.");
             }
 
-            if(data.data.isCorrect === 0) {
-                alert("비밀번호가 일치하지 않습니다.");
-                return;
+            if (!data.data.isCorrect) {
+                throw new Error("비밀번호가 일치하지 않습니다.");
             }
 
             //로그인 성공시
             onDone(); // 모달 닫힘
 
-            enterRoom(); // Socket 유저 입장 알림.
             // 해당 room으로 이동
             navigate(`/room/${roomId}`, {
                 state: {
                     roomId,  // roomId도 state에 포함
-                    roomName
+                    roomName,
                 }
             });
 
