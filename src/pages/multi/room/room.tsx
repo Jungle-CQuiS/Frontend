@@ -6,39 +6,11 @@ import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
 
-
-const testOneUsers = [
-  {
-    id: 1, name: "흑화해버린담곰", honor: 54, profileImage: "/images/profile_image.png",
-
-    role: "host", isLeader: 'member', team: "blue"
-  },
-  {
-    id: 2, name: "톱들고다니는담곰", honor: 67, profileImage: "/images/profile_image.png",
-    role: "guest", isLeader: 'leader', team: "blue"
-
-  }, null, null, null,
-]
-
-const testTwoUsers = [
-  {
-    id: 3, name: "현우오빠가데려온악마담곰", honor: 54, profileImage: "/images/profile_image.png",
-
-    role: "guest", isLeader: 'leader', team: "red"
-  },
-  {
-    id: 4, name: "머리만있는담곰", honor: 67, profileImage: "/images/profile_image.png",
-    role: "guest", isLeader: 'member', team: "red"
-
-  }, null, null, null,
-]
-
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
 
-  //web socket 관련 비활성화 시켜놓음.
-  const { teamOneUsers, teamTwoUsers } = useRoom(roomId);
+  const { teamOneUsers, teamTwoUsers , exitRoom} = useRoom(roomId);
 
   const handleTeamClick = (clickedTeam: string) => {
     /*
@@ -110,7 +82,7 @@ export default function Room() {
         />
 
       </RoomTeamContainer>
-      <RoomButtons roomId={roomId} />
+      <RoomButtons roomId={roomId} MultiReadyButton = {exitRoom} MultiExitButton = {exitRoom}/>
     </Background>
   );
 }

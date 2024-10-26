@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { TeamUser } from "../modules/room/components/TeamUser";
-import { UseWebSocket } from "./useWebSocket";
-import { socketEvents } from "./socketEvent";
+
 export const useTeamState = (roomId: string) => {
     const [teamOneUsers, setTeamOneUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
     const [teamTwoUsers, setTeamTwoUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));

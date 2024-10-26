@@ -29,6 +29,7 @@ export type UserState = 'ready' | 'notready';
 // Member 인터페이스 정의
 export interface TeamUser extends User {
   role: UserRole;
+  honor : number;
   isLeader: TeamRole;
   team: TeamType;
   state: UserState;

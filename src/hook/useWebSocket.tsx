@@ -1,12 +1,6 @@
 import { Client } from '@stomp/stompjs';
 import { useState, useEffect, useRef, useCallback } from "react";
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
-import { socketEvents } from './socketEvent';
-
-interface RoomMessage {
-    roomUserId: string;
-    roomId: string;
-}
 
 const CONSTANTS = {
     RECONNECT_DELAY: 5000,
@@ -53,8 +47,6 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
         setIsLoading(false);
         setIsConnected(true);
 
-        // 구독 설정
-        //socketEvents.subscribeToRoom(client, roomId, updateTeams);
     }, []);
 
     // 연결 로직 
@@ -101,60 +93,6 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
         });
     }, [setupStompClient, handleConnect]);
 
-    // 소켓 이벤트 함수
-    // 2. 준비하기
-    const updateUserStatus = (userId: string, status: 'READY' | 'NOT_READY') => {
-        if (!stompClient.current?.active || !isConnected) {
-            console.error('STOMP connection is not active');
-            return;
-        }
-
-        stompClient.current.publish({
-            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY(roomId),
-            body: JSON.stringify({
-                "roomUserId": userId,
-                "roomId": roomId,
-            })
-        });
-    };
-
-    // 3. 팀 바꾸기
-    const changeUserTeam = (userId: string, team: 'red' | 'blue') => {
-        if (!stompClient.current?.active || !isConnected) {
-            console.error('STOMP connection is not active');
-            return;
-        }
-
-        stompClient.current.publish({
-            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH(roomId),
-            body: JSON.stringify({
-                "roomUserId": userId,
-                "roomId": roomId
-            })
-        });
-    }
-    // 4. 방 나가기
-    const userExitRoom = (userId: string, roomId: string) => {
-        if (!stompClient.current?.active || !isConnected) {
-            console.error('STOMP connection is not active');
-            return;
-        }
-
-        stompClient.current.publish({
-            destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.EXIT(roomId),
-            body: JSON.stringify({
-                "roomUserId": userId,
-                "roomId": roomId,
-            })
-        });
-    }
-
-    // 5. 유저 강퇴하기(방장 권한)
-    // 함수 이름 뭐지을지 모르겠어서 나중에 함수 적겠음 ㅋㅋ
-
-    // 6. 방장 위임하기(방장 권한)
-
-    // 7. 리더 위임하기(리더 권한)
 
     // 초기 자동 연결
     useEffect(() => {
@@ -169,7 +107,7 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
 
     return {
         isConnected, isLoading, error, stompClient,
-        connect, updateUserStatus, changeUserTeam, userExitRoom
+        connect
     };
 };
 
