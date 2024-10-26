@@ -6,8 +6,8 @@ const quizMultiEndpoints = new EndpointCreator(SERVICES.QUIZ.MULTI);
 export const QUIZ_MULTI_ENDPOINTS = {
     ROOMS: {
         LIST: quizMultiEndpoints.create('/rooms'), //GET
-        JOIN: quizMultiEndpoints.create('/rooms/join'), //POST
-        DETAIL: (roomId: string) => quizMultiEndpoints.createWithParams('/rooms/:roomId', { roomId }), //GET
+        PWCHECK: quizMultiEndpoints.create('/rooms/check'), //POST
+        JOIN: (roomId: string) => quizMultiEndpoints.createWithParams('/rooms/:roomId', { roomId }), //GET
         CREATE: quizMultiEndpoints.create('/rooms/create') //POST
     },
     ROOM:{

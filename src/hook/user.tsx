@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export interface User {
     id: number;
@@ -26,12 +26,3 @@ export const useUser = () => {
 
     return { user, login , logout };
 };
-
-// 사용 예시
-function Component() {
-    const { user, login, logout } = useUser();
-
-    if (!user) return <div>로그인이 필요합니다 </div>;
-
-    return <div>안녕하세요, { user.name }님! </div>;
-}
