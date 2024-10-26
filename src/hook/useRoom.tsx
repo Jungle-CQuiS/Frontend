@@ -34,6 +34,15 @@ export const useRoom = (roomId: string) => {
         }
     }, [roomId, isConnected, connect, setupSubscriptions]);
 
+    const exitRoom = async()=> {
+        try{
+            await socketEvents.userExitRoom(stompClient, "2" ,roomId); // 수정 요!
+        }catch(error){
+            console.error('Room exit failed:', error);
+            throw error;
+        }
+    };
+
     useEffect(() => {
         enterRoom();
 
@@ -47,5 +56,6 @@ export const useRoom = (roomId: string) => {
     return {
         teamOneUsers,
         teamTwoUsers,
+        exitRoom,
     };
 };

@@ -14,7 +14,7 @@ export const SOCKET_DESTINATIONS = {
             // 서버에 보낼 메시지 (액션)
             SEND: {
                 READY: (roomId: string) => `/app/rooms/${roomId}/ready`,
-                EXIT: (roomId: string) => `/app/rooms/${roomId}/exit`,
+                EXIT: `/app/rooms/exit`,
                 JOIN: `/app/rooms/join`,
                 TEAMSWITCH: (roomId: string) => `/app/rooms/${roomId}/team-switch`
             }

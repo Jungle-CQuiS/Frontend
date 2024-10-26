@@ -87,11 +87,9 @@ export const CreateRoomModal = ({
            
             setRoomId(responseData.roomId);
      
-            window.location.href= QUIZ_MULTI_ENDPOINTS.ROOMS.JOIN(responseData.roomId);
-
             // navigate 사용
-            navigate(QUIZ_MULTI_ENDPOINTS.ROOMS.JOIN(responseData.roomId), {
-                state: { roomId: responseData.roomId }
+            navigate(`/room/${roomId}`, {
+                state: { roomId: roomId, roomName : roomName}
             });
         }
         catch (error){
