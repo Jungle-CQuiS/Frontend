@@ -1,13 +1,10 @@
 import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
-import { UseWebSocket } from '../../../hook/useWebSocket';
 import { RoomTeamContainer } from './styled';
-
+import { useRoom } from '../../../hook/useRoom';
 
 
 const testOneUsers = [
@@ -41,10 +38,7 @@ export default function Room() {
   const { state } = useLocation();
 
   //web socket 관련 비활성화 시켜놓음.
-  const {
-    teamOneUsers,
-    teamTwoUsers,
-  } = UseWebSocket(roomId, true);  // 자동연결 비활성화
+  const { teamOneUsers, teamTwoUsers } = useRoom(roomId);
 
   const handleTeamClick = (clickedTeam: string) => {
     /*

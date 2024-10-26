@@ -5,7 +5,6 @@ import { PrimaryButtonMedium, SecondaryButton } from "../../buttons/styled"
 import { ModalTitle, ModalTitleIcon, ModalTitleWrap } from "../styled"
 import { CreateRoomModalRow, CreateRoomModalLabel, CreateRoomModalInput, CreateRoomModalButtonWrap, CreateRoomModalRowContainer, CreateRoomModalNumber, CreateRoomModalNumberInfo, CreateRoomModalNumberInfoImg, CreateRoomModalNumberInfoText, CreateRoomModalPasswordCheckbox, CreateRoomModalPasswordInput, CreateRoomModalPasswordRow, CreateRoomModalPasswordWrap, CreateRoomModalText, CreateRoomModalNumberWrap, CreateRoomModalBodyWrap } from "./styled"
 import { QUIZ_MULTI_ENDPOINTS } from "../../../config/api/endpoints/quiz-multi.endpoints"
-import { UseWebSocket } from "../../../hook/useWebSocket"
 
 export const CreateRoomModal = ({
     ...props
@@ -14,7 +13,6 @@ export const CreateRoomModal = ({
     const [isPasswordChecked, setIsPasswordChecked] = useState(false);
     const [isNoPasswordChecked, setIsNoPasswordChecked] = useState(true);
     const [roomId, setRoomId] = useState<string>('');
-    const {enterRoom} = UseWebSocket(roomId);
     const navigate = useNavigate();
 
     const handleNoPasswordCheckbox = () => {
@@ -37,7 +35,6 @@ export const CreateRoomModal = ({
         const roomName = (document.getElementById("roomName") as HTMLInputElement).value;
         const roomPassword = (document.getElementById("password") as HTMLInputElement).value;
         const participants = Number((document.getElementById("participants") as HTMLInputElement).value);
-        
        
         if(!roomName){
             alert("방 이름을 입력하지 않았습니다. 입력해주세요.");
@@ -89,7 +86,7 @@ export const CreateRoomModal = ({
             console.log("성공");
            
             setRoomId(responseData.roomId);
-            enterRoom();
+     
             window.location.href= QUIZ_MULTI_ENDPOINTS.ROOMS.JOIN(responseData.roomId);
 
             // navigate 사용
