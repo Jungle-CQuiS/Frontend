@@ -7,7 +7,6 @@ export const QUIZ_MULTI_ENDPOINTS = {
     ROOMS: {
         LIST: quizMultiEndpoints.create('/rooms'), //GET
         PWCHECK: quizMultiEndpoints.create('/rooms/check'), //POST
-        JOIN: (roomId: number) => `/room/${ roomId }`, //GET
         CREATE: quizMultiEndpoints.create('/rooms/create') //POST
     },
     ROOM: {

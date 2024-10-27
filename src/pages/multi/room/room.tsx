@@ -14,30 +14,6 @@ export default function Room() {
   const { state } = useLocation();
   const { teamOneUsers, teamTwoUsers, userReady, exitRoom, teamSwitch } = useRoom(roomId);
 
-  useEffect(() => {
-    setUserRoomId("14");
-   /* const fetchRoomUserId = async () => {
-      try {
-        // REST API 호출 코드
-        const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOM.JOIN, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            "uuid": "95ba7632-28a2-470d-9464-24c4219e070f",
-          }),
-        });
-        const data = await response.json();
-        setUserRoomId(data.roomUserId);
-      } catch (error) {
-        console.error('Get UserRoomId failed', error);
-        throw error;
-      }
-    };
-
-    fetchRoomUserId();*/
-  }, [roomId]);
 
 
   return (

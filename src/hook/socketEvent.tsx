@@ -12,9 +12,7 @@ export const socketEvents = {
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId),
                 (message) => {
                     console.log('Received message:', message);
-                    try {
-                        
-                        
+                    try {      
                         interface ServerUser {
                             roomUserId: number;  // string이 아닌 number
                             username: string;
@@ -60,7 +58,7 @@ export const socketEvents = {
 
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
-            uuid: "8abd487f-6409-4e22-b101-942401c43d0d", // 수정 요!
+            uuid: "f60680e5-c3d9-42fe-830e-9e8199a0cdb8", // 수정 요!
             roomId: roomId,
         };
 
