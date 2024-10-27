@@ -4,6 +4,7 @@ import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 
 
 export const socketEvents = {
+    // SUBSCRIBE ------------------------------------------------------------------------------------
     // 방 정보 구독 함수
     subscribeToRoom: (client: Client, roomId: string, updateTeams: (users: TeamUser[]) => void) => {
         try {
@@ -12,7 +13,7 @@ export const socketEvents = {
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId),
                 (message) => {
                     console.log('Received message:', message);
-                    try {      
+                    try {
                         interface ServerUser {
                             roomUserId: number;  // string이 아닌 number
                             username: string;
@@ -23,20 +24,21 @@ export const socketEvents = {
                             isReady: boolean;
                         }
 
-                        const response = JSON.parse(message.body) ;
+                        const response = JSON.parse(message.body);
 
                         console.log(response);
 
-                        const teamUsers: TeamUser[] = response.usersData.map((user:ServerUser) => ({
-                            id: user.roomUserId ,
+                        const teamUsers: TeamUser[] = response.usersData.map((user: ServerUser) => ({
+                            id: user.roomUserId,
                             name: user.username,
                             honor: user.honorCount,
-                            profileImage : "/images/profile_image.png",
+                            profileImage: "/images/profile_image.png",
                             role: user.role,
-                            team: user.team, 
+                            team: user.team,
                             isLeader: user.isLeader ? 'leader' : 'member', // bool?
                             state: user.isReady ? 'ready' : 'notready'// bool?
                         }));
+
                         console.log(teamUsers);
                         updateTeams(teamUsers);
                     } catch (err) {
@@ -50,6 +52,34 @@ export const socketEvents = {
         }
     },
 
+    // 유저 roomUserId 구독 함수
+    subscribeRoomUserId: (client: Client, uuid: string, setRoomUserID : (roomUid: string) => void) => {
+        try {
+            console.log('Attempting to subscribe to roomUserId:', uuid);
+            const subscription = client.subscribe(
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.USER_JOIN,
+                (message) => {
+                    console.log('Received message:', message);
+                    try {
+                        const response = JSON.parse(message.body);
+                        setRoomUserID(response.data.roomUserId);
+                        console.log(response);
+                    } catch (err) {
+                        console.error('Error processing message:', err);
+                    }
+                },
+                {
+                    'uuid': uuid // 헤더에 uuid 포함
+                });
+            console.log('Subscription successful:', subscription);
+        } catch (err) {
+            console.error('Subscription error:', err);
+        }
+    },
+
+    // ----------------------------------------------------------------------------------------------
+
+    // APP ( room enter )---------------------------------------------------------------------------
     // 유저 방 입장 알림 함수
     sendJoinMessage: (client: Client, roomId: string) => {
         if (!client.active) {
@@ -58,7 +88,7 @@ export const socketEvents = {
 
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
-            uuid: "f60680e5-c3d9-42fe-830e-9e8199a0cdb8", // 수정 요!
+            uuid: "bd79f530-ea82-4487-bd3a-9240e517e39a", // 수정 요!
             roomId: roomId,
         };
 
@@ -73,7 +103,7 @@ export const socketEvents = {
         });
     },
 
-    // 유저 방 입장 알림 함수
+    // 유저 방 입장 함수
     enterRoom: async (
         stompClient: React.RefObject<Client>,
         roomId: string,
@@ -89,11 +119,13 @@ export const socketEvents = {
             throw error;
         }
     },
+    //-----------------------------------------------------------------------------------------------
 
+    // APP ( state change )--------------------------------------------------------------------------
     // todo : 유저 준비 상태 변경 함수
     updateUserState: async (
         stompClient: React.RefObject<Client>,
-        userId: string,
+        roomUserId: string,
         roomId: string,
     ) => {
         try {
@@ -105,7 +137,7 @@ export const socketEvents = {
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY,
                 body: JSON.stringify({
-                    "roomUserId": userId,
+                    "roomUserId": roomUserId,
                     "roomId": roomId,
                 })
             });
@@ -114,11 +146,13 @@ export const socketEvents = {
             throw error;
         }
     },
+    // -----------------------------------------------------------------------------------------------
 
+    // APP ( action ) --------------------------------------------------------------------------------
     // todo : 유저 팀 변경 함수
     changeUserTeam: async (
         stompClient: React.RefObject<Client>,
-        userId: string,
+        roomUserId: string,
         roomId: string,
     ) => {
         try {
@@ -130,7 +164,7 @@ export const socketEvents = {
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH,
                 body: JSON.stringify({
-                    "roomUserId": userId,
+                    "roomUserId": roomUserId,
                     "roomId": roomId
                 })
             });
@@ -143,7 +177,7 @@ export const socketEvents = {
     // todo : 유저 방 나가기 함수.
     userExitRoom: async (
         stompClient: React.RefObject<Client>,
-        userId: string,
+        roomUserId: string,
         roomId: string
     ) => {
         try {
@@ -155,7 +189,7 @@ export const socketEvents = {
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.EXIT,
                 body: JSON.stringify({
-                    "roomUserId": userId,
+                    "roomUserId": roomUserId,
                     "roomId": roomId,
                 })
             });
@@ -165,7 +199,7 @@ export const socketEvents = {
         }
     }
 
-    
+
     // todo : 유저 강퇴하기(방장 권한)
 
     // todo : 방장 위임하기(방장 권한)

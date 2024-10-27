@@ -6,13 +6,11 @@ import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
-import { QUIZ_MULTI_ENDPOINTS } from '../../../config/api/endpoints/quiz-multi.endpoints';
 
 export default function Room() {
-  const [userRoomID, setUserRoomId] = useState('');
   const { roomId } = useLocation().state;
   const { state } = useLocation();
-  const { teamOneUsers, teamTwoUsers, userReady, exitRoom, teamSwitch } = useRoom(roomId);
+  const { roomUserId, teamOneUsers, teamTwoUsers, userReady, exitRoom, teamSwitch } = useRoom(roomId);
 
 
 
@@ -35,7 +33,7 @@ export default function Room() {
         />
 
       </RoomTeamContainer>
-      <RoomButtons userRoomId={userRoomID} MultiReadyButton={userReady} MultiExitButton={exitRoom} />
+      <RoomButtons userRoomId={roomUserId} MultiReadyButton={userReady} MultiExitButton={exitRoom} />
     </Background>
   );
 }

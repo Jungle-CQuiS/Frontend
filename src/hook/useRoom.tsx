@@ -1,21 +1,28 @@
 import { Client } from '@stomp/stompjs';
-import { useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { socketEvents } from './socketEvent';
 import { useTeamState } from './useTeamState';
 import { UseWebSocket } from './useWebSocket';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
+import { useRoomUerId } from './useRoomUserId';
 
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
+    const [isEntry, setIsEntry] = useState(false);
+    const { roomUserId, initRoomUserID } = useRoomUerId();
 
     const navigate = useNavigate();
 
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
         console.log('Setting up room subscriptions');
+        socketEvents.subscribeRoomUserId(client, "bd79f530-ea82-4487-bd3a-9240e517e39a", initRoomUserID);
+
         socketEvents.subscribeToRoom(client, roomId, updateTeams);
+
+
     }, [roomId, updateTeams]);
 
     // 입장 로직
@@ -71,14 +78,16 @@ export const useRoom = (roomId: string) => {
     };
 
     useEffect(() => {
+
         enterRoom(); // Active Socket Protocol 
+
 
         return () => {
             if (stompClient.current?.active) {
                 stompClient.current.deactivate();
             }
         };
-    }, []);
+    }, [roomId]);
 
     // 디버깅을 위한 상태 변화 감지
     useEffect(() => {
@@ -89,6 +98,7 @@ export const useRoom = (roomId: string) => {
     }, [teamOneUsers, teamTwoUsers]);
 
     return {
+        roomUserId,
         teamOneUsers,
         teamTwoUsers,
         exitRoom,
