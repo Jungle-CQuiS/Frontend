@@ -1,21 +1,45 @@
 import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
+import { QUIZ_MULTI_ENDPOINTS } from '../../../config/api/endpoints/quiz-multi.endpoints';
 
 export default function Room() {
+  const [userRoomID, setUserRoomId] = useState('');
   const { roomId } = useLocation().state;
   const { state } = useLocation();
+  const { teamOneUsers, teamTwoUsers, userReady, exitRoom, teamSwitch } = useRoom(roomId);
 
-  const { teamOneUsers, teamTwoUsers , userReady , exitRoom} = useRoom(roomId);
+  useEffect(() => {
+    setUserRoomId("14");
+   /* const fetchRoomUserId = async () => {
+      try {
+        // REST API 호출 코드
+        const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOM.JOIN, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            "uuid": "95ba7632-28a2-470d-9464-24c4219e070f",
+          }),
+        });
+        const data = await response.json();
+        setUserRoomId(data.roomUserId);
+      } catch (error) {
+        console.error('Get UserRoomId failed', error);
+        throw error;
+      }
+    };
 
-  
-  const handleTeamClick = (clickedTeam: string) => {
+    fetchRoomUserId();*/
+  }, [roomId]);
 
-  }
+
   return (
     <Background>
       <RoomTitleComponent roomName={state?.roomName} />
@@ -23,19 +47,19 @@ export default function Room() {
         <TeamComponent
           team="1팀"
           teamUsers={teamOneUsers} // 여기 있는 팀이 실시간 통신으로 업데이트 되어야함.
-          handleTeamClick={handleTeamClick}
+          handleTeamClick={teamSwitch}
           teamType="blue"
         />
         <img src='/icons/VS.svg' alt='VS' />
         <TeamComponent
           team="2팀"
           teamUsers={teamTwoUsers}
-          handleTeamClick={handleTeamClick}
+          handleTeamClick={teamSwitch}
           teamType="red"
         />
 
       </RoomTeamContainer>
-      <RoomButtons roomId={roomId} MultiReadyButton = {userReady} MultiExitButton = {exitRoom}/>
+      <RoomButtons userRoomId={userRoomID} MultiReadyButton={userReady} MultiExitButton={exitRoom} />
     </Background>
   );
 }
