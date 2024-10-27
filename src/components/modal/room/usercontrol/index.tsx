@@ -21,7 +21,13 @@ export const UserControlInRoom = ({
 
   const handleTeamLeaderDelegation = () => {
     // 팀장 위임 로직 추가
-    // socketEvents.handOver(stompClient, userId, user.roomUserId, roomId); //stompClient랑 roomId 받아오는 부분 추가 요망..
+    // socketEvents.handOverLeader(stompClient, userId, user.roomUserId, roomId); //stompClient랑 roomId 받아오는 부분 추가 요망..
+    console.log('팀장 위임하기');
+  };
+
+  const handleRoomHostDelegation = () => {
+    // 방장 위임 로직 추가
+    // socketEvents.handOverHost(stompClient, userId, user.roomUserId, roomId); //stompClient랑 roomId 받아오는 부분 추가 요망..
     console.log('팀장 위임하기');
   };
 
