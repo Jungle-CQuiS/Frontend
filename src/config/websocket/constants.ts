@@ -16,7 +16,10 @@ export const SOCKET_DESTINATIONS = {
                 READY: `/app/rooms/ready`,
                 EXIT: `/app/rooms/exit`,
                 JOIN: `/app/rooms/join`,
-                TEAMSWITCH: `/app/rooms/team-switch`
+                TEAMSWITCH: `/app/rooms/team-switch`,
+                KICK: `/app/rooms/kick`,
+                YIELDLEADER: `/app/rooms/yield-host`,
+                YIELDHOST: `/app/rooms/yield-host`
             }
         }
     }
