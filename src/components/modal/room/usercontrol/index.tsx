@@ -1,6 +1,8 @@
 import { Modal, IModalProps } from "../..";
 import { UserControlWrap, UserControlBtn, UserControlKickBtn } from "./styled";
 import { useState } from "react";
+import { UseWebSocket } from "../../../../hook/useWebSocket";
+import { socketEvents } from "../../../../hook/socketEvent";
 
 interface UserControlInRoomProps extends IModalProps {
   user: any; // 유저 정보 타입
@@ -19,6 +21,7 @@ export const UserControlInRoom = ({
 
   const handleTeamLeaderDelegation = () => {
     // 팀장 위임 로직 추가
+    // socketEvents.handOver(stompClient, userId, user.roomUserId, roomId); //stompClient랑 roomId 받아오는 부분 추가 요망..
     console.log('팀장 위임하기');
   };
 

@@ -10,13 +10,16 @@ export const SOCKET_DESTINATIONS = {
             REQUEST: {
                 ROOM_INFO: (roomId: string) => `/app/rooms/${roomId}/info`,
             },
-            
+
             // 서버에 보낼 메시지 (액션)
             SEND: {
                 READY: `/app/rooms/ready`,
                 EXIT: `/app/rooms/exit`,
                 JOIN: `/app/rooms/join`,
-                TEAMSWITCH: `/app/rooms/team-switch`
+                TEAMSWITCH: `/app/rooms/team-switch`,
+                KICK: `/app/rooms/kick`,
+                YIELDLEADER: `/app/rooms/yield-host`,
+                YIELDHOST: `/app/rooms/yield-host`
             }
         }
     }
