@@ -5,6 +5,7 @@ import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
+// import { useOpenVidu } from '../../../hook/useOpenVidu';   // WebRTC 기능 구현 때 다시 할 예정
 
 export default function Room() {
   const { roomId } = useLocation().state;
