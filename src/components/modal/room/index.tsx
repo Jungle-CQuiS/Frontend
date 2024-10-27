@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { useNavigate } from 'react-router-dom';
 import { Modal, IModalProps } from ".."
 import { PrimaryButtonMedium, SecondaryButton } from "../../buttons/styled"
@@ -12,7 +12,8 @@ export const CreateRoomModal = ({
     const [value, setValue] = useState(4);
     const [isPasswordChecked, setIsPasswordChecked] = useState(false);
     const [isNoPasswordChecked, setIsNoPasswordChecked] = useState(true);
-    const [roomId, setRoomId] = useState<string>('');
+    const [roomId, setRoomId] = useState<number>(0);
+    const [roomName, setRoomName] = useState<string>();
     const navigate = useNavigate();
 
     const handleNoPasswordCheckbox = () => {
@@ -32,11 +33,11 @@ export const CreateRoomModal = ({
     //TODO: 방 만들기
     const handleCreateRoom = async () => {
         const userUuid = localStorage.getItem("uuid");
-        const roomName = (document.getElementById("roomName") as HTMLInputElement).value;
+        const NroomName = (document.getElementById("roomName") as HTMLInputElement).value;
         const roomPassword = (document.getElementById("password") as HTMLInputElement).value;
         const participants = Number((document.getElementById("participants") as HTMLInputElement).value);
        
-        if(!roomName){
+        if(!NroomName){
             alert("방 이름을 입력하지 않았습니다. 입력해주세요.");
             return;
         }
@@ -63,7 +64,7 @@ export const CreateRoomModal = ({
         }
 
         const roomData = {
-            name: roomName,
+            name: NroomName,
             password: isPasswordChecked? roomPassword: null,
             maxUser: participants,
             uuid: userUuid,
@@ -84,20 +85,25 @@ export const CreateRoomModal = ({
 
             const responseData = await response.json();
             console.log(responseData);
-            console.log("성공");
+            console.log(responseData.data.roomId);
            
-            setRoomId(responseData.data.roomId); // 이거 응답 파싱 틀렸을수도있음
-     
-            // navigate 사용
-            navigate(`/room/${roomId}`, {
-                state: { roomId: roomId, roomName : roomName}
-            });
+            setRoomId(responseData.data.roomId); 
+            setRoomName(NroomName);
+            console.log(roomId);
         }
         catch (error){
             console.error("방 생성 에러", error);
             alert("방을 생성하지 못했습니다. 잠시후 다시 시도해주세요.")
         }
     };   
+
+    useEffect(() => {
+        if (roomId) {
+          navigate(QUIZ_MULTI_ENDPOINTS.ROOMS.JOIN(roomId), {
+            state: { roomId: roomId, roomName : roomName },
+          });
+        }
+      }, [roomId, navigate, roomName]);
 
     return(
         <Modal {...props} >
