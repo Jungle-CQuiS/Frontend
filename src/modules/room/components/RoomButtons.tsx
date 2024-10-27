@@ -1,22 +1,31 @@
 import { PrimaryButtonMiddle, SecondaryButtonShort } from "../../../components/buttons/styled";
 import { RoomButtonWrap } from "../../../pages/multi/room/styled";
-import { useUser } from "../../../hook/user";
-import { UseWebSocket } from "../../../hook/useWebSocket";
-import { QUIZ_MULTI_ENDPOINTS } from "../../../config/api/endpoints/quiz-multi.endpoints";
+
 
 interface RoomButtonsProps {
-  roomId: string;
-  MultiReadyButton: () => void;
-  MultiExitButton: () => void
+  userRoomId: string;
+  MultiReadyButton: (userRoomId: string) => void;
+  MultiExitButton: (userRoomId: string) => void
 }
 
-export const RoomButtons = ({ roomId,MultiReadyButton,MultiExitButton }: RoomButtonsProps) => {
-  const { user } = useUser(); // storage에서 로그인된 유저 정보 가져오기.
-  //const { updateUserStatus } = useWebSocket(roomId);
+export const RoomButtons = ({
+  userRoomId,
+  MultiReadyButton,
+  MultiExitButton
+}: RoomButtonsProps) => {
+
+  const handleReadyClick = () => {
+    MultiReadyButton(userRoomId);
+  };
+
+  const handleExitClick = () => {
+    MultiExitButton(userRoomId);
+  };
+
 
   return (
     <RoomButtonWrap>
-      <PrimaryButtonMiddle onClick={MultiReadyButton}>Ready</PrimaryButtonMiddle>
-      <SecondaryButtonShort onClick={MultiExitButton}>나가기</SecondaryButtonShort>
+      <PrimaryButtonMiddle onClick={handleReadyClick}>Ready</PrimaryButtonMiddle>
+      <SecondaryButtonShort onClick={handleExitClick}>나가기</SecondaryButtonShort>
     </RoomButtonWrap>);
 };

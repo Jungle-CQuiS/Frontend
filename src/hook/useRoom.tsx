@@ -9,7 +9,9 @@ import { SERVICES } from '../config/api/constants';
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
+
     const navigate = useNavigate();
+
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
         console.log('Setting up room subscriptions');
@@ -34,11 +36,14 @@ export const useRoom = (roomId: string) => {
             console.error('Room entry failed:', error);
             throw error;
         }
+
+
+
     }, [roomId, isConnected, connect, setupSubscriptions]);
 
-    const exitRoom = async () => {
+    const exitRoom = async (roomUserId: string) => {
         try {
-            await socketEvents.userExitRoom(stompClient, "13", roomId); // 수정 요!
+            await socketEvents.userExitRoom(stompClient, roomUserId, roomId); // 수정 요!
         } catch (error) {
             console.error('Room exit failed:', error);
             throw error;
@@ -47,17 +52,26 @@ export const useRoom = (roomId: string) => {
         navigate(SERVICES.MULTI);
     };
 
-    const userReady = async () => {
+    const userReady = async (roomUserId: string) => {
         try {
-            await socketEvents.updateUserState(stompClient, "13", roomId); // 수정 요!
+            await socketEvents.updateUserState(stompClient, roomUserId, roomId); // 수정 요!
         } catch (error) {
             console.error('User ready failed:', error);
             throw error;
         }
-    }
+    };
+
+    const teamSwitch = async (clickedTeam: string) => {
+        try {
+            // todo : team switch socket protocol
+        } catch (error) {
+            console.error('Team switch failed:', error);
+            throw error;
+        }
+    };
 
     useEffect(() => {
-        enterRoom();
+        enterRoom(); // Active Socket Protocol 
 
         return () => {
             if (stompClient.current?.active) {
@@ -78,6 +92,7 @@ export const useRoom = (roomId: string) => {
         teamOneUsers,
         teamTwoUsers,
         exitRoom,
-        userReady
+        userReady,
+        teamSwitch,
     };
 };
