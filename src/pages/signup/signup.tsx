@@ -48,7 +48,6 @@ export default function SignupPage() {
         } else {
           const checksignupData = await response.json();
           if (checksignupData.code === "S001") {
-            console.log(emailData);
             navigate("/main");
           }
         }
