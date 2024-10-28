@@ -21,7 +21,7 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
         const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
  
         return new Client({           
-            brokerURL: `${wsProtocol}://dev.cquis.net:8080/ws`,
+            brokerURL: `${wsProtocol}://dev.cquis.net/ws`,
             connectHeaders: {
                 roomId: roomId,
             },
