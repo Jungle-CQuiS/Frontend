@@ -18,20 +18,20 @@ export default function SignupPage() {
     if (email && username && password) {
       try {
         // 이메일 중복 체크      
-        const emailResponse = await fetch(`/auth/email/${email}/duplicate-check`);
+        const emailResponse = await fetch(`/api/auth/email/${email}/duplicate-check`);
         const emailData = await emailResponse.json();
-        if (emailData.data.emailIsDuplicate === 1) {
+        if (emailData.data.emailIsDuplicate === true) {
           alert("이미 사용 중인 이메일입니다.");
           return;
         }
         // 닉네임 중복 체크    
-        const usernameResponse = await fetch(`/auth/username/${username}/duplicate-check`);
+        const usernameResponse = await fetch(`/api/auth/username/${username}/duplicate-check`);
         const usernameData = await usernameResponse.json();
-        if (usernameData.data.usernameIsDuplicate === 1) {
+        if (usernameData.data.usernameIsDuplicate === true) {
           alert("중복된 닉네임입니다.");
           return;
         }
-        const response = await fetch(`/auth/signup`, {
+        const response = await fetch(`/api/auth/signup`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -76,16 +76,16 @@ export default function SignupPage() {
                 <LoginInput
                   type="text"
                   placeholder="닉네임을 입력해주세요"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)} />
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)} />
               </SignupInputWrap>
               <SignupInputWrap>
                 <SignupLabel>이메일</SignupLabel>
                 <LoginInput
                   type="text"
                   placeholder="이메일을 입력해주세요"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)} />
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)} />
               </SignupInputWrap>
               <SignupInputWrap>
                 <SignupLabel>비밀번호</SignupLabel>
