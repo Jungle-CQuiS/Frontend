@@ -18,7 +18,7 @@ export const useRoom = (roomId: string) => {
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
         console.log('Setting up room subscriptions');
-        socketEvents.subscribeRoomUserId(client, "85d7a54a-5e44-445b-a49a-ceb012786102", initRoomUserID);
+        socketEvents.subscribeRoomUserId(client, "47da5545-eb7c-4742-8803-12f00bc864d8", initRoomUserID);
 
         socketEvents.subscribeToRoom(client, roomId, updateTeams);
 

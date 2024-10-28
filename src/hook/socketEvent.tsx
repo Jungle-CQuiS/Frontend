@@ -88,7 +88,7 @@ export const socketEvents = {
 
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
-            uuid: "bd79f530-ea82-4487-bd3a-9240e517e39a", // 수정 요!
+            uuid: "47da5545-eb7c-4742-8803-12f00bc864d8", // 수정 요!
             roomId: roomId,
         };
 
