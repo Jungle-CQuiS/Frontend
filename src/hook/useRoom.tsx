@@ -10,7 +10,6 @@ import { useRoomUerId } from './useRoomUserId';
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
-    const [isEntry, setIsEntry] = useState(false);
     const { roomUserId, initRoomUserID } = useRoomUerId();
 
     const navigate = useNavigate();
