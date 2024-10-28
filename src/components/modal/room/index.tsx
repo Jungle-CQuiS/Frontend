@@ -30,9 +30,8 @@ export const CreateRoomModal = ({
         setValue(Number(e.target.value));
     };
 
-    //TODO: 방 만들기
     const handleCreateRoom = async () => {
-        const userUuid = "91f89030-e522-496f-afd8-015c42e501f3";
+        const userUuid = localStorage.getItem("uuid");
         const NroomName = (document.getElementById("roomName") as HTMLInputElement).value;
         const roomPassword = (document.getElementById("password") as HTMLInputElement).value;
         const participants = Number((document.getElementById("participants") as HTMLInputElement).value);
@@ -41,7 +40,6 @@ export const CreateRoomModal = ({
             alert("방 이름을 입력하지 않았습니다. 입력해주세요.");
             return;
         }
-        // 비번 체크 됐지만 입력이 없을 때 경고창
         if (isPasswordChecked) {
             if (!roomPassword) {
                 alert("비밀번호를 입력해주세요.");
@@ -50,7 +48,6 @@ export const CreateRoomModal = ({
 
             const roomPasswordStr = roomPassword;
 
-            // 숫자인지 확인
             const isNumber = /^\d+$/.test(roomPasswordStr);
             if (!isNumber) {
                 alert("숫자를 입력하세요.");
@@ -69,12 +66,13 @@ export const CreateRoomModal = ({
             maxUser: participants,
             uuid: userUuid,
         };
-
+        const token = localStorage.getItem("AccessToken");
         try {
             const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOM.CREATE, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(roomData),
             });
@@ -84,11 +82,8 @@ export const CreateRoomModal = ({
             }
 
             const responseData = await response.json();
-            console.log(responseData);
-            console.log(responseData.data.roomId);
             setRoomId(responseData.data.roomId);
             setRoomName(NroomName);
-            console.log(roomId);
         } catch (error) {
             console.error("방 생성 에러", error);
             alert("방을 생성하지 못했습니다. 잠시후 다시 시도해주세요.");
