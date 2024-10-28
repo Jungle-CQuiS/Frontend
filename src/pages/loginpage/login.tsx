@@ -12,24 +12,38 @@ export default function LoginPage() {
   const handleLogin = async () => {
     if (username && password) {
       try {
-        // 유저가 입력한 username과 password를 URL 경로에 추가
-        const response = await fetch(`api/auth/login/${username}/${password}`, {
-          method: "POST", 
+        const response = await fetch(`/api/auth/login`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            email: username,
+            password: password,
+          }),
         });
-
+  
         if (!response.ok) {
           throw new Error("로그인에 실패했습니다.");
         }
-
-        const data = await response.json();
-        
-        // 백엔드에서 받은 uuid와 username을 저장
-        localStorage.setItem("uuid", data.data); // 유저의 uuid 저장
-        localStorage.setItem("username", data.username); // 유저 이름도 저장
-        
+  
+        // 응답 텍스트를 가져오고 "Login Success" 메시지를 제거
+        const textData = await response.text();
+        console.log("서버 응답:", textData);
+  
+        // "Login Success" 메시지 제거 후 JSON 파싱
+        const jsonData = textData.split("Login Success")[0];
+        const data = JSON.parse(jsonData);
+  
+        // AccessToken과 RefreshToken이 있는지 확인
+        if (!data.AccessToken || !data.RefreshToken) {
+          throw new Error("응답 데이터에 AccessToken 또는 RefreshToken이 없습니다.");
+        }
+  
+        // AccessToken과 RefreshToken 저장
+        localStorage.setItem("AccessToken", data.AccessToken);
+        localStorage.setItem("RefreshToken", data.RefreshToken);
+  
         // 로그인 후 메인 페이지로 이동
         navigate("/main");
       } catch (error) {
@@ -37,9 +51,10 @@ export default function LoginPage() {
         alert("로그인에 실패했습니다.");
       }
     } else {
-      alert("닉네임과 비밀번호를 입력해주세요.");
+      alert("이메일과 비밀번호를 입력해주세요.");
     }
   };
+  
 
   return (
     <>
@@ -57,7 +72,7 @@ export default function LoginPage() {
             <LoginInputWrap>
               <LoginInput
                 type="text"
-                placeholder="닉네임"
+                placeholder="이메일"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
