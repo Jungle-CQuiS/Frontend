@@ -27,22 +27,22 @@ export default function LoginPage() {
           throw new Error("로그인에 실패했습니다.");
         }
   
-        // 응답 텍스트를 가져오고 "Login Success" 메시지를 제거
         const textData = await response.text();
-        console.log("서버 응답:", textData);
   
-        // "Login Success" 메시지 제거 후 JSON 파싱
         const jsonData = textData.split("Login Success")[0];
         const data = JSON.parse(jsonData);
   
-        // AccessToken과 RefreshToken이 있는지 확인
-        if (!data.AccessToken || !data.RefreshToken) {
+        if (!data.accessToken || !data.refreshToken) {
           throw new Error("응답 데이터에 AccessToken 또는 RefreshToken이 없습니다.");
         }
-  
-        // AccessToken과 RefreshToken 저장
-        localStorage.setItem("AccessToken", data.AccessToken);
-        localStorage.setItem("RefreshToken", data.RefreshToken);
+
+        if (!data.uuid) {
+          throw new Error("응답 데이터에 Uuid가 없습니다.");
+        }
+
+        localStorage.setItem("AccessToken", data.accessToken);
+        localStorage.setItem("RefreshToken", data.refreshToken);
+        localStorage.setItem("uuid", data.uuid)
   
         // 로그인 후 메인 페이지로 이동
         navigate("/main");
