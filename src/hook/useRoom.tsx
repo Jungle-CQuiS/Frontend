@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect,useRef, useCallback } from 'react';
 import { socketEvents } from './socketEvent';
 import { useTeamState } from './useTeamState';
 import { UseWebSocket } from './useWebSocket';
@@ -10,7 +10,7 @@ import { useRoomUerId } from './useRoomUserId';
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
-    const [isEntry, setIsEntry] = useState(false);
+    const Connected = useRef(false);  // 연결 상태 체크용
     const { roomUserId, initRoomUserID } = useRoomUerId();
 
     const navigate = useNavigate();
@@ -32,6 +32,7 @@ export const useRoom = (roomId: string) => {
             if (!stompClient.current?.active || !isConnected) {
                 await connect();
                 // 연결 성공 후 구독 설정
+                Connected.current = true;
                 if (stompClient.current) {
                     setupSubscriptions(stompClient.current);
                 }
@@ -43,9 +44,6 @@ export const useRoom = (roomId: string) => {
             console.error('Room entry failed:', error);
             throw error;
         }
-
-
-
     }, [roomId, isConnected, connect, setupSubscriptions]);
 
     const exitRoom = async (roomUserId: string) => {
@@ -78,6 +76,7 @@ export const useRoom = (roomId: string) => {
     };
 
     useEffect(() => {
+        if (Connected.current) return;
 
         enterRoom(); // Active Socket Protocol 
 
