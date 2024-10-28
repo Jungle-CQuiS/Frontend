@@ -15,11 +15,13 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
- 
+
     // 기본 STOMP 클라이언트 설정
     const setupStompClient = useCallback(() => {
-        return new Client({
-            brokerURL: 'wss://dev.cquis.net:8080/ws',
+        const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+ 
+        return new Client({           
+            brokerURL: `${wsProtocol}://dev.cquis.net:8080/ws`,
             connectHeaders: {
                 roomId: roomId,
             },
