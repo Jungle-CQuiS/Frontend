@@ -19,7 +19,7 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
     // 기본 STOMP 클라이언트 설정
     const setupStompClient = useCallback(() => {
         return new Client({
-            brokerURL: 'wss://dev.cquis.net:8080/ws',
+            brokerURL: '85d7a54a-5e44-445b-a49a-ceb012786102',
             connectHeaders: {
                 roomId: roomId,
             },
