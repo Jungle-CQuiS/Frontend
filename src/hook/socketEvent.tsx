@@ -2,7 +2,6 @@ import { Client } from '@stomp/stompjs';
 import { TeamUser } from '../modules/room/components/TeamUser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 
-
 export const socketEvents = {
     // SUBSCRIBE ------------------------------------------------------------------------------------
     // 방 정보 구독 함수
@@ -53,7 +52,7 @@ export const socketEvents = {
     },
 
     // 유저 roomUserId 구독 함수
-    subscribeRoomUserId: (client: Client, uuid: string, setRoomUserID : (roomUid: string) => void) => {
+    subscribeRoomUserId: (client: Client, uuid: string, setRoomUserID: (roomUid: string) => void) => {
         try {
             console.log('Attempting to subscribe to roomUserId:', uuid);
             const subscription = client.subscribe(
@@ -75,6 +74,30 @@ export const socketEvents = {
         } catch (err) {
             console.error('Subscription error:', err);
         }
+    },
+
+    // 준비방 상태 구독 함수
+    subscribeRoomStatusMessage: (client: Client , roomId: string, setUseGameState:(event : string, time : number) => void) => {
+        try {
+            // client에 구독 요청
+            // message를 받는다.
+            /*
+            {
+                "data": {
+                    "isAllReady": 1 or 0(bool)
+                    },
+                    "message": 성공,
+                    "code": S001
+                }
+            
+            */
+           // setUseGameState(response.data.message)
+
+        } catch (error) {
+
+        }
+
+        // 게임이 시작되면 구독 해지도 해야함.
     },
 
     // ----------------------------------------------------------------------------------------------
@@ -205,5 +228,7 @@ export const socketEvents = {
     // todo : 방장 위임하기(방장 권한)
 
     // todo : 리더 위임하기(리더 권한)
+
+
 
 };
