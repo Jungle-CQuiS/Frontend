@@ -42,12 +42,26 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
     useEffect(() => {
         const fetchRooms = async (): Promise<void> => {
             try {
-                const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOMS.LIST);
+                // 로컬 스토리지에서 AccessToken 가져오기
+                const token = localStorage.getItem("AccessToken");
+                if (!token) {
+                    throw new Error("로그인이 필요합니다."); // 토큰이 없으면 에러 처리
+                }
+    
+                // API 요청에 Authorization 헤더 포함
+                const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOMS.LIST, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`, // 토큰 추가
+                    },
+                });
+    
                 if (!response.ok) {
+                    console.log(response);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+    
                 const data = await response.json();
-
                 setRooms(data.data.rooms);
                 setIsLoading(false);
             } catch (e) {
@@ -57,9 +71,10 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                 setIsLoading(false);
             }
         };
-
+    
         fetchRooms();
     }, []);
+    
 
     const handleRowClick = (roomId: string, roomName: string) => {
         navigate(`/room/${roomId}`, {

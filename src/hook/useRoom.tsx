@@ -6,22 +6,22 @@ import { UseWebSocket } from './useWebSocket';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
 import { useRoomUerId } from './useRoomUserId';
+import { UseGameState } from './useGameState';
 
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
     const Connected = useRef(false);  // 연결 상태 체크용
     const { roomUserId, initRoomUserID } = useRoomUerId();
-
+    const {GameState, isAllReady, isGameStart,countdown, handleReadyRoomEvent} = UseGameState();
     const navigate = useNavigate();
 
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
         console.log('Setting up room subscriptions');
         socketEvents.subscribeRoomUserId(client, "8a9aa9b8-5cba-4281-b4bc-833b1459c273", initRoomUserID);
-
         socketEvents.subscribeToRoom(client, roomId, updateTeams);
-
+        socketEvents.subscribeRoomStatusMessage(client, roomId, handleReadyRoomEvent);
 
     }, [roomId, updateTeams]);
 
@@ -75,6 +75,8 @@ export const useRoom = (roomId: string) => {
         }
     };
 
+    
+
     useEffect(() => {
         if (Connected.current) return;
 
@@ -103,5 +105,6 @@ export const useRoom = (roomId: string) => {
         exitRoom,
         userReady,
         teamSwitch,
+        GameState, isAllReady, isGameStart, countdown
     };
 };
