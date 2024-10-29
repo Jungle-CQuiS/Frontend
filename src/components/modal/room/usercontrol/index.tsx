@@ -1,9 +1,11 @@
+import { Client, Stomp } from "@stomp/stompjs";
 import { Modal, IModalProps } from "../..";
+import { socketEvents } from "../../../../hook/socketEvent";
 import { UserControlWrap, UserControlBtn, UserControlKickBtn } from "./styled";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface UserControlInRoomProps extends IModalProps {
-  user: any; // 유저 정보 타입
+  user: any; // 유저 정보 타입 => 수정 필요
   modalPosition:any;
 }
 
@@ -14,6 +16,7 @@ export const UserControlInRoom = ({
 }: UserControlInRoomProps & { modalPosition: { x: number; y: number } }) => {
   const handleKick = () => {
     // 강퇴 로직 추가
+    // socketEvents.userKick(stompClient, userId, user.roomUserId, roomId);  => stompClient랑 roomId 받아오는 부분 추가 요망..
     console.log('강퇴하기');
   };
 
