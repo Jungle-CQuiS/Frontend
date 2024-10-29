@@ -19,13 +19,14 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
     // 기본 STOMP 클라이언트 설정
     const setupStompClient = useCallback(() => {
         const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
-        const accessToken = localStorage.getItem("AccessToken");
- 
+        // const accessToken = localStorage.getItem("AccessToken");
+        const userUuid = localStorage.getItem("uuid") || "";
+        // console.log(userUuid);
         return new Client({           
             brokerURL: `${wsProtocol}://dev.cquis.net/ws`,
             connectHeaders: {
-                roomId: roomId,
-                Authorization: `Bearer ${accessToken}`,
+                // roomId: roomId,
+                uuid: userUuid,
             },
             debug: (str) => {
                 console.log('STOMP Debug:', str);
