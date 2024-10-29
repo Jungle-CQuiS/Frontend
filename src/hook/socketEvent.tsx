@@ -244,14 +244,14 @@ export const socketEvents = {
 
 
     // todo : 유저 강퇴하기(방장 권한)
-    userKick: async(
+    userKick: async (
         stompClient: React.RefObject<Client>,
         userId: string,
         kickRoomUserId: string,
-        roomId: string        
+        roomId: string
     ) => {
-        try{
-            if(!stompClient.current?.active){
+        try {
+            if (!stompClient.current?.active) {
                 console.error('STOMP connection is not active');
                 return;
             }
@@ -259,18 +259,66 @@ export const socketEvents = {
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.KICK,
                 body: JSON.stringify({
-                    "roomUserId":userId,
+                    "roomUserId": userId,
                     "kickRoomUserId": kickRoomUserId,
                     "roomId": roomId
                 })
             });
-        } catch (error){
+        } catch (error) {
+
+        }
+    },
+    // todo : 방장 위임하기(방장 권한)
+    handOverHost: async (
+        stompClient: React.RefObject<Client>,
+        userId: string,
+        yieldUserId: string,
+        roomId: string
+    ) => {
+        try {
+            if (!stompClient.current?.active) {
+                console.error('STOMP connection is not active');
+                return;
+            }
+
+            stompClient.current.publish({
+                destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.YIELDLEADER,
+                body: JSON.stringify({
+                    "roomUserId": userId,
+                    "roomId": roomId,
+                    "yieldUserId": yieldUserId
+                })
+            });
+        } catch (error) {
+
+        }
+    },
+
+    // todo : 리더 위임하기(리더 권한)
+    handOverLeader: async (
+        stompClient: React.RefObject<Client>,
+        userId: string,
+        yieldUserId: string,
+        roomId: string
+    ) => {
+        try {
+            if (!stompClient.current?.active) {
+                console.error('STOMP connection is not active');
+                return;
+            }
+
+            stompClient.current.publish({
+                destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.YIELDLEADER,
+                body: JSON.stringify({
+                    "roomUserId": userId,
+                    "roomId": roomId,
+                    "yieldUserId": yieldUserId
+                })
+            });
+        } catch (error) {
 
         }
     }
-    // todo : 방장 위임하기(방장 권한)
-
-    // todo : 리더 위임하기(리더 권한)
 
 
 
