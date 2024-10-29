@@ -1,6 +1,9 @@
 import { Client } from '@stomp/stompjs';
 import { TeamUser } from '../modules/room/components/TeamUser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
+import { UserControlKickBtn } from '../components/modal/room/usercontrol/styled';
+import React from 'react';
+
 
 export const socketEvents = {
     // SUBSCRIBE ------------------------------------------------------------------------------------
@@ -128,6 +131,7 @@ export const socketEvents = {
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
             uuid: uuid, // 수정 요!
+
             roomId: roomId,
         };
 
@@ -236,11 +240,34 @@ export const socketEvents = {
         } catch (error) {
 
         }
-    }
+    },
 
 
     // todo : 유저 강퇴하기(방장 권한)
+    userKick: async(
+        stompClient: React.RefObject<Client>,
+        userId: string,
+        kickRoomUserId: string,
+        roomId: string        
+    ) => {
+        try{
+            if(!stompClient.current?.active){
+                console.error('STOMP connection is not active');
+                return;
+            }
 
+            stompClient.current.publish({
+                destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.KICK,
+                body: JSON.stringify({
+                    "roomUserId":userId,
+                    "kickRoomUserId": kickRoomUserId,
+                    "roomId": roomId
+                })
+            });
+        } catch (error){
+
+        }
+    }
     // todo : 방장 위임하기(방장 권한)
 
     // todo : 리더 위임하기(리더 권한)
