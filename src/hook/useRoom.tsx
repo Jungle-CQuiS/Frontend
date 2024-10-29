@@ -71,7 +71,7 @@ export const useRoom = (roomId: string) => {
 
     const teamSwitch = async (clickedTeam: string) => {
         try {
-            // todo : team switch socket protocol
+            // TODO: team switch socket protocol
         } catch (error) {
             console.error('Team switch failed:', error);
             throw error;

@@ -165,7 +165,7 @@ export const socketEvents = {
     //-----------------------------------------------------------------------------------------------
 
     // APP ( state change )--------------------------------------------------------------------------
-    // todo : 유저 준비 상태 변경 함수
+    // TODO: 유저 준비 상태 변경 함수
     updateUserState: async (
         stompClient: React.RefObject<Client>,
         roomUserId: string,
@@ -192,7 +192,7 @@ export const socketEvents = {
     // -----------------------------------------------------------------------------------------------
 
     // APP ( action ) --------------------------------------------------------------------------------
-    // todo : 유저 팀 변경 함수
+    // TODO: 유저 팀 변경 함수
     changeUserTeam: async (
         stompClient: React.RefObject<Client>,
         roomUserId: string,
@@ -217,7 +217,7 @@ export const socketEvents = {
         }
     },
 
-    // todo : 유저 방 나가기 함수.
+    // TODO: 유저 방 나가기 함수.
     userExitRoom: async (
         stompClient: React.RefObject<Client>,
         roomUserId: string,
@@ -243,7 +243,7 @@ export const socketEvents = {
     },
 
 
-    // todo : 유저 강퇴하기(방장 권한)
+    // TODO: 유저 강퇴하기(방장 권한)
     userKick: async (
         stompClient: React.RefObject<Client>,
         userId: string,
@@ -268,7 +268,7 @@ export const socketEvents = {
 
         }
     },
-    // todo : 방장 위임하기(방장 권한)
+    // TODO: 방장 위임하기(방장 권한)
     handOverHost: async (
         stompClient: React.RefObject<Client>,
         userId: string,
@@ -294,7 +294,7 @@ export const socketEvents = {
         }
     },
 
-    // todo : 리더 위임하기(리더 권한)
+    // TODO: 리더 위임하기(리더 권한)
     handOverLeader: async (
         stompClient: React.RefObject<Client>,
         userId: string,

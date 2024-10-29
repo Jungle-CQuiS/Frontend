@@ -66,7 +66,7 @@ export const PasswordCheckModal = ({
             return;
         }
 
-        // todo : 비밀 번호 인증 로직 구현 해야함.
+        // TODO: 비밀 번호 인증 로직 구현 해야함.
         checkRoomPasswordValid();
     };
 

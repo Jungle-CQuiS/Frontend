@@ -10,7 +10,7 @@ export const UseGameState = () => {
 
 
     const handleReadyRoomEvent = (event : string, time : number) => {
-        // todo : 서버에서 받은 이벤트 타입에 따라 처리.
+        // TODO: 서버에서 받은 이벤트 타입에 따라 처리.
         setcountdown(time);
         switch(event){
             case GameReadyEvents.ALLREADY:
