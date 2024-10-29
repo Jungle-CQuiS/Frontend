@@ -108,10 +108,11 @@ export const socketEvents = {
         if (!client.active) {
             throw new Error('No active connection');
         }
+        const uuid = localStorage.getItem("uuid");
 
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
-            uuid: "8a9aa9b8-5cba-4281-b4bc-833b1459c273", // 수정 요!
+            uuid: uuid, // 수정 요!
             roomId: roomId,
         };
 

@@ -48,7 +48,7 @@ export default function SignupPage() {
         } else {
           const checksignupData = await response.json();
           if (checksignupData.code === "S001") {
-            navigate("/main");
+            navigate("/login");
           }
         }
       } catch (error) {
