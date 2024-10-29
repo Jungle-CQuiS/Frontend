@@ -7,6 +7,7 @@ import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
 import { GameStartCountDownModal } from '../../../components/modal/room/countdown';
+import { socketEvents } from '../../../hook/socketEvent';
 
 export default function Room() {
   const { roomId } = useLocation().state;
@@ -14,7 +15,16 @@ export default function Room() {
   const { roomUserId,
     teamOneUsers, teamTwoUsers,
     userReady, exitRoom, teamSwitch,
-    GameState, isAllReady, isGameStart, countdown } = useRoom(roomId);
+    GameState, isGameStart, countdown, stompClient, isAllReady } = useRoom(roomId);
+
+  const handleStopReady = async (roomUserId: string) => {
+    try {
+      await socketEvents.updateUserState(stompClient, roomUserId, roomId); // 수정 요!
+    } catch (error) {
+      console.error('User ready failed:', error);
+      throw error;
+    }
+  };
 
   return (
     <Background>
@@ -39,8 +49,9 @@ export default function Room() {
       <GameStartCountDownModal
         count={countdown}
         open={isAllReady}
-        onClose={() => { } }
-        onDone={() => { } } backdrop={true}      
+        handleStopReady = {()=>{}}
+        onClose={()=> {}}
+        onDone={() => { }} backdrop={true}
       />
     </Background>
   );
