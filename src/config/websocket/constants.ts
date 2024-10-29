@@ -19,8 +19,8 @@ export const SOCKET_DESTINATIONS = {
                 JOIN: `/app/rooms/join`,
                 TEAMSWITCH: `/app/rooms/team-switch`,
                 KICK: `/app/rooms/kick`,
-                // YIELDHOST: `/app/rooms/yield-host`,
-                // YIELDLEADER: `/app/rooms/yield-host`
+                YIELDHOST: `/app/rooms/yield-host`,
+                YIELDLEADER: `/app/rooms/yield-host`
             }
         }
     }

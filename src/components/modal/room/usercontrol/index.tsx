@@ -1,6 +1,7 @@
 import { Client, Stomp } from "@stomp/stompjs";
 import { Modal, IModalProps } from "../..";
 import { socketEvents } from "../../../../hook/socketEvent";
+import { UseWebSocket } from "../../../../hook/useWebSocket";
 import { UserControlWrap, UserControlBtn, UserControlKickBtn } from "./styled";
 import React, { useState } from "react";
 
@@ -22,7 +23,14 @@ export const UserControlInRoom = ({
 
   const handleTeamLeaderDelegation = () => {
     // 팀장 위임 로직 추가
+    // socketEvents.handOverLeader(stompClient, userId, user.roomUserId, roomId); //stompClient랑 roomId 받아오는 부분 추가 요망..
     console.log('팀장 위임하기');
+  };
+
+  const handleRoomHostDelegation = () => {
+    // 방장 위임 로직 추가
+    // socketEvents.handOverHost(stompClient, userId, user.roomUserId, roomId); //stompClient랑 roomId 받아오는 부분 추가 요망..
+    console.log('방장 위임하기');
   };
 
   const [volume, setVolume] = useState<number>(0.5);
