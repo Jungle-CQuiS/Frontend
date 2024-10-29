@@ -39,8 +39,8 @@ export default function Room() {
       <GameStartCountDownModal
         count={countdown}
         open={isAllReady}
-        onClose={() => { }}
-        onDone={() => { }}
+        onClose={() => { } }
+        onDone={() => { } } backdrop={true}      
       />
     </Background>
   );
