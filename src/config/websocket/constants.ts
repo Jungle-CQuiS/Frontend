@@ -4,7 +4,8 @@ export const SOCKET_DESTINATIONS = {
             // 구독할 토픽
             SUBSCRIBE: {
                 ROOM_INFO: (roomId: string) => `/topic/rooms/${roomId}/info`,
-                USER_JOIN: `user/queue/rooms/join`
+                USER_JOIN: `user/queue/rooms/join`,
+                ALL_READY: (roomId: string) => `/topic/rooms/${roomId}/status`
             },
 
             REQUEST: {

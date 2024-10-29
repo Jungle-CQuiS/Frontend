@@ -80,26 +80,41 @@ export const socketEvents = {
     },
 
     // 준비방 상태 구독 함수
-    subscribeRoomStatusMessage: (client: Client , roomId: string, setUseGameState:(event : string, time : number) => void) => {
+    subscribeRoomStatusMessage: (client: Client, roomId: string, setUseGameState: (event: string, time: number) => void) => {
         try {
+            console.log('Attempting to subscribe to room:', roomId);
             // client에 구독 요청
-            // message를 받는다.
-            /*
-            {
-                "data": {
-                    "isAllReady": 1 or 0(bool)
-                    },
-                    "message": 성공,
-                    "code": S001
-                }
-            
-            */
-           // setUseGameState(response.data.message)
+            const subscription = client.subscribe(
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ALL_READY(roomId),
+                (message) => {
+                    console.log('Received message:', message);
+                    try {
+                        const response = JSON.parse(message.body);
+                        if (response.data.isAllReady) {
+                            console.log('All user are ready');
+                            setUseGameState("ALL_READY", 5);
+                        }
+                    } catch (err) {
+                        console.error('Error processing message:', err);
+                    }
+                });
+            console.log('Subscription successful:', subscription);
 
-        } catch (error) {
-
+        } catch (err) {
+            console.error('Subscription successful:', err);
         }
-
+        // message를 받는다.
+        /*
+        {
+            "data": {
+                "isAllReady": 1 or 0(bool)
+                },
+                "message": 성공,
+                "code": S001
+            }
+        
+        */
+        // setUseGameState(response.data.message)
         // 게임이 시작되면 구독 해지도 해야함.
     },
 
@@ -111,10 +126,12 @@ export const socketEvents = {
         if (!client.active) {
             throw new Error('No active connection');
         }
+        const uuid = localStorage.getItem("uuid");
 
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
-            uuid: "ef088bd1-df38-4499-9592-4205cfdbcea9", // 수정 요!
+            uuid: uuid, // 수정 요!
+
             roomId: roomId,
         };
 

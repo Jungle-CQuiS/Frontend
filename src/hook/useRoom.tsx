@@ -15,11 +15,14 @@ export const useRoom = (roomId: string) => {
     const { roomUserId, initRoomUserID } = useRoomUerId();
     const {GameState, isAllReady, isGameStart,countdown, handleReadyRoomEvent} = UseGameState();
     const navigate = useNavigate();
-
+    const userUuid = localStorage.getItem("uuid");
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
         console.log('Setting up room subscriptions');
-        socketEvents.subscribeRoomUserId(client, "8a9aa9b8-5cba-4281-b4bc-833b1459c273", initRoomUserID);
+        if (userUuid) {  // userUuid가 null이 아닌 경우에만 호출
+            socketEvents.subscribeRoomUserId(client, userUuid, initRoomUserID);
+        }
+
         socketEvents.subscribeToRoom(client, roomId, updateTeams);
         socketEvents.subscribeRoomStatusMessage(client, roomId, handleReadyRoomEvent);
 
