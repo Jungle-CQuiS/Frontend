@@ -85,14 +85,14 @@ export const socketEvents = {
             console.log('Attempting to subscribe to room:', roomId);
             // client에 구독 요청
             const subscription = client.subscribe(
-                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ALL_READY(roomId),
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.READY_STATUS(roomId),
                 (message) => {
                     console.log('Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
                         if (response.data.isAllReady) {
                             console.log('All user are ready');
-                            setUseGameState("ALL_READY", 5);
+                            setUseGameState("READY_STATUS", 5);
                         }
                     } catch (err) {
                         console.error('Error processing message:', err);
