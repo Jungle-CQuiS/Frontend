@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
@@ -8,7 +9,7 @@ import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
 import { GameStartCountDownModal } from '../../../components/modal/room/countdown';
 import { socketEvents } from '../../../hook/socketEvent';
-
+import { SERVICES } from '../../../config/api/constants';
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
@@ -25,6 +26,16 @@ export default function Room() {
       throw error;
     }
   };
+
+  const navigate = useNavigate();
+
+  // isGameStart가 되면, 게임이 시작한다.
+  useEffect(() => {
+    //FIXME: Navigate 조건문 좀 더 견고하게 수정해야함.
+    if(isGameStart){
+      navigate(SERVICES.MULTI);
+    }
+}, [isGameStart]);
 
   return (
     <Background>
