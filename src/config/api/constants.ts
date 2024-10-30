@@ -7,5 +7,7 @@ export const SERVICES = {
     },
     MULTI: '/multi',
     MAIN: '/main',
-    AUTH: '/auth'
+    AUTH: '/auth',
+    LOGIN: '/login',
+    SIGNUP: '/signup'
 } as const;

@@ -25,7 +25,7 @@ export default function LandingPage(){
                         <LandingPageText>을 확인하세요!</LandingPageText>
                     </LandingPageTextWrap>
                 </LandingPageTextContainer>
-                    <Link to= {SERVICES.MAIN} >
+                    <Link to= {SERVICES.LOGIN} >
                         <PrimaryButtonLarge>시작하기</PrimaryButtonLarge>
                     </Link>
             </LandingPageWrap>
