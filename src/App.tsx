@@ -35,7 +35,7 @@ function App() {
           />
           <Route
             path="/multi"
-            element={
+            element={ 
               <ProtectedRoute>
                 <MultiPage />
               </ProtectedRoute>
