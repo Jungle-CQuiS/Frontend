@@ -23,7 +23,7 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
         const userUuid = localStorage.getItem("uuid") || "";
         // console.log(userUuid);
         return new Client({           
-            brokerURL: `${wsProtocol}://dev.cquis.net/ws`,
+            brokerURL: `ws://dev.cquis.net:8080/ws`,
             connectHeaders: {
                 // roomId: roomId,
                 uuid: userUuid,
