@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { PrimaryButtonLong } from "../../components/buttons/styled";
 import NavBar from "../../components/navbar/navbar";
 import { LoginBackground, LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInputWrap, LoginInput, LoginBottomWrap, LoginLinkWrap, LoginLink } from "./styled";
+import { SERVICES } from "../../config/api/constants";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -88,7 +89,8 @@ export default function LoginPage() {
               <LoginLinkWrap>
                 <LoginLink>비밀번호 찾기</LoginLink>
                 <LoginLink>|</LoginLink>
-                <Link to="/signup" style={{textDecoration: "none"}}>
+                <Link to={SERVICES.SIGNUP}
+                 style={{textDecoration: "none"}}>
                   <LoginLink>회원가입</LoginLink>
                 </Link>
               </LoginLinkWrap>
