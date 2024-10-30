@@ -8,24 +8,34 @@ import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
 import { GameStartCountDownModal } from '../../../components/modal/room/countdown';
+import { socketEvents } from '../../../hook/socketEvent';
 import { SERVICES } from '../../../config/api/constants';
-
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
   const { roomUserId,
     teamOneUsers, teamTwoUsers,
     userReady, exitRoom, teamSwitch,
-    GameState, isAllReady, isGameStart, countdown } = useRoom(roomId);
+    GameState, isGameStart, countdown, stompClient, isAllReady } = useRoom(roomId);
+
+  const handleStopReady = async (roomUserId: string) => {
+    try {
+      await socketEvents.updateUserState(stompClient, roomUserId, roomId); // 수정 요!
+    } catch (error) {
+      console.error('User ready failed:', error);
+      throw error;
+    }
+  };
+
   const navigate = useNavigate();
 
-    // isGameStart가 되면, 게임이 시작한다.
-    useEffect(() => {
-      //FIXME: Navigate 조건문 좀 더 견고하게 수정해야함.
-      if(isGameStart){
-        navigate(SERVICES.MULTI);
-      }
-  }, [isGameStart]);
+  // isGameStart가 되면, 게임이 시작한다.
+  useEffect(() => {
+    //FIXME: Navigate 조건문 좀 더 견고하게 수정해야함.
+    if(isGameStart){
+      navigate(SERVICES.MULTI);
+    }
+}, [isGameStart]);
 
   return (
     <Background>
@@ -50,8 +60,9 @@ export default function Room() {
       <GameStartCountDownModal
         count={countdown}
         open={isAllReady}
-        onClose={() => { } } //FIXME: 익명 함수 수정 해야함.
-        onDone={() => { } } backdrop={true}      
+        handleStopReady = {()=>{}}
+        onClose={()=> {}}
+        onDone={() => { }} backdrop={true}
       />
     </Background>
   );

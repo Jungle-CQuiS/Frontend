@@ -1,24 +1,38 @@
 import { useState, useEffect } from "react";
 import { OpenVidu, Session, Subscriber, Publisher } from "openvidu-browser";
+import { socketEvents } from "./socketEvent";
+import { UseWebSocket } from "./useWebSocket";
 
 export const useOpenVidu = (roomId: string) => {
   const [session, setSession] = useState<Session | null>(null); // OpenVidu 세션 객체
   const [publisher, setPublisher] = useState<Publisher | null>(null); // 자신의 미디어 퍼블리셔
-  const [subscribers, setSubscribers] = useState<Subscriber[]>([]); // 다른 사용자의 미디어 구독자, 타입이 맞지 않아서 발생하는 문제
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]); // 다른 사용자의 미디어 구독자
+  const { stompClient, connect, isConnected } = UseWebSocket(roomId, true);
 
   useEffect(() => {
     const initOpenViduSession = async () => {
-      const OV = new OpenVidu();  // OpenVidu 인스턴스 생성
-      const session = OV.initSession();   // 세션 생성
+      try {
+        if (!isConnected) {
+          await connect();
+        }
+        if (stompClient.current) {
+          socketEvents.enterRoom(stompClient, roomId);
+        }
 
-      // 다른 사용자의 스트림이 생성될 때 발생하는 이벤트 핸들러
-      session.on('streamCreated', (event) => {
-        const subscriber = session.subscribe(event.stream, undefined); // 스트림 구독
-        setSubscribers((prev) => [...prev, subscriber]); // 구독자를 state에 추가
-      });
+        const OV = new OpenVidu(); // OpenVidu 인스턴스 생성
+        const session = OV.initSession(); // 세션 생성
 
-      // 세션 설정 완료, state에 세션 저장
-      setSession(session);
+        // 다른 사용자의 스트림이 생성될 때 발생하는 이벤트 핸들러
+        session.on("streamCreated", (event) => {
+          const subscriber = session.subscribe(event.stream, undefined); // 스트림 구독
+          setSubscribers((prev) => [...prev, subscriber]); // 구독자를 state에 추가
+        });
+
+        // 세션 설정 완료, state에 세션 저장
+        setSession(session);
+      } catch (error) {
+        console.error("Failed to initialize session", error);
+      }
     };
 
     initOpenViduSession();
@@ -29,7 +43,7 @@ export const useOpenVidu = (roomId: string) => {
         session.disconnect(); // 세션 종료
       }
     };
-  }, [roomId]); // roomId가 변경될 때마다 세션을 다시 초기화
+  }, [roomId, connect, isConnected, stompClient]); // roomId가 변경될 때마다 세션을 다시 초기화
 
   // 오디오 스트림 퍼블리시
   const publishStream = (audioElement: string | HTMLElement | undefined) => {

@@ -108,6 +108,7 @@ export const useRoom = (roomId: string) => {
         exitRoom,
         userReady,
         teamSwitch,
-        GameState, isAllReady, isGameStart, countdown
+        GameState, isAllReady, isGameStart, countdown,
+        stompClient
     };
 };

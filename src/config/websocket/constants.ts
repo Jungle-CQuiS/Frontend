@@ -5,7 +5,7 @@ export const SOCKET_DESTINATIONS = {
             SUBSCRIBE: {
                 ROOM_INFO: (roomId: string) => `/topic/rooms/${roomId}/info`,
                 USER_JOIN: `user/queue/rooms/join`,
-                ALL_READY: (roomId: string) => `/topic/rooms/${roomId}/status`
+                READY_STATUS: (roomId: string) => `/topic/rooms/${roomId}/status`
             },
 
             REQUEST: {
