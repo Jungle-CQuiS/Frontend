@@ -25,6 +25,7 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
         return new Client({           
             brokerURL: `${wsProtocol}://dev.cquis.net:8080/ws`,
             connectHeaders: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${accessToken}`,
                 uuid: userUuid,
             },
