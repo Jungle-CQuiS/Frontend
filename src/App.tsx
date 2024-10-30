@@ -50,7 +50,7 @@ function App() {
             }
           />
           <Route
-            path="/multi/attack"
+            path="/multi/attack" 
             element={
               <ProtectedRoute>
                 <AttackPage />
