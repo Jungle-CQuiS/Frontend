@@ -9,14 +9,54 @@ import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
 import { GameStartCountDownModal } from '../../../components/modal/room/countdown';
 import { socketEvents } from '../../../hook/socketEvent';
+import { FirstAttackModal } from '../../../components/modal/room/flipcoin/result';
+
 import { SERVICES } from '../../../config/api/constants';
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
-  const { roomUserId,
+  const {
+    roomUserId,
     teamOneUsers, teamTwoUsers,
     userReady, exitRoom, teamSwitch,
-    GameState, isGameStart, countdown, stompClient, isAllReady } = useRoom(roomId);
+    GameState, isGameStart, countdown, stompClient, isAllReady
+  } = useRoom(roomId);
+
+  const [isAnimationPlaying, setIsAnimationPlaying] = useState(false);
+  const [isFirstAttackModalOpen, setIsFirstAttackModalOpen] = useState(false);
+  const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(5);
+
+  useEffect(() => {
+    if (isAllReady) {
+      // 5초 카운트다운 모달 시작
+      setTimeLeft(5); // 카운트다운 초기화
+      const countdownTimer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownTimer);
+            setIsAnimationPlaying(true);
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(countdownTimer);
+    }
+  }, [isAllReady]);
+
+  useEffect(() => {
+    if (isAnimationPlaying) {
+      // 애니메이션이 5초 정도 후에 끝난다고 가정
+      const animationTimer = setTimeout(() => {
+        setIsAnimationPlaying(false);
+        // 무작위로 선공 팀 결정
+        const selectedTeam = Math.random() > 0.5 ? '1팀' : '2팀';
+        setFirstAttackTeam(selectedTeam);
+        setIsFirstAttackModalOpen(true);
+      }, 5000);
+      return () => clearTimeout(animationTimer);
+    }
+  }, [isAnimationPlaying]);
 
   const handleStopReady = async (roomUserId: string) => {
     try {
@@ -43,8 +83,8 @@ export default function Room() {
       <RoomTeamContainer>
         <TeamComponent
           team="1팀"
-          teamUsers={teamOneUsers} // 여기 있는 팀이 실시간 통신으로 업데이트 되어야함.
-          handleTeamClick={teamSwitch} 
+          teamUsers={teamOneUsers}
+          handleTeamClick={teamSwitch}
           teamType="blue"
         />
         <img src='/icons/VS.svg' alt='VS' />
@@ -54,16 +94,26 @@ export default function Room() {
           handleTeamClick={teamSwitch}
           teamType="red"
         />
-
       </RoomTeamContainer>
       <RoomButtons userRoomId={roomUserId} MultiReadyButton={userReady} MultiExitButton={exitRoom} />
+      
       <GameStartCountDownModal
-        count={countdown}
-        open={isAllReady}
-        handleStopReady = {()=>{}}
-        onClose={()=> {}}
-        onDone={() => { }} backdrop={true}
+        count={timeLeft}
+        open={isAllReady && timeLeft > 0}
+        handleStopReady={handleStopReady}
+        onClose={() => {}}
+        onDone={() => {}}
+        backdrop={true}
       />
+
+      {/* {isAnimationPlaying && <GameStartAnimation />} */}
+
+      {isFirstAttackModalOpen && firstAttackTeam && (
+        <FirstAttackModal
+          team={firstAttackTeam}
+          onClose={() => setIsFirstAttackModalOpen(false)}
+        />
+      )}
     </Background>
   );
 }
