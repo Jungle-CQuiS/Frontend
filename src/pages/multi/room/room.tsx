@@ -23,7 +23,7 @@ export default function Room() {
         <TeamComponent
           team="1팀"
           teamUsers={teamOneUsers} // 여기 있는 팀이 실시간 통신으로 업데이트 되어야함.
-          handleTeamClick={teamSwitch}
+          handleTeamClick={teamSwitch} 
           teamType="blue"
         />
         <img src='/icons/VS.svg' alt='VS' />
