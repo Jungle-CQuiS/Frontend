@@ -36,4 +36,5 @@ jobs:
             git pull origin main  # 최신 코드 가져오기
             npm install  # 의존성 설치
             npm run build  # 빌드
+            export WDS_SOCKET_PORT=0
             pm2 restart all  # PM2로 애플리케이션 재시작
