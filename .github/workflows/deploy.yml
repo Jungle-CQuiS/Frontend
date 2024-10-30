@@ -33,7 +33,6 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/frontend  # 프론트엔드 프로젝트 디렉토리로 이동
-            echo "WDS_SOCKET_PORT=0" > .env  # 서버에 .env 파일 생성 및 환경 변수 추가
             git pull origin main  # 최신 코드 가져오기
             npm install  # 의존성 설치
             npm run build  # 빌드
