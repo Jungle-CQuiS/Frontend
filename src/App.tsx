@@ -35,7 +35,7 @@ function App() {
           />
           <Route
             path="/multi"
-            element={
+            element={ 
               <ProtectedRoute>
                 <MultiPage />
               </ProtectedRoute>
@@ -50,7 +50,7 @@ function App() {
             }
           />
           <Route
-            path="/multi/attack"
+            path="/multi/attack" 
             element={
               <ProtectedRoute>
                 <AttackPage />
