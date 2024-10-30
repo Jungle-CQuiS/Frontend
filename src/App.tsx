@@ -29,7 +29,7 @@ function App() {
             path="/main"
             element={
               <ProtectedRoute>
-                <MainPage />
+                <MainPage /> 
               </ProtectedRoute>
             }
           />
