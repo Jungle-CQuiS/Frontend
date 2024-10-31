@@ -70,7 +70,6 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
                 // 연결 되면 할 것.
                 client.onConnect = () => {
                     console.log('Connection successful');
-
                     handleConnect(client);
                     stompClient.current = client;
                     setIsConnected(true);

@@ -16,7 +16,6 @@ export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
   const {
-    roomUserId,
     teamOneUsers, teamTwoUsers,
     userReady, exitRoom, teamSwitch,
     GameState, isGameStart, countdown, stompClient, isAllReady
@@ -60,7 +59,7 @@ export default function Room() {
 
   const handleStopReady = async (roomUserId: string) => {
     try {
-      await socketEvents.updateUserState(stompClient, roomUserId, roomId); // 수정 요!
+      await socketEvents.updateUserState(stompClient, roomUserId); // 수정 요!
     } catch (error) {
       console.error('User ready failed:', error);
       throw error;
@@ -95,8 +94,7 @@ export default function Room() {
           teamType="red"
         />
       </RoomTeamContainer>
-      <RoomButtons userRoomId={roomUserId} MultiReadyButton={userReady} MultiExitButton={exitRoom} />
-      
+      <RoomButtons MultiReadyButton={userReady} MultiExitButton={exitRoom} />
       <GameStartCountDownModal
         count={timeLeft}
         open={isAllReady && timeLeft > 0}

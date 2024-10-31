@@ -3,23 +3,32 @@ import { RoomButtonWrap } from "../../../pages/multi/room/styled";
 
 
 interface RoomButtonsProps {
-  userRoomId: string;
   MultiReadyButton: (userRoomId: string) => void;
   MultiExitButton: (userRoomId: string) => void
 }
 
 export const RoomButtons = ({
-  userRoomId,
   MultiReadyButton,
   MultiExitButton
 }: RoomButtonsProps) => {
-
+  const roomUserId = localStorage.getItem("roomUserId");
+  
   const handleReadyClick = () => {
-    MultiReadyButton(userRoomId);
+    if (roomUserId) {
+      MultiReadyButton(roomUserId);
+    } else {
+      // roomUserId가 null일 경우에 대한 처리
+      console.error("Room user ID is null");
+    }
   };
 
   const handleExitClick = () => {
-    MultiExitButton(userRoomId);
+    if (roomUserId) {
+      MultiExitButton(roomUserId);
+    } else {
+      // roomUserId가 null일 경우에 대한 처리
+      console.error("Room user ID is null");
+    }
   };
 
 
