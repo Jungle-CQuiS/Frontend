@@ -28,6 +28,53 @@ export const useRoom = (roomId: string) => {
 
     }, [roomId, updateTeams]);
 
+    
+    const fetchUserRoomId = async () => {
+        let retries = 0;
+        const maxRetries = 5;
+        
+        while (retries < maxRetries) {
+            try {
+                await getUserRoomID();
+                break;
+            } catch (error) {
+                console.error(`Failed to get user room ID, retry attempt: ${retries + 1}`);
+                retries++;
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+            }
+        }
+    };
+
+    const getUserRoomID = async (): Promise<void> => {
+        try {
+            const token = localStorage.getItem("AccessToken");
+            const response = await fetch('/api/quiz/multi/rooms/join', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, // 토큰 추가
+                    "uuid": `${userUuid}`
+                },
+                body: JSON.stringify({
+                    "uuid": `${userUuid}`
+                })
+            });
+
+            if (!response.ok) {
+                console.log(response);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            localStorage.setItem("roomUserId", data.data.roomUserId);
+
+            console.log("<Response> roomUSerID :", data.data.roomUserId)
+        } catch (e) {
+            const errorMessage = e instanceof Error ? e.message : String(e);
+            console.error("Fetching roomUuid failed:", errorMessage);
+        }
+    };
+
     // 입장 로직
     const enterRoom = useCallback(async () => {
         try {
@@ -46,6 +93,8 @@ export const useRoom = (roomId: string) => {
 
             // 입장 메시지 전송
             await socketEvents.enterRoom(stompClient, roomId);
+            
+
         } catch (error) {
             console.error('Room entry failed:', error);
             throw error;
@@ -85,57 +134,17 @@ export const useRoom = (roomId: string) => {
 
     useEffect(() => {
         if (Connected.current) return;
-
-        //enterRoom(); // Active Socket Protocol 
-        const fetchUserRoomId = async () => {
-            let retries = 0;
-            const maxRetries = 5;
-            
-            while (retries < maxRetries) {
-                try {
-                    await getUserRoomID();
-                    break;
-                } catch (error) {
-                    console.error(`Failed to get user room ID, retry attempt: ${retries + 1}`);
-                    retries++;
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
-                }
+        const initializeRoom = async () => {
+            try {
+                await enterRoom(); // Active Socket Protocol
+                await fetchUserRoomId();
+            } catch (error) {
+                console.error('Room initialization failed:', error);
             }
         };
     
-        const getUserRoomID = async (): Promise<void> => {
-            try {
-                const token = localStorage.getItem("AccessToken");
-                const response = await fetch('/api/quiz/multi/rooms/join', {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`, // 토큰 추가
-                        "uuid": `${userUuid}`
-                    },
-                    body: JSON.stringify({
-                        "uuid": `${userUuid}`
-                    })
-                });
-
-                if (!response.ok) {
-                    console.log(response);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                localStorage.setItem("roomUserId", data.data.roomUserId);
-
-                console.log("<Response> roomUSerID :", data.data.roomUserId)
-            } catch (e) {
-                const errorMessage = e instanceof Error ? e.message : String(e);
-                console.error("Fetching roomUuid failed:", errorMessage);
-            }
-        };
-
-        enterRoom();
-
-        fetchUserRoomId();
+        initializeRoom();
+    
         return () => {
             if (stompClient.current?.active) {
                 stompClient.current.deactivate();
