@@ -10,7 +10,7 @@ export const LookQuestionModal = ({
         <Modal {...props}>
             <LookQuistionModalContainer>
                 <LookQuistionModalTitle>문제보기</LookQuistionModalTitle>
-                <QuizProblemsComponent />
+                <div>문제다시보기</div>
                 <LookQuistionModalButtonWrap>
                     <BlackButtonSmall onClick={props.onClose}>확인</BlackButtonSmall>
                 </LookQuistionModalButtonWrap>

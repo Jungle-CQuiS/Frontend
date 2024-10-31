@@ -4,7 +4,7 @@ import { HealthBarUnit, SolvingHeaderContainer, SolvingHeaderTitle, SolvingHeade
 
 export const SolvingHeaderComponent = () => {
     //팀 체력
-    const [teamOneHealth, setTeamOneHealth] = useState(6); 
+    const [teamOneHealth, setTeamOneHealth] = useState(10); 
     const [teamTwoHealth, setTeamTwoHealth] = useState(10); 
 
     const renderHealthBar = (health: number, team: number, reverse: boolean = false) => {

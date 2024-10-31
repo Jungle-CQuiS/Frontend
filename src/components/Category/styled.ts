@@ -24,4 +24,5 @@ export const CategoryTab = styled.div<CategoryTabProps>`
         background-color: ${({ isSelected }) => (isSelected ? "#444" : "#E7E7E7")}
         
     }
+    width: max-content;
 `;
