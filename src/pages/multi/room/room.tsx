@@ -17,16 +17,17 @@ export default function Room() {
   const { state } = useLocation();
   const {
     teamOneUsers, teamTwoUsers,
-    userReady, exitRoom, teamSwitch,
-    GameState, isGameStart, countdown, stompClient, isAllReady
+    userReady, exitRoom, teamSwitch, gameStart,
+    isGameStart, countdown, stompClient, isAllReady
   } = useRoom(roomId);
 
   const [isAnimationPlaying, setIsAnimationPlaying] = useState(false);
   const [isFirstAttackModalOpen, setIsFirstAttackModalOpen] = useState(false);
   const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(5);
-  //const [temp , setTemp] = useState(false); // FIXME: 나중에 지워야함
+  const [timeLeft, setTimeLeft] = useState(5); // FIXME: timeLeft를 안쓰는데 꼭 필요한가요?
+  const navigate = useNavigate();
 
+  // Ready CountDown Modal Logic
   useEffect(() => {
     if (isAllReady) {
       // 5초 카운트다운 모달 시작
@@ -44,6 +45,7 @@ export default function Room() {
     }
   }, [isAllReady]);
 
+  // Set starter team Logic
   useEffect(() => {
     if (isAnimationPlaying) {
       // 애니메이션이 5초 정도 후에 끝난다고 가정
@@ -56,29 +58,28 @@ export default function Room() {
       }, 5000);
       return () => clearTimeout(animationTimer);
     }
-    else{
-      //setTemp(true);
-    }
   }, [isAnimationPlaying]);
+
+  // isGameStart가 되면, 게임이 시작한다.
+  useEffect(() => {
+    if (isGameStart) {
+      //TODO: API 통신으로 서버에 게임 시작을 알림. 응답을 대기하나? 응답을 받고 다음페이지로 이동
+      navigate(SERVICES.MULTI);
+    }
+  }, [isGameStart]);
 
   const handleStopReady = async (roomUserId: string) => {
     try {
-      await socketEvents.updateUserState(stompClient, roomUserId); // 수정 요!
+      await socketEvents.updateUserState(stompClient, roomUserId);
     } catch (error) {
       console.error('User ready failed:', error);
       throw error;
     }
   };
 
-  const navigate = useNavigate();
+  
 
-  // isGameStart가 되면, 게임이 시작한다.
-  useEffect(() => {
-    //FIXME: Navigate 조건문 좀 더 견고하게 수정해야함.
-    if(isGameStart){
-      navigate('/multi/game');
-    }
-}, [isGameStart]);
+
 
   return (
     <Background>
@@ -103,8 +104,8 @@ export default function Room() {
         count={countdown}
         open={isAllReady && countdown > 0}
         handleStopReady={handleStopReady}
-        onClose={() => {}}
-        onDone={() => {}}
+        onClose={() => { }}
+        onDone={() => { }}
         backdrop={true}
       />
 
