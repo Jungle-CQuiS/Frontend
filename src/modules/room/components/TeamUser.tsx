@@ -30,7 +30,6 @@ export type UserState = 'ready' | 'notready';
 export interface TeamUser extends User {
   roomUserId: number;
   username: string;
-  honorCount : number;
   role: UserRole;
   team: TeamType;
   isLeader: TeamRole;
@@ -57,10 +56,10 @@ export const TeamUserComponent = ({ user, onClick, teamType}: TeamUserProps) => 
           <RoomTeamOneUserName>
             {isReady && <ReadyText $align = 'left'>READY</ReadyText>}
             {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
-            {user.name}
+            {user.username}
             {isHost && <RoomHostIcon src="/icons/crown.svg" alt="Badge" />}
           </RoomTeamOneUserName>
-          <RoomTeamOneUserProfile src={user.profileImage} alt={user.name} />
+          <RoomTeamOneUserProfile src={user.profileImage} alt={user.username} />
           <RoomTeamOneUserHonorWrap>
             <RoomTeamOneUserHonor>{user.honorCount}</RoomTeamOneUserHonor>
             <RoomTeamOneUserHonorIcon src="/icons/badge.svg" alt="Badge" />
@@ -83,11 +82,11 @@ export const TeamUserComponent = ({ user, onClick, teamType}: TeamUserProps) => 
             <RoomTeamTwoUserHonor>{user.honorCount}</RoomTeamTwoUserHonor>
             <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />
           </RoomTeamTwoUserHonorWrap>
-          <RoomTeamTwoUserProfile src={user.profileImage} alt={user.name} />
+          <RoomTeamTwoUserProfile src={user.profileImage} alt={user.username} />
           <RoomTeamTwoUserName>
             {isReady && <ReadyText $align = 'right'>READY</ReadyText>}
             {isHost && <RoomTeamTwoUserHonorIcon src="/icons/crown.svg" alt="Badge" />}
-            {user.name}
+            {user.username}
             {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
           </RoomTeamTwoUserName>
 
