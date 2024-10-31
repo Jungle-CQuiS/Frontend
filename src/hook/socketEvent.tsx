@@ -164,7 +164,6 @@ export const socketEvents = {
     //-----------------------------------------------------------------------------------------------
 
     // APP ( state change )--------------------------------------------------------------------------
-    // FIXME: 유저 준비 상태 변경 함수 형변환 문제가 있어서 수정필요
     updateUserState: async (
         stompClient: React.RefObject<Client>,
         roomId: string,
@@ -192,7 +191,6 @@ export const socketEvents = {
     // -----------------------------------------------------------------------------------------------
 
     // APP ( action ) --------------------------------------------------------------------------------
-    // FIXME: 유저 팀 변경 함수
     changeUserTeam: async (
         stompClient: React.RefObject<Client>,
         roomId: string,
@@ -217,10 +215,8 @@ export const socketEvents = {
         }
     },
 
-    // FIXME: 유저 방 나가기 함수.
     userExitRoom: async (
         stompClient: React.RefObject<Client>,
-        roomUserId: string,
         roomId: string
     ) => {
         try {

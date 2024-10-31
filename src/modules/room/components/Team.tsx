@@ -42,7 +42,7 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
           <TeamUserComponent
             key={index}
             user={user}
-            onClick={() => !user && handleTeamClick('BLUE')}
+            onClick={() =>!user && handleTeamClick('BLUE')}
             teamType="BLUE"
             state= {user?.state}
           />
@@ -71,7 +71,7 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
           <TeamUserComponent
             key={index}
             user={user}
-            onClick={() => !user && handleTeamClick('RED')}
+            onClick={() =>!user && handleTeamClick('RED')}
             teamType="RED"
             state= {user?.state}
           />
