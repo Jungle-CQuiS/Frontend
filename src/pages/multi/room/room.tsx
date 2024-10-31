@@ -25,7 +25,7 @@ export default function Room() {
   const [isFirstAttackModalOpen, setIsFirstAttackModalOpen] = useState(false);
   const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(5);
-  const [temp , setTemp] = useState(false); // FIXME: 나중에 지워야함
+  //const [temp , setTemp] = useState(false); // FIXME: 나중에 지워야함
 
   useEffect(() => {
     if (isAllReady) {
@@ -57,7 +57,7 @@ export default function Room() {
       return () => clearTimeout(animationTimer);
     }
     else{
-      setTemp(true);
+      //setTemp(true);
     }
   }, [isAnimationPlaying]);
 
@@ -75,10 +75,10 @@ export default function Room() {
   // isGameStart가 되면, 게임이 시작한다.
   useEffect(() => {
     //FIXME: Navigate 조건문 좀 더 견고하게 수정해야함.
-    if(temp){
+    if(isGameStart){
       navigate('/multi/game');
     }
-}, [temp]);
+}, [isGameStart]);
 
   return (
     <Background>
