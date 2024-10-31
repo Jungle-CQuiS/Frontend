@@ -101,9 +101,9 @@ export const useRoom = (roomId: string) => {
         }
     }, [roomId, isConnected, connect, setupSubscriptions]);
 
-    const exitRoom = async (roomUserId_: string) => {
+    const exitRoom = async () => {
         try {
-            await socketEvents.userExitRoom(stompClient, roomUserId_, roomId); // 수정 요!
+            await socketEvents.userExitRoom(stompClient, roomId); // 수정 요!
         } catch (error) {
             console.error('Room exit failed:', error);
             throw error;
@@ -123,7 +123,7 @@ export const useRoom = (roomId: string) => {
 
     const teamSwitch = async (clickedTeam: string) => {
         try {
-            // TODO: team switch socket protocol
+            await socketEvents.changeUserTeam(stompClient,roomId);
         } catch (error) {
             console.error('Team switch failed:', error);
             throw error;
