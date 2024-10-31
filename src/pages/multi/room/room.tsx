@@ -25,6 +25,7 @@ export default function Room() {
   const [isFirstAttackModalOpen, setIsFirstAttackModalOpen] = useState(false);
   const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(5);
+  const [temp , setTemp] = useState(false); // FIXME: 나중에 지워야함
 
   useEffect(() => {
     if (isAllReady) {
@@ -55,6 +56,9 @@ export default function Room() {
       }, 5000);
       return () => clearTimeout(animationTimer);
     }
+    else{
+      setTemp(true);
+    }
   }, [isAnimationPlaying]);
 
   const handleStopReady = async (roomUserId: string) => {
@@ -71,10 +75,10 @@ export default function Room() {
   // isGameStart가 되면, 게임이 시작한다.
   useEffect(() => {
     //FIXME: Navigate 조건문 좀 더 견고하게 수정해야함.
-    if(isGameStart){
-      navigate(SERVICES.MULTI);
+    if(temp){
+      navigate('/multi/game');
     }
-}, [isGameStart]);
+}, [temp]);
 
   return (
     <Background>
@@ -96,8 +100,8 @@ export default function Room() {
       </RoomTeamContainer>
       <RoomButtons MultiReadyButton={userReady} MultiExitButton={exitRoom} />
       <GameStartCountDownModal
-        count={timeLeft}
-        open={isAllReady && timeLeft > 0}
+        count={countdown}
+        open={isAllReady && countdown > 0}
         handleStopReady={handleStopReady}
         onClose={() => {}}
         onDone={() => {}}

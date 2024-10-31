@@ -13,11 +13,14 @@ export const UseGameState = () => {
         // TODO: 서버에서 받은 이벤트 타입에 따라 처리.
         setcountdown(time);
         switch(event){
-            case GameReadyEvents.ALLREADY:
+            case GameReadyEvents.ALL_READY:
+                setisAllReady(true);
                 break;
-            case GameReadyEvents.STOPREADY:
+            case GameReadyEvents.STOP_READY:
+                setisAllReady(false);
                 break;
             case GameReadyEvents.GAME_START:
+                setisGameStart(true);
                 break;
         }
     }

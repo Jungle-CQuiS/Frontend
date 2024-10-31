@@ -79,7 +79,7 @@ export const socketEvents = {
     },
 
     // 준비방 상태 구독 함수
-    subscribeRoomStatusMessage: (client: Client, roomId: string, setUseGameState: (event: string, time: number) => void) => {
+    subscribeRoomStatusMessage: (client: Client, roomId: string, handleReadyRoomEvent: (event: string, time: number) => void) => {
         try {
             console.log('Attempting to subscribe to room:', roomId);
             // client에 구독 요청
@@ -89,10 +89,7 @@ export const socketEvents = {
                     console.log('Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
-                        if (response.data.isAllReady) {
-                            console.log('All user are ready');
-                            setUseGameState("READY_STATUS", 5);
-                        }
+                        handleReadyRoomEvent(response.gameStatus, response.count);
                     } catch (err) {
                         console.error('Error processing message:', err);
                     }
@@ -205,7 +202,7 @@ export const socketEvents = {
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH,
                 body: JSON.stringify({
-                   "roomUserId": roomUserId,
+                    "roomUserId": roomUserId,
                     "roomId": `${roomId}`
                 })
             });
@@ -229,7 +226,7 @@ export const socketEvents = {
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.EXIT,
                 body: JSON.stringify({
-                   "roomUserId": roomUserId,
+                    "roomUserId": roomUserId,
                     "roomId": `${roomId}`
                 })
             });

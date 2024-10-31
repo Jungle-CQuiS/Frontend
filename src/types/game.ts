@@ -1,7 +1,7 @@
 // 이벤트 타입을 상수로 관리
 export enum GameReadyEvents {
-    ALLREADY = 'ALLREADY',
-    STOPREADY = 'STOPREADY',
+    ALL_READY = 'ALL_READY',
+    STOP_READY = 'STOP_READY',
     GAME_START = 'GAME_START',
     GAME_END = 'GAME_END'
 };
