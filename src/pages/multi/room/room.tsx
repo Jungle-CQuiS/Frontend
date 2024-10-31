@@ -1,3 +1,4 @@
+import Lottie from 'lottie-web';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,10 +22,10 @@ export default function Room() {
     isGameStart, countdown, stompClient, isAllReady
   } = useRoom(roomId);
 
-  const [isAnimationPlaying, setIsAnimationPlaying] = useState(false);
+  const [isCoinAnimation, setIsCoinAnimation] = useState(false);
   const [isFirstAttackModalOpen, setIsFirstAttackModalOpen] = useState(false);
   const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(5); // FIXME: timeLeft를 안쓰는데 꼭 필요한가요?
+  const [timeLeft, setTimeLeft] = useState(5);
   const navigate = useNavigate();
 
   // Ready CountDown Modal Logic
@@ -36,7 +37,7 @@ export default function Room() {
         setTimeLeft((prev) => {
           if (prev <= 1) {
             clearInterval(countdownTimer);
-            setIsAnimationPlaying(true);
+            setIsCoinAnimation(true);
           }
           return prev - 1;
         });
@@ -47,10 +48,10 @@ export default function Room() {
 
   // Set starter team Logic
   useEffect(() => {
-    if (isAnimationPlaying) {
+    if (isCoinAnimation) {
       // 애니메이션이 5초 정도 후에 끝난다고 가정
       const animationTimer = setTimeout(() => {
-        setIsAnimationPlaying(false);
+        setIsCoinAnimation(false);
         // 무작위로 선공 팀 결정
         const selectedTeam = Math.random() > 0.5 ? '1팀' : '2팀';
         setFirstAttackTeam(selectedTeam);
@@ -58,15 +59,7 @@ export default function Room() {
       }, 5000);
       return () => clearTimeout(animationTimer);
     }
-  }, [isAnimationPlaying]);
-
-  // isGameStart가 되면, 게임이 시작한다.
-  useEffect(() => {
-    if (isGameStart) {
-      //TODO: API 통신으로 서버에 게임 시작을 알림. 응답을 대기하나? 응답을 받고 다음페이지로 이동
-      navigate(SERVICES.MULTI);
-    }
-  }, [isGameStart]);
+  }, [isCoinAnimation]);
 
   const handleStopReady = async (roomUserId: string) => {
     try {
@@ -77,7 +70,7 @@ export default function Room() {
     }
   };
 
-  
+
 
 
 
@@ -101,15 +94,15 @@ export default function Room() {
       </RoomTeamContainer>
       <RoomButtons MultiReadyButton={userReady} MultiExitButton={exitRoom} />
       <GameStartCountDownModal
-        count={countdown}
-        open={isAllReady && countdown > 0}
+        count={timeLeft}
+        open={isAllReady && timeLeft > 0}
         handleStopReady={handleStopReady}
         onClose={() => { }}
         onDone={() => { }}
         backdrop={true}
       />
 
-      {/* {isAnimationPlaying && <GameStartAnimation />} */}
+      {/* {isCoinAnimation && <GameStartAnimation />} */}
 
       {isFirstAttackModalOpen && firstAttackTeam && (
         <FirstAttackModal
