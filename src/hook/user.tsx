@@ -3,7 +3,7 @@ import { useState } from 'react';
 export interface User {
     id: number;
     name: string;
-    honor: number;
+    honorCount: number;
     profileImage: string;
 }
 

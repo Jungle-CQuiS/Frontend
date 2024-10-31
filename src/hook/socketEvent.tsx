@@ -31,14 +31,14 @@ export const socketEvents = {
                         console.log(response);
 
                         const teamUsers: TeamUser[] = response.usersData.map((user: ServerUser) => ({
-                            id: user.roomUserId,
-                            name: user.username,
-                            honor: user.honorCount,
+                            roomUserId: user.roomUserId,
+                            username: user.username,
+                            honorCount: user.honorCount,
                             profileImage: "/images/profile_image.png",
                             role: user.role,
                             team: user.team,
                             isLeader: user.isLeader ? 'leader' : 'member', // bool?
-                            state: user.isReady ? 'ready' : 'notready'// bool?
+                            isReady: user.isReady ? 'ready' : 'notready'// bool?
                         }));
 
                         console.log(teamUsers);

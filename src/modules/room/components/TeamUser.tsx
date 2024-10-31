@@ -21,18 +21,20 @@ import { User } from "../../../hook/user";
 import {ReadyText} from "./styled"
 
 // 공통으로 사용할 타입들을 먼저 정의
-export type UserRole = 'host' | 'guest';
+export type UserRole = 'HOST' | 'GUEST';
 export type TeamRole = 'leader' | 'member';
 export type TeamType = 'RED' | 'BLUE';
 export type UserState = 'ready' | 'notready';
 
 // Member 인터페이스 정의
 export interface TeamUser extends User {
+  roomUserId: number;
+  username: string;
+  honorCount : number;
   role: UserRole;
-  honor : number;
-  isLeader: TeamRole;
   team: TeamType;
-  state: UserState;
+  isLeader: TeamRole;
+  isReady: UserState;
 }
 
 // TeamUserProps는 Member를 활용하여 정의
@@ -40,14 +42,13 @@ export interface TeamUserProps {
   user: TeamUser | null;
   onClick: () => void;
   teamType: TeamType;
-  state: UserState;
 }
 
-export const TeamUserComponent = ({ user, onClick, teamType, state }: TeamUserProps) => {
+export const TeamUserComponent = ({ user, onClick, teamType}: TeamUserProps) => {
   const isRedTeam = teamType === 'BLUE';
-  const isHost = user?.role === 'host'; // null 일수도 있어서 ?로 
+  const isHost = user?.role === 'HOST'; // null 일수도 있어서 ?로 
   const isLeader = user?.isLeader === 'leader';
-  const isReady = state === 'ready';
+  const isReady = user?.isReady === 'ready';
 
   return isRedTeam ? (
     <RoomTeamOneUser onClick={onClick}>
@@ -61,7 +62,7 @@ export const TeamUserComponent = ({ user, onClick, teamType, state }: TeamUserPr
           </RoomTeamOneUserName>
           <RoomTeamOneUserProfile src={user.profileImage} alt={user.name} />
           <RoomTeamOneUserHonorWrap>
-            <RoomTeamOneUserHonor>{user.honor}</RoomTeamOneUserHonor>
+            <RoomTeamOneUserHonor>{user.honorCount}</RoomTeamOneUserHonor>
             <RoomTeamOneUserHonorIcon src="/icons/badge.svg" alt="Badge" />
           </RoomTeamOneUserHonorWrap>
         </>
@@ -79,13 +80,13 @@ export const TeamUserComponent = ({ user, onClick, teamType, state }: TeamUserPr
         <>
           <RoomTeamTwobackground />
           <RoomTeamTwoUserHonorWrap>
-            <RoomTeamTwoUserHonor>{user.honor}</RoomTeamTwoUserHonor>
+            <RoomTeamTwoUserHonor>{user.honorCount}</RoomTeamTwoUserHonor>
             <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />
           </RoomTeamTwoUserHonorWrap>
           <RoomTeamTwoUserProfile src={user.profileImage} alt={user.name} />
           <RoomTeamTwoUserName>
             {isReady && <ReadyText $align = 'right'>READY</ReadyText>}
-            {isHost && <RoomTeamTwoUserHonorIcon src="/icons/badge.svg" alt="Badge" />}
+            {isHost && <RoomTeamTwoUserHonorIcon src="/icons/crown.svg" alt="Badge" />}
             {user.name}
             {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
           </RoomTeamTwoUserName>
