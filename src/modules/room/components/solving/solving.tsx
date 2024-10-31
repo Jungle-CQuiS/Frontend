@@ -8,25 +8,40 @@ import { UserTag } from "../../../../modules/quiz/components/multi/UserTags/styl
 import { UserTagsComponent } from "../../../../modules/quiz/components/multi/UserTags/UserTags";
 import { SolvingBottom, SolvingContainer, SovlingInput, SovlingInputWrap } from "./styled";
 import { SolvingHeaderComponent } from "../../../../modules/quiz/components/multi/SolvingHeader/SolvingHeader";
+import { useConfirm } from "../../../../components/confirmPopup";
 
-export const SolvingPage = () => {
+export const SolvingPage = ({ selectedQuiz }: { selectedQuiz: any }) => {
     const [teamId, setTeamId] = useState(2);
+    const customConfirm = useConfirm(); 
+
+    const handleSubmitAnswer = () => {
+        console.log("제출")
+    }
+
+    const handleLeaveRoom = async () => {
+        const confirmed = await customConfirm("정말 나가시겠습니까?");
+        if (confirmed) {
+            console.log("나감");  // TODO: 방 나감
+        }
+    };
 
     return(
         <Background>
             <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
             <SolvingContainer>
-                    <SolvingHeaderComponent />
-                <QuizProblemsComponent />
+                <SolvingHeaderComponent />
+                <div>
+                    <QuizProblemsComponent quiz={selectedQuiz} showAnswer={false} />
+                </div>
                 <SolvingBottom>
                     <SovlingInputWrap>
                         <SovlingInput placeholder="정답을 입력해주세요."/>
-                        <BlackButtonSmall>제출하기</BlackButtonSmall>
+                        <BlackButtonSmall onClick={handleSubmitAnswer}>제출하기</BlackButtonSmall>
                     </SovlingInputWrap>
-                    <SecondaryButtonSmall>나가기</SecondaryButtonSmall>
+                    <SecondaryButtonSmall onClick={handleLeaveRoom}>나가기</SecondaryButtonSmall>
                 </SolvingBottom>
                 <UserTagsComponent teamId={teamId}  />
             </SolvingContainer>
         </Background>
-    )
+    );
 }

@@ -4,6 +4,7 @@ export const MultiGameBackground = styled.div`
     display: flex;
     flex-direction: column;
     gap: 36px;
+    width: 70%;
 `;
 
 export const MultiGameHeader = styled.div`
@@ -31,6 +32,8 @@ export const MultiGameAttackTimer = styled.div`
     font-size: 16px;
     font-weight: 600;
     padding-left: 8px;
+    width: 40px;
+    text-align: right;
 `;
 
 export const MultiGameAttackTimerText = styled.div`
@@ -51,6 +54,8 @@ export const MultiGameAttackQuizWrap = styled.div`
     padding: 0px 40px 0px 40px;
     align-items: center;
     overflow-y: scroll;
+    background-color: #fff;
+    align-items: flex-start;
 `;
 
 export const MultiGameAttackQuiz = styled.div`
@@ -62,6 +67,7 @@ export const MultiGameAttackQuiz = styled.div`
     &:nth-child(2){
         border: none;
     }
+    width: 100%;
 `;
 
 export const MultiGameAttackQuizCheckbox = styled.img`

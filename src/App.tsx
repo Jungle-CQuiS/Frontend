@@ -8,11 +8,10 @@ import MultiPage from './pages/multi/multi';
 import Room from './pages/multi/room/room';
 import ProtectedRoute from './pages/loginpage/protected';
 import SignupPage from './pages/signup/signup';
-import AttackPage from './pages/multi/attack/attack';
 import DefendPage from './pages/multi/defend/defend';
-import { SolvingPage } from './pages/multi/defend/solving/solving';
 import { SelectAnswerPage } from './pages/multi/defend/select/select';
 import { MultiModeResultPage } from './pages/multi/result/multiResult';
+import QuizGamePage from './pages/multi/game/quizGame';
 
 function App() {
   return (
@@ -50,10 +49,10 @@ function App() {
             }
           />
           <Route
-            path="/multi/attack" 
+            path="/multi/game" 
             element={
               <ProtectedRoute>
-                <AttackPage />
+                <QuizGamePage />
               </ProtectedRoute>
             }
           />
@@ -62,14 +61,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <DefendPage />
-              </ProtectedRoute>
-            }
-          />
-            <Route
-            path="/multi/defend/solving"
-            element={
-              <ProtectedRoute>
-                <SolvingPage />
               </ProtectedRoute>
             }
           />
