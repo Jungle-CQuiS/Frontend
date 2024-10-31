@@ -5,14 +5,14 @@ import { useTeamState } from './useTeamState';
 import { UseWebSocket } from './useWebSocket';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
-import { useRoomUserId } from './useRoomUserId';
 import { UseGameState } from './useGameState';
+import { GameReadyEvents } from '../types/game';
 
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { GameState, isAllReady, isGameStart, countdown, handleReadyRoomEvent } = UseGameState();
+    const { isAllReady, isGameStart, countdown, handleReadyRoomEvent } = UseGameState();
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
     // 구독 로직
@@ -130,7 +130,9 @@ export const useRoom = (roomId: string) => {
         }
     };
 
-
+    const gameStart = () => {
+        handleReadyRoomEvent(GameReadyEvents.GAME_START);
+    }
 
     useEffect(() => {
         if (Connected.current) return;
@@ -166,7 +168,8 @@ export const useRoom = (roomId: string) => {
         exitRoom,
         userReady,
         teamSwitch,
-        GameState, isAllReady, isGameStart, countdown,
+        gameStart,
+        isAllReady, isGameStart, countdown,
         stompClient
     };
 };
