@@ -59,7 +59,6 @@ export default function SignupPage() {
 
   return (
     <>
-      <NavBar />
       <SignupBackground>
         <LoginContainer>
           <LoginTitle>Sign Up</LoginTitle>

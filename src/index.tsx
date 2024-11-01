@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';  // BrowserRouter 임포트
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ConfirmPopupProvider } from './components/confirmPopup';
@@ -10,7 +11,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ConfirmPopupProvider>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </ConfirmPopupProvider>
   </React.StrictMode>
 );

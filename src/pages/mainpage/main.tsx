@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
-import NavBar from "../../components/navbar/navbar";
 import { MainPageContainer, GameModeButton, GameModeWrapper, Icon } from "./styled";
 
 // 아이콘 경로를 절대 경로로 설정
 export default function MainPage(){
     return (
     <>
-        <NavBar />
         <MainPageContainer>
             <GameModeWrapper>
                 <GameModeButton disabled>

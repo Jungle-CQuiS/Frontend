@@ -1,65 +1,54 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { PrimaryButtonLong } from "../../components/buttons/styled";
-import NavBar from "../../components/navbar/navbar";
 import { LoginBackground, LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInputWrap, LoginInput, LoginBottomWrap, LoginLinkWrap, LoginLink } from "./styled";
 import { SERVICES } from "../../config/api/constants";
+import { LoginPageProps } from "../../types/user";
 
-export default function LoginPage() {
+export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if (username && password) {
-      try {
-        const response = await fetch(`/api/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: username,
-            password: password,
-          }),
-        });
-  
-        if (!response.ok) {
-          throw new Error("로그인에 실패했습니다.");
-        }
-  
-        const textData = await response.text();
-  
-        const jsonData = textData.split("Login Success")[0];
-        const data = JSON.parse(jsonData);
-  
-        if (!data.accessToken || !data.refreshToken) {
-          throw new Error("응답 데이터에 AccessToken 또는 RefreshToken이 없습니다.");
-        }
+      if (username && password) {
+          try {
+              const response = await fetch(`/api/auth/login`, {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ email: username, password: password }),
+              });
 
-        if (!data.uuid) {
-          throw new Error("응답 데이터에 Uuid가 없습니다.");
-        }
+              if (!response.ok) {
+                  throw new Error("로그인에 실패했습니다.");
+              }
 
-        localStorage.setItem("AccessToken", data.accessToken);
-        localStorage.setItem("RefreshToken", data.refreshToken);
-        localStorage.setItem("uuid", data.uuid)
-  
-        // 로그인 후 메인 페이지로 이동
-        navigate("/main");
-      } catch (error) {
-        console.error("로그인 에러:", error);
-        alert("로그인에 실패했습니다.");
+              const data = await response.json();
+              const userNickname = data.username;
+
+              if (userNickname) {
+                  setNickname(userNickname);
+                  localStorage.setItem("nickname", userNickname);
+              }
+
+              localStorage.setItem("AccessToken", data.accessToken);
+              localStorage.setItem("RefreshToken", data.refreshToken);
+              localStorage.setItem("uuid", data.uuid);
+
+              setIsLoggedIn(true); // 로그인 상태 업데이트
+              navigate("/main");
+          } catch (error) {
+              console.error("로그인 에러:", error);
+              alert("로그인에 실패했습니다.");
+          }
+      } else {
+          alert("이메일과 비밀번호를 입력해주세요.");
       }
-    } else {
-      alert("이메일과 비밀번호를 입력해주세요.");
-    }
   };
-  
-
   return (
     <>
-      <NavBar />
       <LoginBackground>
         <LoginContainer>
           <LoginTitle>Log In</LoginTitle>
