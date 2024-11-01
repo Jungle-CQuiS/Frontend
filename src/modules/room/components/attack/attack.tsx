@@ -9,12 +9,13 @@ import { TeamHeaderComponent } from "../../../quiz/components/multi/TeamHeader/T
 import { UserTagsComponent } from "../../../quiz/components/multi/UserTags/UserTags";
 import { MultiGameBackground, MultiGameAttackContainer, MutliGameAttackTimerWrap, MultiGameAttackTimer, MultiGameAttackTimerText, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameAttackQuiz, MultiGameAttackQuizCheckbox, MultiGameAttackButtonWrap } from "./styled";
 import { Quiz } from "../../../../types/quiz";
+import { useRoom } from "../../../../hook/useRoom";
 
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
 }
 
-export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
+export default function AttackPage({ onSelectionComplete }: AttackPageProps, roomId: string) {
     const [teamId, setTeamId] = useState(1);
     const [isAttackTeam, setIsAttackTeam] = useState(true);
     const customConfirm = useConfirm(); 
@@ -23,6 +24,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
     const [selectedCategory, setSelectedCategory] = useState("OS");
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
     const fetchCalled = useRef(false); // API 중복 호출 방지용 ref
+    const {exitRoom} = useRoom(roomId);
 
     useEffect(() => {
         if (timeLeft > 0) {
@@ -40,7 +42,10 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
+            exitRoom();
         }
+
+
     };
 
     useEffect(() => {
