@@ -127,7 +127,6 @@ export const useRoom = (roomId: string) => {
     };
 
 
-    // TODO: Team 나눠서 페이지 이동하는 함수 
     const navigateToGamePage = async () => {
         //GameStart 상태로 만들어줌.
         handleReadyRoomEvent(GameReadyEvents.GAME_START);

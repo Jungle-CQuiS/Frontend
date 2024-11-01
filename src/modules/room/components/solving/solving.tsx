@@ -24,9 +24,8 @@ export const SolvingPage = ({ selectedQuiz }: { selectedQuiz: any }, roomId: str
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
+            exitRoom();
         }
-
-        exitRoom();
     };
 
     return(

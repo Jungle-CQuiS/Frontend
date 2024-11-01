@@ -44,8 +44,6 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps, roo
             console.log("나감");  // TODO: 방 나감
             exitRoom();
         }
-
-
     };
 
     useEffect(() => {
