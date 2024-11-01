@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useLocation } from 'react-router-dom';
 import { Background } from "../../../../components/background/styled"
 import { BlackButtonSmall, SecondaryButtonSmall } from "../../../../components/buttons/styled"
 import { SolvingHeaderComponent } from "../../../../modules/quiz/components/multi/SolvingHeader/SolvingHeader"
@@ -8,7 +9,8 @@ import AnswerSelectComponent from "../../../../modules/quiz/components/multi/Ans
 import { SelectAnswerButtonWrap, SelectAnswerContainer } from "./styled"
 import { useRoom } from "../../../../hook/useRoom";
 
-export const SelectAnswerPage = (roomId : string) => {
+export const SelectAnswerPage = () => {
+    const { roomId } = useLocation().state;
     const [teamId, setTeamId] = useState(2);
     const {exitRoom} = useRoom(roomId);
     return(
