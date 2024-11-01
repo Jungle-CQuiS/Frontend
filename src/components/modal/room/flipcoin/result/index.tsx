@@ -1,5 +1,6 @@
-import { Modal } from "../../..";
+
 import { useEffect } from 'react';
+import { Modal } from '../../..';
 
 interface FirstAttackModalProps {
     team: string;
@@ -8,18 +9,24 @@ interface FirstAttackModalProps {
 
 export const FirstAttackModal = ({ team, onClose }: FirstAttackModalProps) => {
     useEffect(() => {
-        // 5초 후 자동으로 모달 닫기
         const timer = setTimeout(() => {
             onClose();
-        }, 5000);
+        }, 3000);
         return () => clearTimeout(timer);
     }, [onClose]);
 
     return (
-        // <Modal onClose={onClose} width="50px" height="50px">
-        <div>
-            <h2>{team}이 먼저 공격을 시작합니다!</h2>
-        </div>
-        // </Modal>
+        <Modal
+            open={true}
+            onClose={onClose}
+            onDone={() => {}} // 필요에 따라 onDone 함수 지정
+            width="300px"
+            backdrop={true}
+            backdropcolor={true}
+        >
+            <p style={{ textAlign: "center", fontSize: "1.2rem", fontWeight: "bold" }}>
+                {team}이 선공입니다!
+            </p>
+        </Modal>
     );
 };

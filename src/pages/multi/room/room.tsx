@@ -14,6 +14,7 @@ import { FirstAttackModal } from '../../../components/modal/room/flipcoin/result
 
 import { SERVICES } from '../../../config/api/constants';
 import FlipCoin from '../../../components/modal/room/flipcoin';
+import { FlipCoinBackdrop, FlipCoinScreen } from '../../../components/modal/room/flipcoin/styled';
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
@@ -57,7 +58,7 @@ export default function Room() {
         const selectedTeam = Math.random() > 0.5 ? '1팀' : '2팀';   // 백엔드에서 랜덤 받아와야 할 듯!
         setFirstAttackTeam(selectedTeam);
         setIsFirstAttackModalOpen(true);
-      }, 5000);
+      }, 3000);
       return () => clearTimeout(animationTimer);
     }
   }, [isCoinAnimation]);
@@ -99,7 +100,13 @@ export default function Room() {
         backdrop={true}
       />
 
-      {isCoinAnimation && <FlipCoin />}
+      {isCoinAnimation && (
+          <FlipCoinBackdrop>
+              <FlipCoinScreen>
+                  <FlipCoin />
+              </FlipCoinScreen>
+          </FlipCoinBackdrop>
+      )}
 
       {isFirstAttackModalOpen && firstAttackTeam && (
         <FirstAttackModal

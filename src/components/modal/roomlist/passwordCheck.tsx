@@ -20,11 +20,13 @@ export const PasswordCheckModal = ({
     const navigate = useNavigate();
 
     const checkRoomPasswordValid = async () => {
+        const userToken = localStorage.getItem("AccessToken");
         try {
             const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOMS.PWCHECK, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",  // Content-Type 헤더 추가
+                    "Authorization": `Bearer ${userToken}`,
                 },
 
                 body: JSON.stringify({
