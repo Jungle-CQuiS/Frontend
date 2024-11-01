@@ -9,7 +9,7 @@ import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
 import { GameStartCountDownModal } from '../../../components/modal/room/countdown';
-import { socketEvents } from '../../../hook/socketEvent';
+import { readyRoomSocketEvents } from '../../../hook/readyRoomSocketEvent';
 import { FirstAttackModal } from '../../../components/modal/room/flipcoin/result';
 
 import { SERVICES } from '../../../config/api/constants';
@@ -19,8 +19,8 @@ export default function Room() {
   const { state } = useLocation();
   const {
     teamOneUsers, teamTwoUsers,
-    userReady, exitRoom, teamSwitch, gameStart,
-    isGameStart, countdown, stompClient, isAllReady
+    userReady, exitRoom, teamSwitch,navigateToTeamPage,
+    countdown, stompClient, isAllReady
   } = useRoom(roomId);
 
   const [isCoinAnimation, setIsCoinAnimation] = useState(false);
@@ -33,7 +33,7 @@ export default function Room() {
   useEffect(() => {
     if (isAllReady) {
       // 5초 카운트다운 모달 시작
-      setTimeLeft(5); // 카운트다운 초기화
+      setTimeLeft(countdown); // 카운트다운 초기화
       const countdownTimer = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
@@ -64,16 +64,12 @@ export default function Room() {
 
   const handleStopReady = async (roomUserId: string) => {
     try {
-      await socketEvents.updateUserState(stompClient, roomUserId);
+      await readyRoomSocketEvents.updateUserState(stompClient, roomUserId);
     } catch (error) {
       console.error('User ready failed:', error);
       throw error;
     }
   };
-
-
-
-
 
   return (
     <Background>
@@ -108,7 +104,11 @@ export default function Room() {
       {isFirstAttackModalOpen && firstAttackTeam && (
         <FirstAttackModal
           team={firstAttackTeam}
-          onClose={() => setIsFirstAttackModalOpen(false)}
+          onClose={() => {
+            setIsFirstAttackModalOpen(false)
+            
+            navigateToTeamPage(); // 팀 별로 다른 페이지 리다이렉트
+          }}
         />
       )}
     </Background>

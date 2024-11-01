@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { GameReadyEvents  } from "../types/game";
+import { GameStatus ,GameReadyEvents  } from "../types/game";
 
 
 export const UseGameState = () => {
     const [isAllReady, setisAllReady ] = useState(false); // 모두 준비가 됐는지 불값.
-    const [isGameStart, setisGameStart ] = useState(false); // 게임 시작 boolean
     const [countdown, setcountdown ] = useState(5); // 카운트 다운 시간 number
 
 
@@ -19,7 +18,9 @@ export const UseGameState = () => {
                 setisAllReady(false);
                 break;
             case GameReadyEvents.GAME_START:
-                setisGameStart(true);
+                // Local Storage에 게임 정보 저장
+                // 그래야지 재 접속했을 때 다시 들어올 수 있음.
+                localStorage.setItem("GameState", JSON.stringify(`${GameStatus.START}`));
                 break;
         }
     }
@@ -27,7 +28,6 @@ export const UseGameState = () => {
 
     return {
         isAllReady,
-        isGameStart,
         countdown,
         handleReadyRoomEvent
     };
