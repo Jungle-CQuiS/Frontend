@@ -23,29 +23,30 @@ export const GameStartCountDownModal = ({
         };
         document.addEventListener("keydown", handleLock);
         return () => {
-            document.addEventListener("keydown", handleLock);
+            document.removeEventListener("keydown", handleLock);
         }
     }, []);
 
-    const stopReadyHandler = () => {
+    const stopReadyHandler = async() => {
         if (roomUserId !== null) {
-            handleStopReady(roomUserId);
+            await handleStopReady(roomUserId);
         }
         // TODO: 모달 창 닫히도록 추가
-
+        if(props.onClose){
+            props.onClose();
+        }
     }
 
     return (
         <Modal
             {...props}
-            onClose={() => { }}
             width="250px"
             height="auto"
             position="absolute"
             $transform="translate(-50%, -200%)">
             <UserControlWrap {...props}>
                 <div>
-                    {count} 초 남았습니다
+                    게임 시작까지 {count} 초 남았습니다!
                 </div>
                 <button onClick={stopReadyHandler}>취소하기</button>
             </UserControlWrap>
