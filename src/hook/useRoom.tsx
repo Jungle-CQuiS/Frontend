@@ -6,13 +6,13 @@ import { UseWebSocket } from './useWebSocket';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
 import { UseGameState } from './useGameState';
-import { GameReadyEvents } from '../types/game';
+import { GameReadyEvents, GameStatus } from '../types/game';
 
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { isAllReady, countdown, handleReadyRoomEvent } = UseGameState();
+    const { gameState ,isAllReady, countdown, handleReadyRoomEvent } = UseGameState();
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
 
@@ -127,16 +127,22 @@ export const useRoom = (roomId: string) => {
     };
 
 
-    // TODO: Team 나눠서 페이지 이동하는 함수 
-    const navigateToTeamPage = async () => {
-        // Local Storage에 Game State를 Start로 저장해준다.
+    const navigateToGamePage = async () => {
+        //GameStart 상태로 만들어줌.
         handleReadyRoomEvent(GameReadyEvents.GAME_START);
 
-        // TODO: Team 별로 Subscribe 설정.
+        // Navigate Game Page
+        navigate("/multi/game", {
+            state: {
+                roomId
+            }
+        });
     };
 
 
     useEffect(() => {
+        // 게임 준비 상태일 때만. 해당 훅을 실행한다.
+        if(gameState !== GameStatus.READY) return;
         if (Connected.current) return;
         const initializeRoom = async () => {
             try {
@@ -170,7 +176,7 @@ export const useRoom = (roomId: string) => {
         exitRoom,
         userReady,
         teamSwitch,
-        navigateToTeamPage,
+        navigateToGamePage,
         isAllReady, countdown,
         stompClient
     };

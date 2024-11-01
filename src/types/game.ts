@@ -8,6 +8,7 @@ export enum GameReadyEvents {
 
 // 게임 상태도 상수로 관리
 export enum GameStatus {
+    READY = 'READY',
     START = 'START',
     WAITING = 'WAITING',
     COUNTDOWN = 'COUNTDOWN',

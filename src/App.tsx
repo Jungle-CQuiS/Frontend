@@ -80,7 +80,7 @@ function App() {
           }
         />
           <Route
-          path="/multi/defend/select"
+          path="/multi/defend/select/:id"
           element={
             <ProtectedRoute>
               <SelectAnswerPage />

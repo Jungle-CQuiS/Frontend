@@ -19,7 +19,7 @@ export default function Room() {
   const { state } = useLocation();
   const {
     teamOneUsers, teamTwoUsers,
-    userReady, exitRoom, teamSwitch,navigateToTeamPage,
+    userReady, exitRoom, teamSwitch,navigateToGamePage,
     countdown, stompClient, isAllReady
   } = useRoom(roomId);
 
@@ -107,7 +107,7 @@ export default function Room() {
           onClose={() => {
             setIsFirstAttackModalOpen(false)
             
-            navigateToTeamPage(); // 팀 별로 다른 페이지 리다이렉트
+            navigateToGamePage(); // 팀 별로 다른 페이지 리다이렉트
           }}
         />
       )}
