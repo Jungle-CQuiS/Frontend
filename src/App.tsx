@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, BrowserRouter as Router } from 'react-router-dom';
 import LandingPage from './pages/landing/landing';
 import GlobalStyle from './globalstyles';
 import MainPage from './pages/mainpage/main';
@@ -15,19 +15,27 @@ import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
 
 function App() {
-  const [nickname, setNickname] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string | null>(localStorage.getItem("nickname"));
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("uuid"));
   const location = useLocation();
 
-  const navBarPaths = ["/login", "/main", "/multi", "/signup", "/landing"];
+  const navBarPaths = ["/login", "/main", "/multi", "/signup", "/"];
   const showNavBar = navBarPaths.includes(location.pathname);
 
   return (
     <>
       <GlobalStyle />
-      {showNavBar && <NavBar nickname={nickname} setNickname={setNickname} />}
+      {showNavBar && (
+        <NavBar 
+          nickname={nickname} 
+          setNickname={setNickname} 
+          isLoggedIn={isLoggedIn} 
+          setIsLoggedIn={setIsLoggedIn} 
+        />
+      )}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage setNickname={setNickname} />} />
+        <Route path="/login" element={<LoginPage setNickname={setNickname} setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/signup" element={<SignupPage />} />
 
         {/* 보호된 경로들 */}
