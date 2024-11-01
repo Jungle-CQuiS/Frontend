@@ -29,8 +29,6 @@ export default function Room() {
   const [timeLeft, setTimeLeft] = useState(5);
   const [isCountDownModalOpen, setIsCountDownModalOpen] = useState(false);
   const navigate = useNavigate();
-
-  // 웹소켓취소 이벤트 핸들러 생성
   
   // Ready CountDown Modal Logic
   useEffect(() => {
@@ -54,18 +52,16 @@ export default function Room() {
 
   const handleStopReady = async () => {
       await SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY;
-      // handleReadyClick 함수 실행되게 해보자...
       userReady();
     };
 
     // Set starter team Logic
     useEffect(() => {
       if (isCoinAnimation) {
-        // 애니메이션이 5초 정도 후에 끝난다고 가정
         const animationTimer = setTimeout(() => {
           setIsCoinAnimation(false);
           // 무작위로 선공 팀 결정
-          const selectedTeam = Math.random() > 0.5 ? '1팀' : '2팀';   // 백엔드에서 랜덤 받아와야 할 듯!
+          const selectedTeam = '1팀';   // 백엔드에서 랜덤 받아와야 할 듯!
           setFirstAttackTeam(selectedTeam);
           setIsFirstAttackModalOpen(true);
         }, 5000);
