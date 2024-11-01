@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { TeamUser } from "../modules/room/components/TeamUser";
+import { TeamUser } from "../types/teamuser";
+import { TeamUserComponent } from "../modules/room/components/TeamUserComponent";
 
 export const useTeamState = (roomId: string) => {
     const [teamOneUsers, setTeamOneUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));

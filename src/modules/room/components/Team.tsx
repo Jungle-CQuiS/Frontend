@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RoomTeamOne, RoomTeamOneTitleWrap, RoomTeamOneTitleBackground, RoomTeamOneTitle, RoomTeamOneUserWrap, RoomTeamTwo, RoomTeamTwoTitleWrap, RoomTeamTwoTitle, RoomTeamTwoTitleBackground, RoomTeamTwoUserWrap } from "../../../pages/multi/room/styled";
-import { TeamUser, TeamUserComponent } from "./TeamUser";
+import { TeamUser } from "../../../types/teamuser";
+import { TeamUserComponent } from "./TeamUserComponent";
 import { UserControlInRoom } from "../../../components/modal/room/usercontrol";
 
 export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: any) => {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { OpenVidu, Session, Subscriber, Publisher } from "openvidu-browser";
-import { socketEvents } from "./socketEvent";
+import { readyRoomSocketEvents } from "./readyRoomSocketEvent";
 import { UseWebSocket } from "./useWebSocket";
 
 export const useOpenVidu = (roomId: string) => {
@@ -16,7 +16,7 @@ export const useOpenVidu = (roomId: string) => {
           await connect();
         }
         if (stompClient.current) {
-          socketEvents.enterRoom(stompClient, roomId);
+          readyRoomSocketEvents.enterRoom(stompClient, roomId);
         }
 
         const OV = new OpenVidu(); // OpenVidu 인스턴스 생성

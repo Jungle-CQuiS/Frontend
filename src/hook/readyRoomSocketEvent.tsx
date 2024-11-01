@@ -1,11 +1,11 @@
 import { Client } from '@stomp/stompjs';
-import { TeamUser } from '../modules/room/components/TeamUser';
+import { TeamUser } from '../types/teamuser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { UserControlKickBtn } from '../components/modal/room/usercontrol/styled';
 import React from 'react';
 
 
-export const socketEvents = {
+export const readyRoomSocketEvents = {
     // SUBSCRIBE ------------------------------------------------------------------------------------
     // 방 정보 구독 함수
     subscribeToRoom: (client: Client, roomId: string, updateTeams: (users: TeamUser[]) => void) => {
@@ -150,7 +150,7 @@ export const socketEvents = {
         try {
             // 입장 메시지 전송만 담당
             if (stompClient.current) {
-                socketEvents.sendJoinMessage(stompClient.current, roomId);
+                readyRoomSocketEvents.sendJoinMessage(stompClient.current, roomId);
                 console.log('Join message sent successfully');
             }
         } catch (error) {

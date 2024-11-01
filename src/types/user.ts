@@ -9,3 +9,10 @@ export interface NavBarProps {
     isLoggedIn: boolean;
     setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
+
+export interface User {
+    id: number;
+    name: string;
+    honorCount: number;
+    profileImage: string;
+}
