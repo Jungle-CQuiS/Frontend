@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { PrimaryButtonLong } from "../../components/buttons/styled";
-import NavBar from "../../components/navbar/navbar";
 import { LoginBackground, LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInputWrap, LoginInput, LoginBottomWrap, LoginLinkWrap, LoginLink } from "./styled";
 import { SERVICES } from "../../config/api/constants";
+import { LoginPageProps } from "../../types/user";
 
-export default function LoginPage() {
+export default function LoginPage({ setNickname}: LoginPageProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -32,6 +32,10 @@ export default function LoginPage() {
   
         const jsonData = textData.split("Login Success")[0];
         const data = JSON.parse(jsonData);
+
+        if (data.nickname) {
+          setNickname(data.nickname);
+        }
   
         if (!data.accessToken || !data.refreshToken) {
           throw new Error("응답 데이터에 AccessToken 또는 RefreshToken이 없습니다.");
@@ -59,7 +63,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <NavBar />
       <LoginBackground>
         <LoginContainer>
           <LoginTitle>Log In</LoginTitle>

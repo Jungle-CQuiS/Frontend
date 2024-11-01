@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { CreateRoomModal } from "../../components/modal/room";
-import NavBar from "../../components/navbar/navbar";
 import { MainPageSearchBar, MainPageSearchBarWrap, MainPageTable, MainPageTableThead, MainPageTableTheadTh, MainPageTableTheadTr, MainPageTitleText, MultiPageTitle, MultiPageTitleIcon } from "./styled";
 import { PrimaryButtonMedium } from "../../components/buttons/styled";
 import { Background } from "../../components/background/styled";
@@ -25,7 +24,6 @@ export default function MultiPage(){
 
     return(
         <>
-            <NavBar />
             <Background>
                 <MultiPageTitle>
                     <MultiPageTitleIcon src="/icons/mdi_users_black.svg" alt="Multi Icon Black"/>

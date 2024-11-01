@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
 import { PrimaryButtonLarge } from "../../components/buttons/styled";
-import NavBar from "../../components/navbar/navbar";
 import { LandingPageContainer, LandingPageText, LandingPageTextContainer, LandingPageTextPrimary, LandingPageTextSecondary, LandingPageTextWrap, LandingPageWrap } from "./styled";
 import { SERVICES } from "../../config/api/constants";
 
 export default function LandingPage(){
     return (
     <>
-        <NavBar />
         <LandingPageContainer>
             <LandingPageWrap>
                 <LandingPageTextContainer>
