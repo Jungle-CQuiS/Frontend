@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import { TeamUser } from '../modules/room/components/TeamUser';
+import { TeamUser } from '../types/teamuser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { UserControlKickBtn } from '../components/modal/room/usercontrol/styled';
 import React from 'react';
