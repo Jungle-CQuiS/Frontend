@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import Lottie from "lottie-web";
-import animationData from '/home/yong/final-project/frontend/src/lottie/flip_coin.json';
+import animationData from "../../../../lottie/flip_coin.json";
 import { FlipCoinScreen } from "./styled";
+import { Modal } from "../..";
 
 export default function FlipCoin() {
     const coincontainer = useRef<HTMLDivElement | null>(null);
