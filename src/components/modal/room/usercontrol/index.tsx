@@ -1,7 +1,6 @@
 import { Client, Stomp } from "@stomp/stompjs";
 import { Modal, IModalProps } from "../..";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
-import { UseWebSocket } from "../../../../hook/useWebSocket";
 import { UserControlWrap, UserControlBtn, UserControlKickBtn } from "./styled";
 import React, { useState } from "react";
 

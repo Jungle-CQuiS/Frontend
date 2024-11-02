@@ -4,14 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Room } from "../../../types/room"
 import { PasswordCheckModal } from '../../../components/modal/roomlist/passwordCheck';
 import { QUIZ_MULTI_ENDPOINTS } from '../../../config/api/endpoints/quiz-multi.endpoints';
-import { UseWebSocket } from '../../../hook/useWebSocket';
-
-//임시 방 정보 하드코딩
-const testrooms = [
-    { id: "room1", name: "이기는 팀 우리 팀", isLocked: true, currentUsers: "7", maxUser: "8" },
-    { id: "room2", name: "패배 팀", isLocked: false, currentUsers: "6", maxUser: "8" },
-    { id: "room3", name: "우승 팀", isLocked: true, currentUsers: "5", maxUser: "10" },
-];
 
 interface RoomListProps {
     searchTerm: string;
@@ -20,7 +12,7 @@ interface RoomListProps {
 const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [roomID, setRoomId] = useState<string>();
-    const [roomName, setRoomName] = useState<string>();
+    const [roomName, setRoomName] = useState<string>(); 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();

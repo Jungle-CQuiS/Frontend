@@ -1,18 +1,20 @@
 import { Client } from '@stomp/stompjs';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { readyRoomSocketEvents } from './readyRoomSocketEvent';
-import { useTeamState } from './useTeamState';
-import { UseWebSocket } from './useWebSocket';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
-import { UseGameState } from './useGameState';
+import { useGameState } from '../contexts/GameStateContext/useGameState';
 import { GameReadyEvents, GameStatus } from '../types/game';
+import { GameData } from '../types/gamedata';
+import { useStompContext } from '../contexts/StompContext';
+import { useTeamState } from '../contexts/TeamStateContext/useTeamState';
 
 export const useRoom = (roomId: string) => {
-    const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
-    const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
+    const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
+    const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { gameState ,isAllReady, countdown, handleReadyRoomEvent } = UseGameState();
+    const { gameState, isAllReady, roomUserId ,
+        handleReadyRoomEvent, setRoomUserIdWithState  } = useGameState();
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
 
@@ -22,7 +24,7 @@ export const useRoom = (roomId: string) => {
         readyRoomSocketEvents.subscribeToRoom(client, roomId, updateTeams);
         readyRoomSocketEvents.subscribeRoomStatusMessage(client, roomId, handleReadyRoomEvent);
 
-    }, [roomId, updateTeams]);
+    }, []);
 
 
     const fetchUserRoomId = async () => {
@@ -62,12 +64,16 @@ export const useRoom = (roomId: string) => {
             }
 
             const data = await response.json();
-            localStorage.setItem("roomUserId", data.data.roomUserId);
 
+            // localStorage와 context 모두 업데이트
+            localStorage.setItem("roomUserId", data.data.roomUserId);
+            setRoomUserIdWithState(data.data.roomUserId);  // context 업데이트
+           
             console.log("<Response> roomUSerID :", data.data.roomUserId)
         } catch (e) {
             const errorMessage = e instanceof Error ? e.message : String(e);
             console.error("Fetching roomUuid failed:", errorMessage);
+            throw e;
         }
     };
 
@@ -95,11 +101,11 @@ export const useRoom = (roomId: string) => {
             console.error('Room entry failed:', error);
             throw error;
         }
-    }, [roomId, isConnected, connect, setupSubscriptions]);
+    }, []);
 
     const exitRoom = async () => {
         try {
-            await readyRoomSocketEvents.userExitRoom(stompClient, roomId); // 수정 요!
+            await readyRoomSocketEvents.userExitRoom(stompClient, roomId,roomUserId); // 수정 요!
         } catch (error) {
             console.error('Room exit failed:', error);
             throw error;
@@ -110,7 +116,7 @@ export const useRoom = (roomId: string) => {
 
     const userReady = async () => {
         try {
-            await readyRoomSocketEvents.updateUserState(stompClient, roomId); // 수정 요!
+            await readyRoomSocketEvents.updateUserState(stompClient, roomId, roomUserId); // 수정 요!
         } catch (error) {
             console.error('User ready failed:', error);
             throw error;
@@ -119,7 +125,7 @@ export const useRoom = (roomId: string) => {
 
     const teamSwitch = async (clickedTeam: string) => {
         try {
-            await readyRoomSocketEvents.changeUserTeam(stompClient, roomId);
+            await readyRoomSocketEvents.changeUserTeam(stompClient, roomId, roomUserId);
         } catch (error) {
             console.error('Team switch failed:', error);
             throw error;
@@ -131,44 +137,64 @@ export const useRoom = (roomId: string) => {
         //GameStart 상태로 만들어줌.
         handleReadyRoomEvent(GameReadyEvents.GAME_START);
 
+
+        if (!userUuid) {
+            console.error('userUuid가 없습니다');
+            return;
+            // 또는 다른 에러 처리
+        }
+        if (!stompClient.current) {
+            console.error('StompClient가 연결되지 않았습니다');
+            return;
+            // 또는 다른 에러 처리
+        }
+
+        // GameData Packing
+        const gameData: GameData = {
+            teamOneUsers: teamOneUsers,
+            teamTwoUsers: teamTwoUsers,
+            _roomId: roomId,
+            uuserUuid: userUuid
+        };
+
         // Navigate Game Page
-        navigate("/multi/game", {
-            state: {
-                roomId
-            }
-        });
+        navigate("/multi/game", { state : gameData });
     };
+
+    useEffect(() => {
+        if (!isTeamsLoaded && stompClient.current?.active) {
+            console.log('Requesting initial team data...');
+            // 필요한 경우 초기 팀 데이터 요청 로직
+        }
+    }, [isTeamsLoaded, stompClient]);
 
 
     useEffect(() => {
         // 게임 준비 상태일 때만. 해당 훅을 실행한다.
-        if(gameState !== GameStatus.READY) return;
+        if (gameState !== GameStatus.ENTER) return;
         if (Connected.current) return;
+
         const initializeRoom = async () => {
             try {
+                handleReadyRoomEvent(GameReadyEvents.ENTER);
                 await enterRoom(); // Active Socket Protocol
                 await fetchUserRoomId();
+                handleReadyRoomEvent(GameReadyEvents.LOADING);
             } catch (error) {
                 console.error('Room initialization failed:', error);
+                handleReadyRoomEvent(GameReadyEvents.ENTER);
             }
         };
 
         initializeRoom();
+        
 
         return () => {
             if (stompClient.current?.active) {
                 stompClient.current.deactivate();
             }
         };
-    }, [roomId]);
-
-    // 디버깅을 위한 상태 변화 감지
-    useEffect(() => {
-        console.log('Team state updated:', {
-            teamOneUsers,
-            teamTwoUsers
-        });
-    }, [teamOneUsers, teamTwoUsers]);
+    }, []);
 
     return {
         teamOneUsers,
@@ -177,7 +203,8 @@ export const useRoom = (roomId: string) => {
         userReady,
         teamSwitch,
         navigateToGamePage,
-        isAllReady, countdown,
-        stompClient
+        isAllReady,
+        stompClient,
+        isTeamsLoaded
     };
 };

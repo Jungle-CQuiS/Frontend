@@ -1,8 +1,9 @@
+import React from 'react';
 import { Client } from '@stomp/stompjs';
 import { TeamUser } from '../types/teamuser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { UserControlKickBtn } from '../components/modal/room/usercontrol/styled';
-import React from 'react';
+import { GameStateContext } from '../contexts/GameStateContext/GameStateContext';
 
 
 export const readyRoomSocketEvents = {
@@ -48,30 +49,6 @@ export const readyRoomSocketEvents = {
                     }
                 }
             );
-            console.log('Subscription successful:', subscription);
-        } catch (err) {
-            console.error('Subscription error:', err);
-        }
-    },
-
-    // 유저 roomUserId 구독 함수
-    subscribeRoomUserId: (client: Client, uuid: string, setRoomUserID: (roomUid: string) => void) => {
-        try {
-            console.log('Attempting to subscribe to roomUserId:', uuid);
-            const subscription = client.subscribe(
-                `/user/${uuid}/queue/rooms/join`,
-                (message) => {
-                    console.log('구독 메시지 받음:', message);
-                    console.log('메시지 본문:', message.body);
-                    try {
-                        const response = JSON.parse(message.body);
-                        console.log('파싱된 데이터:', response);
-                        setRoomUserID(response.data.roomUserId);
-
-                    } catch (err) {
-                        console.error('Error processing message:', err);
-                    }
-                });
             console.log('Subscription successful:', subscription);
         } catch (err) {
             console.error('Subscription error:', err);
@@ -164,13 +141,14 @@ export const readyRoomSocketEvents = {
     updateUserState: async (
         stompClient: React.RefObject<Client>,
         roomId: string,
+        roomUserId:string
     ) => {
         try {
             if (!stompClient.current?.active) {
                 console.error('STOMP connection is not active');
                 return;
             }
-            const roomUserId = localStorage.getItem("roomUserId");
+
             console.log(roomUserId, "user change state");
 
             stompClient.current.publish({
@@ -191,13 +169,14 @@ export const readyRoomSocketEvents = {
     changeUserTeam: async (
         stompClient: React.RefObject<Client>,
         roomId: string,
+        roomUserId:string
     ) => {
         try {
             if (!stompClient.current?.active) {
                 console.error('STOMP connection is not active');
                 return;
             }
-            const roomUserId = localStorage.getItem("roomUserId");
+
             console.log(roomUserId, "user change team");
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH,
@@ -208,20 +187,21 @@ export const readyRoomSocketEvents = {
             });
 
         } catch (error) {
-
+            
         }
     },
 
     userExitRoom: async (
         stompClient: React.RefObject<Client>,
-        roomId: string
+        roomId: string,
+        roomUserId:string
     ) => {
         try {
             if (!stompClient.current?.active) {
                 console.error('STOMP connection is not active');
                 return;
             }
-            const roomUserId = localStorage.getItem("roomUserId");
+           
             console.log(roomUserId, "user Exit");
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.EXIT,
@@ -230,6 +210,8 @@ export const readyRoomSocketEvents = {
                     "roomId": `${roomId}`
                 })
             });
+
+            localStorage.removeItem("roomUserId");
 
         } catch (error) {
 

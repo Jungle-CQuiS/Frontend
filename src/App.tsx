@@ -11,6 +11,9 @@ import SignupPage from './pages/signup/signup';
 import DefendPage from './pages/multi/defend/defend';
 import { SelectAnswerPage } from './pages/multi/defend/select/select';
 import { MultiModeResultPage } from './pages/multi/result/multiResult';
+import { StompProvider } from './contexts/StompContext';
+import { GameStateProvider } from './contexts/GameStateContext/GameStateContext';
+import { TeamStateProvider } from './contexts/TeamStateContext/TeamStateContext';
 import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
 import MyPage from './pages/mypage/mypage';
@@ -73,11 +76,19 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
+       {/* using web socket */}
         <Route
           path="/room/:id"
           element={
             <ProtectedRoute>
+              <GameStateProvider>
+              <TeamStateProvider>
+              <StompProvider>
               <Room />
+              </StompProvider>
+              </TeamStateProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
@@ -85,7 +96,13 @@ function App() {
           path="/multi/game" 
           element={
             <ProtectedRoute>
+              <GameStateProvider>
+              <TeamStateProvider>
+              <StompProvider> 
               <QuizGamePage />
+              </StompProvider>
+              </TeamStateProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
@@ -93,15 +110,27 @@ function App() {
           path="/multi/defend"
           element={
             <ProtectedRoute>
+              <GameStateProvider>
+              <TeamStateProvider>
+              <StompProvider>
               <DefendPage />
+              </StompProvider>
+              </TeamStateProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
           <Route
-          path="/multi/defend/select/:id"
+          path="/multi/defend/select"
           element={
             <ProtectedRoute>
+              <GameStateProvider>
+              <TeamStateProvider>
+              <StompProvider>
               <SelectAnswerPage />
+              </StompProvider>
+              </TeamStateProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
@@ -109,7 +138,13 @@ function App() {
           path="/multi/result"
           element={
             <ProtectedRoute>
+              <GameStateProvider>
+              <TeamStateProvider>
+              <StompProvider>
               <MultiModeResultPage />
+              </StompProvider>
+              </TeamStateProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
