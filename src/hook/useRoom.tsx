@@ -13,8 +13,8 @@ export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { gameState, isAllReady, roomUserId: userRoomId ,
-        handleReadyRoomEvent, setRoomUserID  } = useGameState();
+    const { gameState, isAllReady, roomUserId ,
+        handleReadyRoomEvent, setRoomUserIdWithState  } = useGameState();
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
 
@@ -67,7 +67,7 @@ export const useRoom = (roomId: string) => {
 
             // localStorage와 context 모두 업데이트
             localStorage.setItem("roomUserId", data.data.roomUserId);
-            setRoomUserID(data.data.roomUserId);  // context 업데이트
+            setRoomUserIdWithState(data.data.roomUserId);  // context 업데이트
            
             console.log("<Response> roomUSerID :", data.data.roomUserId)
         } catch (e) {
@@ -105,7 +105,7 @@ export const useRoom = (roomId: string) => {
 
     const exitRoom = async () => {
         try {
-            await readyRoomSocketEvents.userExitRoom(stompClient, roomId,userRoomId); // 수정 요!
+            await readyRoomSocketEvents.userExitRoom(stompClient, roomId,roomUserId); // 수정 요!
         } catch (error) {
             console.error('Room exit failed:', error);
             throw error;
@@ -116,7 +116,7 @@ export const useRoom = (roomId: string) => {
 
     const userReady = async () => {
         try {
-            await readyRoomSocketEvents.updateUserState(stompClient, roomId, userRoomId); // 수정 요!
+            await readyRoomSocketEvents.updateUserState(stompClient, roomId, roomUserId); // 수정 요!
         } catch (error) {
             console.error('User ready failed:', error);
             throw error;
@@ -125,7 +125,7 @@ export const useRoom = (roomId: string) => {
 
     const teamSwitch = async (clickedTeam: string) => {
         try {
-            await readyRoomSocketEvents.changeUserTeam(stompClient, roomId, userRoomId);
+            await readyRoomSocketEvents.changeUserTeam(stompClient, roomId, roomUserId);
         } catch (error) {
             console.error('Team switch failed:', error);
             throw error;
@@ -176,16 +176,18 @@ export const useRoom = (roomId: string) => {
 
         const initializeRoom = async () => {
             try {
+                handleReadyRoomEvent(GameReadyEvents.ENTER);
                 await enterRoom(); // Active Socket Protocol
                 await fetchUserRoomId();
+                handleReadyRoomEvent(GameReadyEvents.LOADING);
             } catch (error) {
                 console.error('Room initialization failed:', error);
+                handleReadyRoomEvent(GameReadyEvents.ENTER);
             }
-
-            handleReadyRoomEvent(GameReadyEvents.LOADING);
         };
 
         initializeRoom();
+        
 
         return () => {
             if (stompClient.current?.active) {

@@ -28,12 +28,12 @@ export interface TeamUserProps {
 }
 
 export const TeamUserComponent = ({ user, onClick, teamType}: TeamUserProps) => {
-  const isRedTeam = teamType === 'BLUE';
+  const isBlueTeam = teamType === 'BLUE';
   const isHost = user?.role === 'HOST'; // null 일수도 있어서 ?로 
   const isLeader = user?.isLeader === 'leader';
   const isReady = user?.isReady === 'ready';
 
-  return isRedTeam ? (
+  return isBlueTeam ? (
     <RoomTeamOneUser onClick={onClick}>
       {user ? (
         <>

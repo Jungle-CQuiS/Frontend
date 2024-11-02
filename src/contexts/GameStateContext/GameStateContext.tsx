@@ -6,7 +6,7 @@ interface GameStateContextType {
     isAllReady: boolean;
     roomUserId : string;
     handleReadyRoomEvent: (event: string ) => void;
-    setRoomUserID: (id: string) => void;
+    setRoomUserIdWithState: (id: string) => void;
     roomUserIdError: string | null;
 }
 
@@ -18,13 +18,16 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [roomUserId, setRoomUserID] = useState<string>("none");
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
 
-    const setRoomUserIDWithState = useCallback((id: string) => {
+    const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
         setRoomUserID(id);
     }, []);
 
     const handleReadyRoomEvent = useCallback((event: string) => {
         switch(event) {
+            case GameReadyEvents.ENTER:
+                setGameState(GameStatus.LOADING);
+                break;
             case GameReadyEvents.LOADING:
                 setGameState(GameStatus.WAITING);
                 break;
@@ -49,7 +52,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             isAllReady,
             roomUserId: roomUserId,
             handleReadyRoomEvent,
-            setRoomUserID: setRoomUserIDWithState,
+            setRoomUserIdWithState,
             roomUserIdError
         }}>
             {children}
