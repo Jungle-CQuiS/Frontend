@@ -11,6 +11,8 @@ import SignupPage from './pages/signup/signup';
 import DefendPage from './pages/multi/defend/defend';
 import { SelectAnswerPage } from './pages/multi/defend/select/select';
 import { MultiModeResultPage } from './pages/multi/result/multiResult';
+import { StompProvider } from './contexts/StompContext';
+
 import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
 
@@ -55,11 +57,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
+       {/* using web socket */}
         <Route
           path="/room/:id"
           element={
             <ProtectedRoute>
+              <StompProvider>
               <Room />
+              </StompProvider>
             </ProtectedRoute>
           }
         />
@@ -67,7 +73,9 @@ function App() {
           path="/multi/game" 
           element={
             <ProtectedRoute>
+              <StompProvider> 
               <QuizGamePage />
+              </StompProvider>
             </ProtectedRoute>
           }
         />
@@ -75,7 +83,9 @@ function App() {
           path="/multi/defend"
           element={
             <ProtectedRoute>
+              <StompProvider>
               <DefendPage />
+              </StompProvider>
             </ProtectedRoute>
           }
         />
@@ -83,7 +93,9 @@ function App() {
           path="/multi/defend/select"
           element={
             <ProtectedRoute>
+              <StompProvider>
               <SelectAnswerPage />
+              </StompProvider>
             </ProtectedRoute>
           }
         />
@@ -91,7 +103,9 @@ function App() {
           path="/multi/result"
           element={
             <ProtectedRoute>
+              <StompProvider>
               <MultiModeResultPage />
+              </StompProvider>
             </ProtectedRoute>
           }
         />

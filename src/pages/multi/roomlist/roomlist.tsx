@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Room } from "../../../types/room"
 import { PasswordCheckModal } from '../../../components/modal/roomlist/passwordCheck';
 import { QUIZ_MULTI_ENDPOINTS } from '../../../config/api/endpoints/quiz-multi.endpoints';
-import { UseWebSocket } from '../../../hook/useWebSocket';
 
 //임시 방 정보 하드코딩
 const testrooms = [

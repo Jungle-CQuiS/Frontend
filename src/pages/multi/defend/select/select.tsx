@@ -9,10 +9,11 @@ import AnswerSelectComponent from "../../../../modules/quiz/components/multi/Ans
 import { SelectAnswerButtonWrap, SelectAnswerContainer } from "./styled"
 import { GameData } from "../../../../types/gamedata";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
-
+import { useStompContext } from "../../../../contexts/StompContext";
 export const SelectAnswerPage = () => {
     const { state } = useLocation() as { state: GameData };
     const [teamId, setTeamId] = useState(2);
+    const {stompClient}= useStompContext();
 
     return(
         <Background>
@@ -22,7 +23,7 @@ export const SelectAnswerPage = () => {
                 <AnswerSelectComponent />
                     <SelectAnswerButtonWrap>
                         <SecondaryButtonSmall onClick= {()=>{
-                            readyRoomSocketEvents.userExitRoom(state.stompclient, state._roomId)
+                            readyRoomSocketEvents.userExitRoom(stompClient, state._roomId)
                         }}>나가기</SecondaryButtonSmall>
                         <BlackButtonSmall>선택완료</BlackButtonSmall>
                     </SelectAnswerButtonWrap>

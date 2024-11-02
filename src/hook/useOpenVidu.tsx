@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { OpenVidu, Session, Subscriber, Publisher } from "openvidu-browser";
 import { readyRoomSocketEvents } from "./readyRoomSocketEvent";
-import { UseWebSocket } from "./useWebSocket";
-
+import { useStompContext } from "../contexts/StompContext";
 export const useOpenVidu = (roomId: string) => {
   const [session, setSession] = useState<Session | null>(null); // OpenVidu 세션 객체
   const [publisher, setPublisher] = useState<Publisher | null>(null); // 자신의 미디어 퍼블리셔
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]); // 다른 사용자의 미디어 구독자
-  const { stompClient, connect, isConnected } = UseWebSocket(roomId, true);
+  const { stompClient, connect, isConnected } = useStompContext();
 
   useEffect(() => {
     const initOpenViduSession = async () => {

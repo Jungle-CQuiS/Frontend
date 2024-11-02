@@ -1,15 +1,25 @@
+// StompContext.tsx
 import { Client } from '@stomp/stompjs';
-import { useState, useEffect, useRef, useCallback } from "react";
+import { createContext, useContext,useCallback, useState,useRef, ReactNode } from 'react';
+import { CONSTANTS } from './types';
 
+interface StompContextType {
+    stompClient: React.MutableRefObject<Client | null>;
+    isConnected: boolean;
+    isLoading: boolean;
+    error: string | null;
+    connect: () => Promise<void>;
+}
 
-const CONSTANTS = {
-    RECONNECT_DELAY: 5000,
-    HEARTBEAT_INCOMING: 0,// 타임아웃 비활성화
-    HEARTBEAT_OUTGOING: 0,// 타임아웃 비활성화
-    MAX_TEAM_SIZE: 5
-} as const;
+// Context 생성 (null 체크를 위한 초기값)
+const StompContext = createContext<StompContextType | null>(null);
 
-export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
+// Provider 컴포넌트
+interface StompProviderProps {
+    children: ReactNode;
+}
+
+export const StompProvider = ({ children }: StompProviderProps) => {
     const stompClient = useRef<Client | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +56,7 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
             heartbeatIncoming: CONSTANTS.HEARTBEAT_INCOMING,
             heartbeatOutgoing: CONSTANTS.HEARTBEAT_OUTGOING,
         });
-    }, [roomId]);
+    }, []);
 
     const handleConnect = useCallback((client: Client) => {
         console.log('Connected to WebSocket');
@@ -99,21 +109,23 @@ export const UseWebSocket = (roomId: string, autoConnect: boolean = false) => {
     }, [setupStompClient, handleConnect]);
 
 
-    // 초기 자동 연결
-    useEffect(() => {
-        if (!autoConnect) return;
 
-        return () => {
-            if (stompClient.current?.active) {
-                stompClient.current.deactivate();
-            }
-        };
-    }, [autoConnect, connect]);
-
-    return {
-        isConnected, isLoading, error, stompClient,
+    const value = {
+        stompClient,
+        isConnected,
+        isLoading,
+        error,
         connect
     };
+
+
+
+    return (
+        <StompContext.Provider value={value}>
+            {children}
+        </StompContext.Provider>
+    );
 };
 
 
+export { StompContext };

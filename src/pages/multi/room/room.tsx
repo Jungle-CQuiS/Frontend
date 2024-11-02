@@ -20,7 +20,7 @@ export default function Room() {
   const {
     teamOneUsers, teamTwoUsers,
     userReady, exitRoom, teamSwitch, navigateToGamePage,
-    countdown, stompClient, isAllReady
+    isAllReady
   } = useRoom(roomId);
 
   const [isCoinAnimation, setIsCoinAnimation] = useState(false);

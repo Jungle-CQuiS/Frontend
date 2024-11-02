@@ -11,7 +11,7 @@ import { MultiGameBackground, MultiGameAttackContainer, MutliGameAttackTimerWrap
 import { Quiz } from "../../../../types/quiz";
 import { GameData } from "../../../../types/gamedata";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
-
+import { useStompContext } from "../../../../contexts/StompContext";
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
     gamedata : GameData;
@@ -26,7 +26,7 @@ export default function AttackPage({ onSelectionComplete, gamedata }: AttackPage
     const [selectedCategory, setSelectedCategory] = useState("OS");
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
     const fetchCalled = useRef(false); // API 중복 호출 방지용 ref
-
+    const { stompClient } = useStompContext();
     useEffect(() => {
         if (timeLeft > 0) {
             const timerId = setInterval(() => {
@@ -43,7 +43,7 @@ export default function AttackPage({ onSelectionComplete, gamedata }: AttackPage
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
-            readyRoomSocketEvents.userExitRoom(gamedata.stompclient, gamedata._roomId);
+            readyRoomSocketEvents.userExitRoom( stompClient, gamedata._roomId);
         }
     };
 

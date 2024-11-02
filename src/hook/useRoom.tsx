@@ -2,16 +2,16 @@ import { Client } from '@stomp/stompjs';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { readyRoomSocketEvents } from './readyRoomSocketEvent';
 import { useTeamState } from './useTeamState';
-import { UseWebSocket } from './useWebSocket';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
 import { UseGameState } from './useGameState';
 import { GameReadyEvents, GameStatus } from '../types/game';
 import { GameData } from '../types/gamedata';
+import { useStompContext } from '../contexts/StompContext';
 
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
-    const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
+    const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
     const { gameState, isAllReady, countdown, handleReadyRoomEvent } = UseGameState();
     const navigate = useNavigate();
@@ -146,7 +146,6 @@ export const useRoom = (roomId: string) => {
 
         // GameData Packing
         const gameData: GameData = {
-            stompclient : stompClient,
             teamOneUsers: teamOneUsers,
             teamTwoUsers: teamTwoUsers,
             gameState: gameState,
@@ -179,7 +178,7 @@ export const useRoom = (roomId: string) => {
                 stompClient.current.deactivate();
             }
         };
-    }, [roomId]);
+    }, []);
 
     // 디버깅을 위한 상태 변화 감지
     useEffect(() => {
