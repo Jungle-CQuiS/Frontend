@@ -34,7 +34,7 @@ export const useOpenVidu = (roomId: string) => {
       }
     };
 
-    initOpenViduSession();
+    //initOpenViduSession();
 
     // 컴포넌트 언마운트 시 세션 연결 종료
     return () => {
