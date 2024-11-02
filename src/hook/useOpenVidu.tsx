@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { OpenVidu, Session, Subscriber, Publisher } from "openvidu-browser";
-import { readyRoomSocketEvents } from "./readyRoomSocketEvent";
 import { useStompContext } from "../contexts/StompContext";
 export const useOpenVidu = (roomId: string) => {
   const [session, setSession] = useState<Session | null>(null); // OpenVidu 세션 객체
@@ -9,7 +8,7 @@ export const useOpenVidu = (roomId: string) => {
   const { stompClient, connect, isConnected } = useStompContext();
 
   useEffect(() => {
-    const initOpenViduSession = async () => {
+    /*const initOpenViduSession = async () => {
       try {
         if (!isConnected) {
           await connect();
@@ -32,7 +31,7 @@ export const useOpenVidu = (roomId: string) => {
       } catch (error) {
         console.error("Failed to initialize session", error);
       }
-    };
+    };*/
 
     //initOpenViduSession();
 
