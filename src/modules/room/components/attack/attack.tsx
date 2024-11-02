@@ -9,13 +9,15 @@ import { TeamHeaderComponent } from "../../../quiz/components/multi/TeamHeader/T
 import { UserTagsComponent } from "../../../quiz/components/multi/UserTags/UserTags";
 import { MultiGameBackground, MultiGameAttackContainer, MutliGameAttackTimerWrap, MultiGameAttackTimer, MultiGameAttackTimerText, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameAttackQuiz, MultiGameAttackQuizCheckbox, MultiGameAttackButtonWrap } from "./styled";
 import { Quiz } from "../../../../types/quiz";
-import { useRoom } from "../../../../hook/useRoom";
+import { GameData } from "../../../../types/gamedata";
+import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
+    gamedata : GameData;
 }
 
-export default function AttackPage({ onSelectionComplete }: AttackPageProps, roomId: string) {
+export default function AttackPage({ onSelectionComplete, gamedata }: AttackPageProps) {
     const [teamId, setTeamId] = useState(1);
     const [isAttackTeam, setIsAttackTeam] = useState(true);
     const customConfirm = useConfirm(); 
@@ -24,7 +26,6 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps, roo
     const [selectedCategory, setSelectedCategory] = useState("OS");
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
     const fetchCalled = useRef(false); // API 중복 호출 방지용 ref
-    const {exitRoom} = useRoom(roomId);
 
     useEffect(() => {
         if (timeLeft > 0) {
@@ -42,7 +43,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps, roo
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
-            exitRoom();
+            readyRoomSocketEvents.userExitRoom(gamedata.stompclient, gamedata._roomId);
         }
     };
 

@@ -7,12 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
 import { UseGameState } from './useGameState';
 import { GameReadyEvents, GameStatus } from '../types/game';
+import { GameData } from '../types/gamedata';
 
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
     const { stompClient, isConnected, connect } = UseWebSocket(roomId, false);
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { gameState ,isAllReady, countdown, handleReadyRoomEvent } = UseGameState();
+    const { gameState, isAllReady, countdown, handleReadyRoomEvent } = UseGameState();
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
 
@@ -131,18 +132,36 @@ export const useRoom = (roomId: string) => {
         //GameStart 상태로 만들어줌.
         handleReadyRoomEvent(GameReadyEvents.GAME_START);
 
+
+        if (!userUuid) {
+            console.error('userUuid가 없습니다');
+            return;
+            // 또는 다른 에러 처리
+        }
+        if (!stompClient.current) {
+            console.error('StompClient가 연결되지 않았습니다');
+            return;
+            // 또는 다른 에러 처리
+        }
+
+        // GameData Packing
+        const gameData: GameData = {
+            stompclient : stompClient,
+            teamOneUsers: teamOneUsers,
+            teamTwoUsers: teamTwoUsers,
+            gameState: gameState,
+            _roomId: roomId,
+            uuserUuid: userUuid
+        };
+
         // Navigate Game Page
-        navigate("/multi/game", {
-            state: {
-                roomId
-            }
-        });
+        navigate("/multi/game", { state : gameData });
     };
 
 
     useEffect(() => {
         // 게임 준비 상태일 때만. 해당 훅을 실행한다.
-        if(gameState !== GameStatus.READY) return;
+        if (gameState !== GameStatus.READY) return;
         if (Connected.current) return;
         const initializeRoom = async () => {
             try {

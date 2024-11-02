@@ -9,12 +9,13 @@ import { UserTagsComponent } from "../../../../modules/quiz/components/multi/Use
 import { SolvingBottom, SolvingContainer, SovlingInput, SovlingInputWrap } from "./styled";
 import { SolvingHeaderComponent } from "../../../../modules/quiz/components/multi/SolvingHeader/SolvingHeader";
 import { useConfirm } from "../../../../components/confirmPopup";
-import { useRoom } from "../../../../hook/useRoom";
+import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
+import { GameData } from "../../../../types/gamedata";
 
-export const SolvingPage = ({ selectedQuiz }: { selectedQuiz: any }, roomId: string) => {
+export const SolvingPage = ({ selectedQuiz, gamedata}: { selectedQuiz: any, gamedata:GameData}) => {
     const [teamId, setTeamId] = useState(2);
     const customConfirm = useConfirm(); 
-    const {exitRoom} = useRoom(roomId);
+
 
     const handleSubmitAnswer = () => {
         console.log("제출")
@@ -24,7 +25,7 @@ export const SolvingPage = ({ selectedQuiz }: { selectedQuiz: any }, roomId: str
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
-            exitRoom();
+            readyRoomSocketEvents.userExitRoom(gamedata.stompclient, gamedata._roomId);
         }
     };
 

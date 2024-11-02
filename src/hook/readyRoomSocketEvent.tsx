@@ -208,7 +208,7 @@ export const readyRoomSocketEvents = {
             });
 
         } catch (error) {
-
+            
         }
     },
 
@@ -221,7 +221,8 @@ export const readyRoomSocketEvents = {
                 console.error('STOMP connection is not active');
                 return;
             }
-            const roomUserId = localStorage.getItem("roomUserId");
+            const roomUserId = localStorage.getItem("roomUserId"); // FIXME: 그냥 prop으로 넘길 수 있다면? 수정하기
+            
             console.log(roomUserId, "user Exit");
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.EXIT,
@@ -230,6 +231,8 @@ export const readyRoomSocketEvents = {
                     "roomId": `${roomId}`
                 })
             });
+
+            localStorage.removeItem("roomUserId");
 
         } catch (error) {
 
