@@ -14,13 +14,17 @@ export default function NavBar({ nickname, setNickname, isLoggedIn, setIsLoggedI
         navigate("/login"); // 로그아웃 후 로그인 페이지로 이동
     };
 
+    const handleGoToMypage = () => {
+        navigate("/mypage");
+    }
+
     return (
         <NavBarContainer>
             <Link to="/">
                 <NavBarLogo src="/images/logo.png" />
             </Link>
             <NavBarButtonWrap>
-                <PrimaryButtonMedium>{nickname || "MY PAGE"}</PrimaryButtonMedium>
+                <PrimaryButtonMedium onClick={handleGoToMypage}>{nickname || "MY PAGE"}</PrimaryButtonMedium>
                 {isLoggedIn ? (
                     <PrimaryButtonMedium onClick={handleLogout}>LOGOUT</PrimaryButtonMedium>
                 ) : (
