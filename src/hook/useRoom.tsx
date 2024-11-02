@@ -1,16 +1,16 @@
 import { Client } from '@stomp/stompjs';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { readyRoomSocketEvents } from './readyRoomSocketEvent';
-import { useTeamState } from './useTeamState';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
 import { useGameState } from '../contexts/GameStateContext/useGameState';
 import { GameReadyEvents, GameStatus } from '../types/game';
 import { GameData } from '../types/gamedata';
 import { useStompContext } from '../contexts/StompContext';
+import { useTeamState } from '../contexts/TeamStateContext/useTeamState';
 
 export const useRoom = (roomId: string) => {
-    const { teamOneUsers, teamTwoUsers, updateTeams } = useTeamState(roomId);
+    const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
     const { gameState, isAllReady, roomUserId: userRoomId ,
@@ -24,7 +24,7 @@ export const useRoom = (roomId: string) => {
         readyRoomSocketEvents.subscribeToRoom(client, roomId, updateTeams);
         readyRoomSocketEvents.subscribeRoomStatusMessage(client, roomId, handleReadyRoomEvent);
 
-    }, [roomId, updateTeams]);
+    }, []);
 
 
     const fetchUserRoomId = async () => {
@@ -101,7 +101,7 @@ export const useRoom = (roomId: string) => {
             console.error('Room entry failed:', error);
             throw error;
         }
-    }, [roomId, isConnected, connect, setupSubscriptions]);
+    }, []);
 
     const exitRoom = async () => {
         try {
@@ -161,6 +161,13 @@ export const useRoom = (roomId: string) => {
         navigate("/multi/game", { state : gameData });
     };
 
+    useEffect(() => {
+        if (!isTeamsLoaded && stompClient.current?.active) {
+            console.log('Requesting initial team data...');
+            // 필요한 경우 초기 팀 데이터 요청 로직
+        }
+    }, [isTeamsLoaded, stompClient]);
+
 
     useEffect(() => {
         // 게임 준비 상태일 때만. 해당 훅을 실행한다.
@@ -187,14 +194,6 @@ export const useRoom = (roomId: string) => {
         };
     }, []);
 
-    // 디버깅을 위한 상태 변화 감지
-    useEffect(() => {
-        console.log('Team state updated:', {
-            teamOneUsers,
-            teamTwoUsers
-        });
-    }, [teamOneUsers, teamTwoUsers]);
-
     return {
         teamOneUsers,
         teamTwoUsers,
@@ -203,6 +202,7 @@ export const useRoom = (roomId: string) => {
         teamSwitch,
         navigateToGamePage,
         isAllReady,
-        stompClient
+        stompClient,
+        isTeamsLoaded
     };
 };

@@ -13,7 +13,7 @@ import { SelectAnswerPage } from './pages/multi/defend/select/select';
 import { MultiModeResultPage } from './pages/multi/result/multiResult';
 import { StompProvider } from './contexts/StompContext';
 import { GameStateProvider } from './contexts/GameStateContext/GameStateContext';
-
+import { TeamStateProvider } from './contexts/TeamStateContext/TeamStateContext';
 import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
 import MyPage from './pages/mypage/mypage';
@@ -83,9 +83,11 @@ function App() {
           element={
             <ProtectedRoute>
               <GameStateProvider>
+              <TeamStateProvider>
               <StompProvider>
               <Room />
               </StompProvider>
+              </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
@@ -95,9 +97,11 @@ function App() {
           element={
             <ProtectedRoute>
               <GameStateProvider>
+              <TeamStateProvider>
               <StompProvider> 
               <QuizGamePage />
               </StompProvider>
+              </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
@@ -107,9 +111,11 @@ function App() {
           element={
             <ProtectedRoute>
               <GameStateProvider>
+              <TeamStateProvider>
               <StompProvider>
               <DefendPage />
               </StompProvider>
+              </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
@@ -119,9 +125,11 @@ function App() {
           element={
             <ProtectedRoute>
               <GameStateProvider>
+              <TeamStateProvider>
               <StompProvider>
               <SelectAnswerPage />
               </StompProvider>
+              </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
@@ -131,9 +139,11 @@ function App() {
           element={
             <ProtectedRoute>
               <GameStateProvider>
+              <TeamStateProvider>
               <StompProvider>
               <MultiModeResultPage />
               </StompProvider>
+              </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }

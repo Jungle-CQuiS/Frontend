@@ -1,6 +1,5 @@
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
@@ -8,7 +7,6 @@ import { TeamComponent } from '../../../modules/room/components/Team';
 import { RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
 import { GameStartCountDownModal } from '../../../components/modal/room/countdown';
-import { readyRoomSocketEvents } from '../../../hook/readyRoomSocketEvent';
 import { FirstAttackModal } from '../../../components/modal/room/flipcoin/result';
 import FlipCoin from '../../../components/modal/room/flipcoin';
 import { FlipCoinBackdrop, FlipCoinScreen } from '../../../components/modal/room/flipcoin/styled';
@@ -20,7 +18,7 @@ export default function Room() {
   const {
     teamOneUsers, teamTwoUsers,
     userReady, exitRoom, teamSwitch, navigateToGamePage,
-    isAllReady
+    isAllReady, isTeamsLoaded
   } = useRoom(roomId);
 
   const [isCoinAnimation, setIsCoinAnimation] = useState(false);
@@ -28,7 +26,6 @@ export default function Room() {
   const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(5);
   const [isCountDownModalOpen, setIsCountDownModalOpen] = useState(false);
-  const navigate = useNavigate();
   
   // Ready CountDown Modal Logic
   useEffect(() => {
@@ -70,6 +67,9 @@ export default function Room() {
     }, [isCoinAnimation]);
   
 
+  if (!isTeamsLoaded) {
+      return <div>Loading teams...</div>;
+  }
   return (
     <Background>
       <RoomTitleComponent roomName={state?.roomName} />

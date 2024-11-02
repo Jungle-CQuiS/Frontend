@@ -106,7 +106,7 @@ export const StompProvider = ({ children }: StompProviderProps) => {
                 reject(error);
             }
         });
-    }, [setupStompClient, handleConnect]);
+    }, []);
 
 
 
