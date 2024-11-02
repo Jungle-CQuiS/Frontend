@@ -12,5 +12,5 @@ export const Background = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: scroll;
+  overflow: auto;
 `;

@@ -13,13 +13,15 @@ import { SelectAnswerPage } from './pages/multi/defend/select/select';
 import { MultiModeResultPage } from './pages/multi/result/multiResult';
 import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
+import MyPage from './pages/mypage/mypage';
+import AddProblemPage from './pages/mypage/addProblem/addProblem';
 
 function App() {
   const [nickname, setNickname] = useState<string | null>(localStorage.getItem("nickname"));
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("uuid"));
   const location = useLocation();
 
-  const navBarPaths = ["/login", "/main", "/multi", "/signup", "/"];
+  const navBarPaths = ["/login", "/main", "/multi", "/signup", "/", "/mypage", "/mypage/addProblem"];
   const showNavBar = navBarPaths.includes(location.pathname);
 
   return (
@@ -44,6 +46,22 @@ function App() {
           element={
             <ProtectedRoute>
               <MainPage /> 
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/mypage"
+          element={
+            <ProtectedRoute>
+              <MyPage /> 
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/mypage/addProblem"
+          element={
+            <ProtectedRoute>
+              <AddProblemPage /> 
             </ProtectedRoute>
           }
         />
