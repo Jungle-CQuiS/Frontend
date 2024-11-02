@@ -107,7 +107,6 @@ export const SecondaryButtonSmall = styled(ButtonBase)`
   font-size: 16px;
   background-color: #DB4453;
   padding: 8px 20px;
-  width: 87px;
   &:hover {
     background-color: #EC6B78;
   }
