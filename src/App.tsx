@@ -12,6 +12,7 @@ import DefendPage from './pages/multi/defend/defend';
 import { SelectAnswerPage } from './pages/multi/defend/select/select';
 import { MultiModeResultPage } from './pages/multi/result/multiResult';
 import { StompProvider } from './contexts/StompContext';
+import { GameStateProvider } from './contexts/GameStateContext/GameStateContext';
 
 import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
@@ -63,9 +64,11 @@ function App() {
           path="/room/:id"
           element={
             <ProtectedRoute>
+              <GameStateProvider>
               <StompProvider>
               <Room />
               </StompProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
@@ -73,9 +76,11 @@ function App() {
           path="/multi/game" 
           element={
             <ProtectedRoute>
+              <GameStateProvider>
               <StompProvider> 
               <QuizGamePage />
               </StompProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
@@ -83,9 +88,11 @@ function App() {
           path="/multi/defend"
           element={
             <ProtectedRoute>
+              <GameStateProvider>
               <StompProvider>
               <DefendPage />
               </StompProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
@@ -93,9 +100,11 @@ function App() {
           path="/multi/defend/select"
           element={
             <ProtectedRoute>
+              <GameStateProvider>
               <StompProvider>
               <SelectAnswerPage />
               </StompProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />
@@ -103,9 +112,11 @@ function App() {
           path="/multi/result"
           element={
             <ProtectedRoute>
+              <GameStateProvider>
               <StompProvider>
               <MultiModeResultPage />
               </StompProvider>
+              </GameStateProvider>
             </ProtectedRoute>
           }
         />

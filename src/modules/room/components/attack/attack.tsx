@@ -12,6 +12,8 @@ import { Quiz } from "../../../../types/quiz";
 import { GameData } from "../../../../types/gamedata";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { useStompContext } from "../../../../contexts/StompContext";
+import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
+
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
     gamedata : GameData;
@@ -27,6 +29,8 @@ export default function AttackPage({ onSelectionComplete, gamedata }: AttackPage
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
     const fetchCalled = useRef(false); // API 중복 호출 방지용 ref
     const { stompClient } = useStompContext();
+    const { roomUserId } = useGameState();
+
     useEffect(() => {
         if (timeLeft > 0) {
             const timerId = setInterval(() => {
@@ -43,7 +47,7 @@ export default function AttackPage({ onSelectionComplete, gamedata }: AttackPage
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
-            readyRoomSocketEvents.userExitRoom( stompClient, gamedata._roomId);
+            readyRoomSocketEvents.userExitRoom( stompClient, gamedata._roomId, roomUserId);
         }
     };
 
