@@ -12,13 +12,14 @@ import { Quiz } from "../../../../types/quiz";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { useStompContext } from "../../../../contexts/StompContext";
 import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
+import { useGameUser } from "../../../../contexts/GameUserContext/useGameUser";
+import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState";
+
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
 }
 
 export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
-    const [teamId, setTeamId] = useState(1);
-    const [isAttackTeam, setIsAttackTeam] = useState(true);
     const customConfirm = useConfirm(); 
     const [timeLeft, setTimeLeft] = useState(60);
     const [quizData, setQuizData] = useState<Quiz[]>([]);
@@ -29,6 +30,9 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
     // CONTEXT
     const { stompClient } = useStompContext();
     const { roomUserId, _roomId } = useGameState();
+    const { user } = useGameUser(); // User Info
+    const { attackTeam } = useTeamState();
+    const teamId = user?.team == 'BLUE' ? 1 : 2;
 
     useEffect(() => {
         if (timeLeft > 0) {
@@ -100,7 +104,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
     return (
         <Background>
             <MultiGameBackground>
-                <TeamHeaderComponent teamId={teamId} isAttackTeam={isAttackTeam} />
+                <TeamHeaderComponent teamId={teamId} isAttackTeam={user?.team == attackTeam ? true : false} />
                 <MultiGameAttackContainer>
                     <MutliGameAttackTimerWrap>
                         <Timer />

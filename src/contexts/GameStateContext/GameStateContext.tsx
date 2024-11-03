@@ -6,6 +6,7 @@ interface GameStateContextType {
     // 게임방 정보
     gameState: GameStatus;
     isAllReady: boolean;
+    isLoading: boolean; // 게임방데이터가 로드가 되어있는지.
 
     //GAMEPLAYING
     gamePhase: GamePhase | null;
@@ -19,6 +20,7 @@ interface GameStateContextType {
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
     setRoomUserIdWithState: (id: string) => void;
     setRoomId: (roomId: string) => void;
+    setIsLoaded: () => void;
     changeGamePhase: (event: GamePlayinEvents) => void;
 }
 
@@ -31,7 +33,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [roomUserId, setRoomUserID] = useState<string>("none");
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
     const [_roomId, set_RoomId] = useState<string>("");
-
+    const [isLoading, setIsLoading] = useState(false);
 
     const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
@@ -41,6 +43,10 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const setRoomId = useCallback((roomid: string) => {
         set_RoomId(roomid);
     }, []);
+
+    const setIsLoaded = useCallback(() => {
+        setIsLoading(true);
+    }, [])
 
     const handleReadyRoomEvent = useCallback((event: GameReadyEvents) => {
         switch (event) {
@@ -84,12 +90,14 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         <GameStateContext.Provider value={{
             gameState,
             isAllReady,
+            isLoading,
             gamePhase,
             roomUserId,
             _roomId,
             handleReadyRoomEvent,
             setRoomUserIdWithState,
             setRoomId,
+            setIsLoaded,
             changeGamePhase,
             roomUserIdError
         }}>

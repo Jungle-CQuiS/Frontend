@@ -11,9 +11,11 @@ import SignupPage from './pages/signup/signup';
 import DefendPage from './pages/multi/defend/defend';
 import { SelectAnswerPage } from './pages/multi/defend/select/select';
 import { MultiModeResultPage } from './pages/multi/result/multiResult';
+// FIXME: Provider들 한번에 관리해서 호출하기.
 import { StompProvider } from './contexts/StompContext';
 import { GameStateProvider } from './contexts/GameStateContext/GameStateContext';
 import { TeamStateProvider } from './contexts/TeamStateContext/TeamStateContext';
+import { GameUserProvider } from './contexts/GameUserContext/GameUserContext';
 import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
 import MyPage from './pages/mypage/mypage';
@@ -31,11 +33,11 @@ function App() {
     <>
       <GlobalStyle />
       {showNavBar && (
-        <NavBar 
-          nickname={nickname} 
-          setNickname={setNickname} 
-          isLoggedIn={isLoggedIn} 
-          setIsLoggedIn={setIsLoggedIn} 
+        <NavBar
+          nickname={nickname}
+          setNickname={setNickname}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
         />
       )}
       <Routes>
@@ -48,60 +50,62 @@ function App() {
           path="/main"
           element={
             <ProtectedRoute>
-              <MainPage /> 
+              <MainPage />
             </ProtectedRoute>
           }
         />
-          <Route
+        <Route
           path="/mypage"
           element={
             <ProtectedRoute>
-              <MyPage /> 
+              <MyPage />
             </ProtectedRoute>
           }
         />
-          <Route
+        <Route
           path="/mypage/addProblem"
           element={
             <ProtectedRoute>
-              <AddProblemPage /> 
+              <AddProblemPage />
             </ProtectedRoute>
           }
         />
         <Route
           path="/multi"
-          element={ 
+          element={
             <ProtectedRoute>
               <MultiPage />
             </ProtectedRoute>
           }
         />
-        
-       {/* using web socket */}
+
+        {/* using web socket */}
         <Route
           path="/room/:id"
           element={
             <ProtectedRoute>
               <GameStateProvider>
-              <TeamStateProvider>
-              <StompProvider>
-              <Room />
-              </StompProvider>
-              </TeamStateProvider>
+                <TeamStateProvider>
+                  <StompProvider>
+                    <Room />
+                  </StompProvider>
+                </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/multi/game" 
+          path="/multi/game"
           element={
             <ProtectedRoute>
               <GameStateProvider>
-              <TeamStateProvider>
-              <StompProvider> 
-              <QuizGamePage />
-              </StompProvider>
-              </TeamStateProvider>
+                <TeamStateProvider>
+                  <GameUserProvider>
+                    <StompProvider>
+                      <QuizGamePage />
+                    </StompProvider>
+                  </GameUserProvider>
+                </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
@@ -111,39 +115,45 @@ function App() {
           element={
             <ProtectedRoute>
               <GameStateProvider>
-              <TeamStateProvider>
-              <StompProvider>
-              <DefendPage />
-              </StompProvider>
-              </TeamStateProvider>
+                <TeamStateProvider>
+                  <GameUserProvider>
+                    <StompProvider>
+                      <DefendPage />
+                    </StompProvider>
+                  </GameUserProvider>
+                </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
         />
-          <Route
+        <Route
           path="/multi/defend/select"
           element={
             <ProtectedRoute>
               <GameStateProvider>
-              <TeamStateProvider>
-              <StompProvider>
-              <SelectAnswerPage />
-              </StompProvider>
-              </TeamStateProvider>
+                <TeamStateProvider>
+                  <GameUserProvider>
+                    <StompProvider>
+                      <SelectAnswerPage />
+                    </StompProvider>
+                  </GameUserProvider>
+                </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
         />
-          <Route
+        <Route
           path="/multi/result"
           element={
             <ProtectedRoute>
               <GameStateProvider>
-              <TeamStateProvider>
-              <StompProvider>
-              <MultiModeResultPage />
-              </StompProvider>
-              </TeamStateProvider>
+                <TeamStateProvider>
+                  <GameUserProvider>
+                    <StompProvider>
+                      <MultiModeResultPage />
+                    </StompProvider>
+                  </GameUserProvider>
+                </TeamStateProvider>
               </GameStateProvider>
             </ProtectedRoute>
           }
