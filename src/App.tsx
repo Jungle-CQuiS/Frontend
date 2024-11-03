@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Routes, useLocation, BrowserRouter as Router } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import LandingPage from './pages/landing/landing';
 import GlobalStyle from './globalstyles';
 import MainPage from './pages/mainpage/main';
@@ -80,84 +81,62 @@ function App() {
         />
 
         {/* using web socket */}
-        <Route
-          path="/room/:id"
-          element={
-            <ProtectedRoute>
-              <GameStateProvider>
-                <TeamStateProvider>
-                  <StompProvider>
-                    <Room />
-                  </StompProvider>
-                </TeamStateProvider>
-              </GameStateProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/multi/game"
-          element={
-            <ProtectedRoute>
-              <GameStateProvider>
-                <TeamStateProvider>
-                  <GameUserProvider>
-                    <StompProvider>
-                      <QuizGamePage />
-                    </StompProvider>
-                  </GameUserProvider>
-                </TeamStateProvider>
-              </GameStateProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/multi/defend"
-          element={
-            <ProtectedRoute>
-              <GameStateProvider>
-                <TeamStateProvider>
-                  <GameUserProvider>
-                    <StompProvider>
-                      <DefendPage />
-                    </StompProvider>
-                  </GameUserProvider>
-                </TeamStateProvider>
-              </GameStateProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/multi/defend/select"
-          element={
-            <ProtectedRoute>
-              <GameStateProvider>
-                <TeamStateProvider>
-                  <GameUserProvider>
-                    <StompProvider>
-                      <SelectAnswerPage />
-                    </StompProvider>
-                  </GameUserProvider>
-                </TeamStateProvider>
-              </GameStateProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/multi/result"
-          element={
-            <ProtectedRoute>
-              <GameStateProvider>
-                <TeamStateProvider>
-                  <GameUserProvider>
-                    <StompProvider>
-                      <MultiModeResultPage />
-                    </StompProvider>
-                  </GameUserProvider>
-                </TeamStateProvider>
-              </GameStateProvider>
-            </ProtectedRoute>
-          }
-        />
+        <Route element={
+          <GameStateProvider>
+            <TeamStateProvider>
+              <GameUserProvider>
+              <StompProvider>
+                <Outlet />
+              </StompProvider>
+              </GameUserProvider>
+            </TeamStateProvider>
+          </GameStateProvider>
+        }
+        >
+          <Route
+            path="/room/:id"
+            element={
+              <ProtectedRoute>
+
+                <Room />
+
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/multi/game"
+            element={
+              <ProtectedRoute>
+                <QuizGamePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/multi/defend"
+            element={
+              <ProtectedRoute>
+                <DefendPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/multi/defend/select"
+            element={
+              <ProtectedRoute>
+                <SelectAnswerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/multi/result"
+            element={
+              <ProtectedRoute>
+                <MultiModeResultPage />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
       </Routes>
     </>
   );
