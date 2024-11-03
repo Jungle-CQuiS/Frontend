@@ -12,7 +12,7 @@ export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
         "스몰애기",
     ]);
 
-    // 나중에 setUsernames를 사용하여 이름을 동적으로 변경할 수 있습니다.
+    // TODO: 나중에 setUsernames를 사용하여 이름을 동적으로 변경할 수 있습니다.
 
     return (
         <UserTagsContainer>
