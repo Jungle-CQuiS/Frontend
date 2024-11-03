@@ -1,13 +1,21 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { GameStatus,GameReadyEvents } from '../../types/game';
+import { TeamUser } from '../../types/teamuser';
 
 interface GameStateContextType {
+    // 게임방 정보
     gameState: GameStatus;
     isAllReady: boolean;
+
+    // 유저 정보
+    _roomId : string;
     roomUserId : string;
+    roomUserIdError: string | null;
+
+    // 전역 메소드
     handleReadyRoomEvent: (event: string ) => void;
     setRoomUserIdWithState: (id: string) => void;
-    roomUserIdError: string | null;
+    setRoomId: (roomId : string) => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -17,10 +25,15 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [gameState, setGameState] = useState<GameStatus>(GameStatus.ENTER);
     const [roomUserId, setRoomUserID] = useState<string>("none");
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
+    const [_roomId , set_RoomId] = useState<string>("");
 
     const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
         setRoomUserID(id);
+    }, []);
+
+    const setRoomId = useCallback((roomid: string) => {
+        set_RoomId(roomid);
     }, []);
 
     const handleReadyRoomEvent = useCallback((event: string) => {
@@ -50,9 +63,11 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         <GameStateContext.Provider value={{
             gameState,
             isAllReady,
-            roomUserId: roomUserId,
+            roomUserId,
+            _roomId,
             handleReadyRoomEvent,
             setRoomUserIdWithState,
+            setRoomId,
             roomUserIdError
         }}>
             {children}

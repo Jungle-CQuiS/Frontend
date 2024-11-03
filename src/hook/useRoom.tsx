@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
 import { useGameState } from '../contexts/GameStateContext/useGameState';
 import { GameReadyEvents, GameStatus } from '../types/game';
-import { GameData } from '../types/gamedata';
 import { useStompContext } from '../contexts/StompContext';
 import { useTeamState } from '../contexts/TeamStateContext/useTeamState';
 
@@ -14,7 +13,7 @@ export const useRoom = (roomId: string) => {
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
     const { gameState, isAllReady, roomUserId ,
-        handleReadyRoomEvent, setRoomUserIdWithState  } = useGameState();
+        handleReadyRoomEvent, setRoomUserIdWithState, setRoomId  } = useGameState();
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
 
@@ -67,8 +66,8 @@ export const useRoom = (roomId: string) => {
 
             // localStorage와 context 모두 업데이트
             localStorage.setItem("roomUserId", data.data.roomUserId);
-            setRoomUserIdWithState(data.data.roomUserId);  // context 업데이트
-           
+            setRoomUserIdWithState(data.data.roomUserId);  // context에 roomUserId 업데이트
+            setRoomId(roomId); // Context에 roomId 업데이트
             console.log("<Response> roomUSerID :", data.data.roomUserId)
         } catch (e) {
             const errorMessage = e instanceof Error ? e.message : String(e);
@@ -149,16 +148,8 @@ export const useRoom = (roomId: string) => {
             // 또는 다른 에러 처리
         }
 
-        // GameData Packing
-        const gameData: GameData = {
-            teamOneUsers: teamOneUsers,
-            teamTwoUsers: teamTwoUsers,
-            _roomId: roomId,
-            uuserUuid: userUuid
-        };
-
         // Navigate Game Page
-        navigate("/multi/game", { state : gameData });
+        navigate("/multi/game");
     };
 
     useEffect(() => {

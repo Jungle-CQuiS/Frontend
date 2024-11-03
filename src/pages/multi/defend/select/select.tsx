@@ -7,16 +7,14 @@ import { TeamHeaderTag } from "../../../../modules/quiz/components/multi/TeamHea
 import { UserTagsComponent } from "../../../../modules/quiz/components/multi/UserTags/UserTags"
 import AnswerSelectComponent from "../../../../modules/quiz/components/multi/Answer/AnswerSelect"
 import { SelectAnswerButtonWrap, SelectAnswerContainer } from "./styled"
-import { GameData } from "../../../../types/gamedata";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { useStompContext } from "../../../../contexts/StompContext";
 import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
 
 export const SelectAnswerPage = () => {
-    const { state } = useLocation() as { state: GameData };
     const [teamId, setTeamId] = useState(2);
     const {stompClient}= useStompContext();
-    const {roomUserId} = useGameState();
+    const {roomUserId, _roomId} = useGameState();
 
     return(
         <Background>
@@ -26,7 +24,7 @@ export const SelectAnswerPage = () => {
                 <AnswerSelectComponent />
                     <SelectAnswerButtonWrap>
                         <SecondaryButtonSmall onClick= {()=>{
-                            readyRoomSocketEvents.userExitRoom(stompClient, state._roomId, roomUserId)
+                            readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId)
                         }}>나가기</SecondaryButtonSmall>
                         <BlackButtonSmall>선택완료</BlackButtonSmall>
                     </SelectAnswerButtonWrap>
