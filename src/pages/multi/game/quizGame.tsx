@@ -5,7 +5,7 @@ import { SolvingPage } from "../../../modules/room/components/solving/solving";
 import { Quiz } from "../../../types/quiz";
 import { GameStateContext } from "../../../contexts/GameStateContext/GameStateContext";
 import { useGameState } from "../../../contexts/GameStateContext/useGameState";
-import { GamePhase, GamePlayinEvents } from "../../../types/game";
+import { GamePhase, GamePlayEvents } from "../../../types/game";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
 
 export default function QuizGamePage() {
@@ -15,7 +15,7 @@ export default function QuizGamePage() {
 
     const handleCompleteSelection = (quiz: Quiz) => {
         setSelectedQuiz(quiz); // ATTACK PAGE에서 주제 선택 후 넘겨 줌..
-        changeGamePhase(GamePlayinEvents.SUB_SELECT_END); // 주제 선택 완료 이벤트
+        changeGamePhase(GamePlayEvents.SUB_SELECT_END); // 주제 선택 완료 이벤트
     };
 
     useEffect(() => {

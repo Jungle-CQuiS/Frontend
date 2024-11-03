@@ -14,17 +14,18 @@ import { useStompContext } from "../../../../contexts/StompContext";
 import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
 import { useGameUser } from "../../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState";
+import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
 
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
 }
 
 export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
-    const customConfirm = useConfirm(); 
+    const customConfirm = useConfirm();
     const [timeLeft, setTimeLeft] = useState(60);
     const [quizData, setQuizData] = useState<Quiz[]>([]);
     const [selectedCategory, setSelectedCategory] = useState("OS");
-    const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
+    const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null); // TODO: 소켓 동기화 되어야 하는것.
     const fetchCalled = useRef(false); // API 중복 호출 방지용 ref
 
     // CONTEXT
@@ -50,7 +51,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
-            readyRoomSocketEvents.userExitRoom( stompClient,_roomId, roomUserId);
+            readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
         }
     };
 
@@ -89,17 +90,54 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
             }
         };
 
+        const subscribeData = async () => {
+            try {
+                const client = stompClient.current;
+                if (!client) {
+                    throw new Error('Stomp client is not initialized');
+                }
+
+                await new Promise<void>((resolve) => {
+                    gameRoomSocketEvents.subscribeLeaderSelect(
+                        client,  // null이 아님이 확인된 client 사용
+                        _roomId,
+                        teamId === 1 ? 'BLUE' : 'RED',
+                        subscribeLeaderSelect
+                    );
+                    resolve();
+                });
+            } catch (error) {
+                console.error('subscribe leader select failed:', error);
+                throw error;
+            }
+        };
+
         fetchQuizData();
+        subscribeData(); // FIXME: 혹시 비동기 문제가 있는지 체크하기.
     }, []);
 
     const filteredQuizData = quizData.filter(quiz => quiz.categoryType === selectedCategory).slice(0, 2);
 
     const handleSelectionComplete = () => {
+        if(!user?.isLeader) return;
+        
         const selectedQuiz = quizData.find(quiz => quiz.quizId === selectedQuizId);
         if (selectedQuiz) {
             onSelectionComplete(selectedQuiz); // 상위 컴포넌트에 선택된 문제 전달
         }
     };
+
+    // Leader가 선택한 것을 APP으로 보낸다. 소켓 함수에 넣을 함수.
+    const updateLeaderSelect = (leaderSelect: number) => {
+        setSelectedQuizId(leaderSelect); // CSS적으로 함.
+        // 리더가 선택 한 답을 서버로 보낸다.
+        gameRoomSocketEvents.selectQuiz(stompClient, _roomId, teamId === 1 ? 'BLUE' : 'RED', leaderSelect);
+    }
+
+    // Leader가 선택한 것을 구독해서 받은 결과를 업데이트
+    const subscribeLeaderSelect = (leaderSelect: number) => {
+        setSelectedQuizId(leaderSelect);
+    }
 
     return (
         <Background>
@@ -116,9 +154,14 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                         <MultiGameAttackQuizWrap>
                             {filteredQuizData.map((quiz, index) => (
                                 <MultiGameAttackQuiz key={quiz.quizId}>
-                                    <MultiGameAttackQuizCheckbox 
+                                    <MultiGameAttackQuizCheckbox
                                         src={quiz.quizId === selectedQuizId ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
-                                        onClick={() => setSelectedQuizId(quiz.quizId)}
+                                        onClick={() => {
+                                            if (user?.isLeader){ //Leader만 선택 가능하다.
+                                                setSelectedQuizId(quiz.quizId);
+                                                // 소켓 통신으로 다른 팀원들과 선택한 것 공유
+                                                updateLeaderSelect(quiz.quizId);}
+                                        }}
                                     />
                                     <QuizProblemsComponent quiz={quiz} />
                                 </MultiGameAttackQuiz>
@@ -130,7 +173,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                         <PrimaryButtonMedium onClick={handleSelectionComplete}>선택완료</PrimaryButtonMedium>
                     </MultiGameAttackButtonWrap>
                 </MultiGameAttackContainer>
-                <UserTagsComponent teamId={teamId}/>
+                <UserTagsComponent teamId={teamId} />
             </MultiGameBackground>
         </Background>
     );

@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
-import { GameStatus, GameReadyEvents, GamePlayinEvents, GamePhase } from '../../types/game';
+import { GameStatus, GameReadyEvents, GamePlayEvents, GamePhase } from '../../types/game';
 import { TeamUser } from '../../types/teamuser';
 
 interface GameStateContextType {
@@ -21,7 +21,7 @@ interface GameStateContextType {
     setRoomUserIdWithState: (id: string) => void;
     setRoomId: (roomId: string) => void;
     setIsLoaded: () => void;
-    changeGamePhase: (event: GamePlayinEvents) => void;
+    changeGamePhase: (event: GamePlayEvents) => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -71,14 +71,14 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         }
     }, []);
 
-    const changeGamePhase = useCallback((event: GamePlayinEvents) => {
+    const changeGamePhase = useCallback((event: GamePlayEvents) => {
         if (gameState != GameStatus.PLAYING) return; // PLAYING 상태에서만 유효한 상태
 
         switch (event) {
-            case GamePlayinEvents.SUB_SELECT_END: // 공격이 주제선택을 다하면 SOLVING으로 넘어감.
+            case GamePlayEvents.SUB_SELECT_END: // 공격이 주제선택을 다하면 SOLVING으로 넘어감.
                 setgamePhase(GamePhase.SOLVING);
                 break;
-            case GamePlayinEvents.DEF_CHECK_ANSWER: // 수비가 최종 답 선택을 다하면 정답 결과가 나옴.
+            case GamePlayEvents.DEF_CHECK_ANSWER: // 수비가 최종 답 선택을 다하면 정답 결과가 나옴.
                 setgamePhase(GamePhase.ATTACK); // 주제 선택 페이즈로 전환.
                 break;
             default:
