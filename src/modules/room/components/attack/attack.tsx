@@ -21,6 +21,7 @@ interface AttackPageProps {
 }
 
 export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
+    console.log("AttackPage 컴포넌트 렌더링 시작");
     const customConfirm = useConfirm();
     const [timeLeft, setTimeLeft] = useState(60);
     const [quizData, setQuizData] = useState<Quiz[]>([]);
@@ -56,6 +57,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
     };
 
     useEffect(() => {
+        console.log("AttackPage useEffect 실행 시작");
         const fetchQuizData = async () => {
             if (fetchCalled.current) return; // 이미 호출된 경우 실행하지 않음
             fetchCalled.current = true;
@@ -113,6 +115,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
         };
 
         fetchQuizData();
+        
         subscribeData(); // FIXME: 혹시 비동기 문제가 있는지 체크하기.
     }, []);
 
@@ -120,7 +123,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
     const handleSelectionComplete = () => {
         if(!user?.isLeader) return;
-        
+
         const selectedQuiz = quizData.find(quiz => quiz.quizId === selectedQuizId);
         if (selectedQuiz) {
             onSelectionComplete(selectedQuiz); // 상위 컴포넌트에 선택된 문제 전달
@@ -138,6 +141,9 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
     const subscribeLeaderSelect = (leaderSelect: number) => {
         setSelectedQuizId(leaderSelect);
     }
+
+    
+    
 
     return (
         <Background>
@@ -163,7 +169,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                                                 updateLeaderSelect(quiz.quizId);}
                                         }}
                                     />
-                                    <QuizProblemsComponent quiz={quiz} />
+                                   <QuizProblemsComponent quiz={quiz} /> 
                                 </MultiGameAttackQuiz>
                             ))}
                         </MultiGameAttackQuizWrap>

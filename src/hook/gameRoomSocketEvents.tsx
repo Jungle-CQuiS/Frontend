@@ -3,7 +3,6 @@ import { Client } from '@stomp/stompjs';
 import { TeamUser } from '../types/teamuser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { subscribe } from 'diagnostics_channel';
-import { error } from 'console';
 import { GamePlayEvents } from '../types/game';
 export const gameRoomSocketEvents = {
     // SUBSCRIBE -----------------------------------------------------------------
@@ -72,10 +71,7 @@ export const gameRoomSocketEvents = {
                     console.log('<SUB:Leader Select/ Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
-
-                        if (!response.ok)
-                            throw error("subscribeLeaderSelect 응답 에러");
-
+                        
                         const eventType = response.responseStatus;
 
                         switch (eventType) {
@@ -151,7 +147,7 @@ export const gameRoomSocketEvents = {
             stompClient.current.publish({
                 destination : destination,
                 body: JSON.stringify(message)
-                
+
             });
 
         } catch (error) {

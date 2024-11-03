@@ -21,6 +21,7 @@ export default function QuizGamePage() {
     useEffect(() => {
         // 게임 유저 정보를 받아온다.
         const loadGameUserInfo = async () => {
+            console.log(roomUserId);
             try {
                 const uInfo = await fetchUserGameProfile(roomUserId);
 
@@ -34,21 +35,19 @@ export default function QuizGamePage() {
             }
         };
         // FIXME: 중간에 유저 정보가 소실될 가능성도 있는가? 예외 처리 해야될지도..?
-        if (!isLoading) // 아직 로딩되지 않았다면! 전역으로 관리됨.
+        if (isLoading) // 아직 로딩되지 않았다면! 전역으로 관리됨.
             loadGameUserInfo();
 
     }, []);
 
+
     return (
         <div>
-            {!isLoading ? (
-                <div>로딩 중입니다.</div>
+            { gamePhase === GamePhase.ATTACK ? (
+                <AttackPage onSelectionComplete={handleCompleteSelection} />
             ) : (
-                gamePhase === GamePhase.ATTACK ? (
-                    <AttackPage onSelectionComplete={handleCompleteSelection} />
-                ) : (
-                    <SolvingPage selectedQuiz={selectedQuiz} />
-                )
+                <SolvingPage selectedQuiz={selectedQuiz} />
+
             )}
         </div>
     );

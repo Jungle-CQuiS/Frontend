@@ -29,11 +29,11 @@ const GameStateContext = createContext<GameStateContextType | null>(null);
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [isAllReady, setIsAllReady] = useState(false);
     const [gameState, setGameState] = useState<GameStatus>(GameStatus.ENTER);
-    const [gamePhase, setgamePhase] = useState<GamePhase | null>(null);
+    const [gamePhase, setgamePhase] = useState<GamePhase>(GamePhase.ATTACK);
     const [roomUserId, setRoomUserID] = useState<string>("none");
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
     const [_roomId, set_RoomId] = useState<string>("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
@@ -45,7 +45,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const setIsLoaded = useCallback(() => {
-        setIsLoading(true);
+        setIsLoading(false);
     }, [])
 
     const handleReadyRoomEvent = useCallback((event: GameReadyEvents) => {

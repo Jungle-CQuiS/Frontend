@@ -24,14 +24,17 @@ export const GameUserProvider = ({ children }: { children: ReactNode }) => {
         try {
             const userAccessToken = localStorage.getItem("AccessToken");
             const userUuid = localStorage.getItem("uuid");
-            const API_URL = `/quiz/multi/rooms/user-info/${roomUserId}`;
+            const API_URL = `/api/quiz/multi/rooms/user-info/${roomUserId}`;
 
             const response = await fetch(API_URL, {
                 method: 'GET',
                 headers: {
                     "Authorization": `Bearer ${userAccessToken}`,
                     "uuid": `${userUuid}`,
-                    "Accept": "application/json"
+                    "Content-Type": "application/json;charset=UTF-8",  // charset 추가
+                    "Cache-Control": "no-cache,no-store,max-age=0,must-revalidate",
+                    "Pragma": "no-cache",
+                    "Accept": "application/json"  // Accept 헤더 추가
                 }
             });
 
@@ -52,7 +55,7 @@ export const GameUserProvider = ({ children }: { children: ReactNode }) => {
             // Context의 user 상태 업데이트
             setUser(userinfo);
 
-            return user;
+            return userinfo;
 
         } catch (error) {
             console.error('유저 정보 조회 실패:', error);
