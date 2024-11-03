@@ -1,11 +1,13 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
-import { TeamUser } from '../../types/teamuser';
+import { TeamType, TeamUser } from '../../types/teamuser';
 
 interface TeamStateContextType {
     teamOneUsers: (TeamUser | null)[];
     teamTwoUsers: (TeamUser | null)[];
     updateTeams: (users: TeamUser[]) => void;
+    updateAttackTeam : (attackteam : TeamType) => void;
     isTeamsLoaded: boolean;
+    attackTeam: TeamType | null;
 }
 
 const TeamStateContext = createContext<TeamStateContextType | null>(null);
@@ -14,6 +16,7 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
     const [teamOneUsers, setTeamOneUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
     const [teamTwoUsers, setTeamTwoUsers] = useState<(TeamUser | null)[]>(Array(5).fill(null));
     const [isTeamsLoaded, setIsTeamsLoaded] = useState(false);
+    const [attackTeam, setAttackTeam] = useState<TeamType|null>(null);
 
     const updateTeams = useCallback((users: TeamUser[]) => {
         const blueTeamUsers = users.filter(user => user.team === 'BLUE');
@@ -32,16 +35,22 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
         setIsTeamsLoaded(true);
     }, []);
 
+    const updateAttackTeam = useCallback((attackteam : TeamType ) => {
+        setAttackTeam(attackteam);
+    },[])
+
     return (
         <TeamStateContext.Provider value={{
             teamOneUsers,
             teamTwoUsers,
             updateTeams,
-            isTeamsLoaded
+            isTeamsLoaded,
+            attackTeam,
+            updateAttackTeam
         }}>
             {children}
         </TeamStateContext.Provider>
     );
 };
 
-export {TeamStateContext};
+export { TeamStateContext };

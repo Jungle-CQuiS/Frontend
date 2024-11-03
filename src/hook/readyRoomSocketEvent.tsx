@@ -3,8 +3,7 @@ import { Client } from '@stomp/stompjs';
 import { TeamUser } from '../types/teamuser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { UserControlKickBtn } from '../components/modal/room/usercontrol/styled';
-import { GameStateContext } from '../contexts/GameStateContext/GameStateContext';
-
+import { GameReadyEvents } from '../types/game';
 
 export const readyRoomSocketEvents = {
     // SUBSCRIBE ------------------------------------------------------------------------------------
@@ -56,7 +55,7 @@ export const readyRoomSocketEvents = {
     },
 
     // 준비방 상태 구독 함수
-    subscribeRoomStatusMessage: (client: Client, roomId: string, handleReadyRoomEvent: (event: string, time: number) => void) => {
+    subscribeRoomStatusMessage: (client: Client, roomId: string, handleReadyRoomEvent: (event: GameReadyEvents) => void) => {
         try {
             console.log('Attempting to subscribe to room:', roomId);
             // client에 구독 요청
@@ -66,7 +65,7 @@ export const readyRoomSocketEvents = {
                     console.log('Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
-                        handleReadyRoomEvent(response.gameStatus, response.count);
+                        handleReadyRoomEvent(response.gameStatus);
                     } catch (err) {
                         console.error('Error processing message:', err);
                     }

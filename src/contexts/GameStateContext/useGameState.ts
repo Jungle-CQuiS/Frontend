@@ -9,4 +9,4 @@ export const useGameState = () => {
     return context;
 };
 
-export {GameStateContext};
+export { GameStateContext };

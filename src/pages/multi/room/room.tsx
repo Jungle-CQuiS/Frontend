@@ -11,7 +11,8 @@ import { FirstAttackModal } from '../../../components/modal/room/flipcoin/result
 import FlipCoin from '../../../components/modal/room/flipcoin';
 import { FlipCoinBackdrop, FlipCoinScreen } from '../../../components/modal/room/flipcoin/styled';
 import { SOCKET_DESTINATIONS } from '../../../config/websocket/constants';
-
+import { useTeamState } from '../../../contexts/TeamStateContext/useTeamState';
+import { TeamType } from '../../../types/teamuser';
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
@@ -20,13 +21,14 @@ export default function Room() {
     userReady, exitRoom, teamSwitch, navigateToGamePage,
     isAllReady, isTeamsLoaded
   } = useRoom(roomId);
+  const { updateAttackTeam } = useTeamState();
 
   const [isCoinAnimation, setIsCoinAnimation] = useState(false);
   const [isFirstAttackModalOpen, setIsFirstAttackModalOpen] = useState(false);
   const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(5);
   const [isCountDownModalOpen, setIsCountDownModalOpen] = useState(false);
-  
+
   // Ready CountDown Modal Logic
   useEffect(() => {
     if (isAllReady) {
@@ -48,27 +50,27 @@ export default function Room() {
   }, [isAllReady]);
 
   const handleStopReady = async () => {
-      await SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY;
-      userReady();
-    };
+    await SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY;
+    userReady();
+  };
 
-    // Set starter team Logic
-    useEffect(() => {
-      if (isCoinAnimation) {
-        const animationTimer = setTimeout(() => {
-          setIsCoinAnimation(false);
-          // 무작위로 선공 팀 결정
-          const selectedTeam = '1팀';   // 백엔드에서 랜덤 받아와야 할 듯!
-          setFirstAttackTeam(selectedTeam);
-          setIsFirstAttackModalOpen(true);
-        }, 5000);
-        return () => clearTimeout(animationTimer);
-      }
-    }, [isCoinAnimation]);
-  
+  // Set starter team Logic
+  useEffect(() => {
+    if (isCoinAnimation) {
+      const animationTimer = setTimeout(() => {
+        setIsCoinAnimation(false);
+        // 무작위로 선공 팀 결정
+        const selectedTeam = '1팀';   // 백엔드에서 랜덤 받아와야 할 듯!
+        setFirstAttackTeam(selectedTeam);
+        setIsFirstAttackModalOpen(true);
+      }, 5000);
+      return () => clearTimeout(animationTimer);
+    }
+  }, [isCoinAnimation]);
+
 
   if (!isTeamsLoaded) {
-      return <div>Loading teams...</div>;
+    return <div>Loading teams...</div>;
   }
   return (
     <Background>
@@ -99,11 +101,11 @@ export default function Room() {
       />}
 
       {isCoinAnimation && (
-          <FlipCoinBackdrop>
-              <FlipCoinScreen>
-                  <FlipCoin />
-              </FlipCoinScreen>
-          </FlipCoinBackdrop>
+        <FlipCoinBackdrop>
+          <FlipCoinScreen>
+            <FlipCoin />
+          </FlipCoinScreen>
+        </FlipCoinBackdrop>
       )}
 
       {isFirstAttackModalOpen && firstAttackTeam && (
@@ -111,7 +113,7 @@ export default function Room() {
           team={firstAttackTeam}
           onClose={() => {
             setIsFirstAttackModalOpen(false)
-
+            updateAttackTeam(firstAttackTeam == "BLUE" ? 'BLUE' : 'RED'); // 전역에 first attack team을 저장.
             navigateToGamePage(); // 팀 별로 다른 페이지 리다이렉트
           }}
         />
