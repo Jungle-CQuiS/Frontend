@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
-import { GameStatus,GameReadyEvents } from '../../types/game';
+import { GameStatus, GameReadyEvents, GamePlayinEvents, GamePhase } from '../../types/game';
 import { TeamUser } from '../../types/teamuser';
 
 interface GameStateContextType {
@@ -7,15 +7,19 @@ interface GameStateContextType {
     gameState: GameStatus;
     isAllReady: boolean;
 
+    //GAMEPLAYING
+    gamePhase: GamePhase | null;
+
     // 유저 정보
-    _roomId : string;
-    roomUserId : string;
+    _roomId: string;
+    roomUserId: string;
     roomUserIdError: string | null;
 
     // 전역 메소드
-    handleReadyRoomEvent: (event: string ) => void;
+    handleReadyRoomEvent: (event: GameReadyEvents) => void;
     setRoomUserIdWithState: (id: string) => void;
-    setRoomId: (roomId : string) => void;
+    setRoomId: (roomId: string) => void;
+    changeGamePhase: (event: GamePlayinEvents) => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -23,9 +27,11 @@ const GameStateContext = createContext<GameStateContextType | null>(null);
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [isAllReady, setIsAllReady] = useState(false);
     const [gameState, setGameState] = useState<GameStatus>(GameStatus.ENTER);
+    const [gamePhase, setgamePhase] = useState<GamePhase | null>(null);
     const [roomUserId, setRoomUserID] = useState<string>("none");
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
-    const [_roomId , set_RoomId] = useState<string>("");
+    const [_roomId, set_RoomId] = useState<string>("");
+
 
     const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
@@ -36,8 +42,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         set_RoomId(roomid);
     }, []);
 
-    const handleReadyRoomEvent = useCallback((event: string) => {
-        switch(event) {
+    const handleReadyRoomEvent = useCallback((event: GameReadyEvents) => {
+        switch (event) {
             case GameReadyEvents.ENTER:
                 setGameState(GameStatus.LOADING);
                 break;
@@ -59,15 +65,32 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         }
     }, []);
 
+    const changeGamePhase = useCallback((event: GamePlayinEvents) => {
+        if (gameState != GameStatus.PLAYING) return; // PLAYING 상태에서만 유효한 상태
+
+        switch (event) {
+            case GamePlayinEvents.SUB_SELECT_END: // 공격이 주제선택을 다하면 SOLVING으로 넘어감.
+                setgamePhase(GamePhase.SOLVING);
+                break;
+            case GamePlayinEvents.DEF_CHECK_ANSWER: // 수비가 최종 답 선택을 다하면 정답 결과가 나옴.
+                setgamePhase(GamePhase.ATTACK); // 주제 선택 페이즈로 전환.
+                break;
+            default:
+                break;
+        }
+    }, [])
+
     return (
         <GameStateContext.Provider value={{
             gameState,
             isAllReady,
+            gamePhase,
             roomUserId,
             _roomId,
             handleReadyRoomEvent,
             setRoomUserIdWithState,
             setRoomId,
+            changeGamePhase,
             roomUserIdError
         }}>
             {children}
@@ -75,4 +98,4 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-export {GameStateContext}
+export { GameStateContext }
