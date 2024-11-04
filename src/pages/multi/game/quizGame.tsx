@@ -15,8 +15,8 @@ import DefendPage from "../defend/defend";
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
     const { stompClient } = useStompContext();
-    const { gamePhase, isLoading, roomUserId, _roomId , 
-        setIsLoaded, changeGamePhase , initLeaderSelectQuizeId } = useGameState();
+    const { gamePhase, isLoading, roomUserId, _roomId,
+        setIsLoaded, changeGamePhase, initLeaderSelectQuizeId } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
@@ -44,7 +44,7 @@ export default function QuizGamePage() {
                 console.error('게임 정보 로딩 실패:', error);
             }
         };
-        const subscribeData = async () => {
+        const subscribeLeaderSelectData = async () => {
             try {
                 const client = stompClient.current;
                 if (!client) {
@@ -65,12 +65,34 @@ export default function QuizGamePage() {
                 throw error;
             }
         };
+        const subscribeLeaderFinalSelectQuize = async () => {
+            try {
+                const client = stompClient.current;
+                if (!client) {
+                    throw new Error('Stomp client is not initialized');
+                }
 
-        const setUpGameRoom = async() =>{
+                await new Promise<void>((resolve) => {
+                    gameRoomSocketEvents.subscribeLeaderFinalSelect(
+                        client,  // null이 아님이 확인된 client 사용
+                        _roomId,
+                        teamId === 1 ? 'blue' : 'red',
+                        handleCompleteSelection
+                    );
+                    resolve();
+                });
+            } catch (error) {
+                console.error('subscribe leader select failed:', error);
+                throw error;
+            }
+        };
+
+        const setUpGameRoom = async () => {
             try {
                 await loadGameUserInfo();
-                await subscribeData();
-                
+                await subscribeLeaderSelectData();
+                await subscribeLeaderFinalSelectQuize(); // FIXME: 구독끼리는 순서 상관없음
+
             } catch (error) {
                 console.error("GameRoom을 세팅하는데 실패했습니다.", error);
             }
@@ -90,9 +112,13 @@ export default function QuizGamePage() {
     return (
         <div>
             {user.team === attackTeam ? (
-                <AttackPage onSelectionComplete={handleCompleteSelection} />
+                gamePhase === GamePhase.ATTACK ? (
+                    <AttackPage onSelectionComplete={handleCompleteSelection} />
+                ) : (
+                    <SolvingPage selectedQuiz={selectedQuiz} />
+                )
             ) : (
-                gamePhase === GamePhase.ATTACK? (
+                gamePhase === GamePhase.ATTACK ? (
                     <DefendPage />
                 ) : (
                     <SolvingPage selectedQuiz={selectedQuiz} />
