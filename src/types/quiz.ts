@@ -1,4 +1,5 @@
 export interface Quiz {
+    quizName: any;
     quizId: number;
     name: string;
     categoryType: string;
@@ -6,6 +7,7 @@ export interface Quiz {
     choice2?: string;
     choice3?: string;
     choice4?: string;
+    answer: number;
     koreanAnswer?: string;
     englishAnswer?: string;
 }
