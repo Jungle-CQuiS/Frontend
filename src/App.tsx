@@ -21,13 +21,15 @@ import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
 import MyPage from './pages/mypage/mypage';
 import AddProblemPage from './pages/mypage/addProblem/addProblem';
+import { SingleModePage } from './pages/single/single';
+import SingleModeQuiz from './pages/single/quiz/singleQuiz';
 
 function App() {
   const [nickname, setNickname] = useState<string | null>(localStorage.getItem("nickname"));
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("uuid"));
   const location = useLocation();
 
-  const navBarPaths = ["/login", "/main", "/multi", "/signup", "/", "/mypage", "/mypage/addProblem"];
+  const navBarPaths = ["/login", "/main", "/multi", "/signup", "/", "/mypage", "/mypage/addProblem", "/single"];
   const showNavBar = navBarPaths.includes(location.pathname);
 
   return (
@@ -92,7 +94,7 @@ function App() {
             </TeamStateProvider>
           </GameStateProvider>
         }
-        >
+        />
           <Route
             path="/room/:id"
             element={
@@ -128,15 +130,29 @@ function App() {
             }
           />
           <Route
-            path="/multi/result"
-            element={
-              <ProtectedRoute>
-                <MultiModeResultPage />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
-
+          path="/multi/result"
+          element={
+            <ProtectedRoute>
+              <MultiModeResultPage />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/single"
+          element={
+            <ProtectedRoute>
+              <SingleModePage />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/single/quiz"
+          element={
+            <ProtectedRoute>
+              <SingleModeQuiz />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   );

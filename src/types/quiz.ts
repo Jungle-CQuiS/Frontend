@@ -9,3 +9,7 @@ export interface Quiz {
     koreanAnswer?: string;
     englishAnswer?: string;
 }
+
+export interface QuizTypeProps {
+    type: "객관식" | "주관식";
+  }
