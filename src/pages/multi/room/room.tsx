@@ -34,6 +34,8 @@ export default function Room() {
     if (isAllReady) {
       // 5초 카운트다운 모달 시작
       setIsCountDownModalOpen(true);
+      // 무작위로 선공 팀 결정
+      getFirstAttackTeam();
       setTimeLeft(5); // 카운트다운 초기화
       const countdownTimer = setInterval(() => {
         setTimeLeft((prev) => {
@@ -59,15 +61,42 @@ export default function Room() {
     if (isCoinAnimation) {
       const animationTimer = setTimeout(() => {
         setIsCoinAnimation(false);
-        // 무작위로 선공 팀 결정
-        const selectedTeam = '1팀';   // 백엔드에서 랜덤 받아와야 할 듯!
-        setFirstAttackTeam(selectedTeam);
+       
         setIsFirstAttackModalOpen(true);
       }, 5000);
       return () => clearTimeout(animationTimer);
     }
   }, [isCoinAnimation]);
 
+  const getFirstAttackTeam = async () => {
+    const userUuid = localStorage.getItem("uuid");
+    const userAccessToken = localStorage.getItem("AccessToken");
+    const API_URL = `/api/quiz/multi/game/start`;
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${userAccessToken}`,
+          "uuid": `${userUuid}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          roomId: roomId,
+          gameStatus: "GAME_START"
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const selectedTeam = data.data.teamColor ===  "BLUE" ?'1팀' : '2팀';   // 백엔드에서 랜덤 받아와야 할 듯!
+        setFirstAttackTeam(selectedTeam);
+      }
+
+    } catch (error) {
+      console.error("선공팀을 받아오는데 실패하였습니다.", error);
+    }
+  }
 
   if (!isTeamsLoaded) {
     return <div>Loading teams...</div>;

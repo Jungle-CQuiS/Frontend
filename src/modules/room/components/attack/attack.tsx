@@ -93,30 +93,10 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                 console.error("Error fetching quiz data:", error);
             }
 
-            subscribeData(); // FIXME: 혹시 비동기 문제가 있는지 체크하기.
+            
         };
 
-        const subscribeData = async () => {
-            try {
-                const client = stompClient.current;
-                if (!client) {
-                    throw new Error('Stomp client is not initialized');
-                }
-
-                await new Promise<void>((resolve) => {
-                    gameRoomSocketEvents.subscribeLeaderSelect(
-                        client,  // null이 아님이 확인된 client 사용
-                        _roomId,
-                        teamId === 1 ? 'blue' : 'red',
-                        initLeaderSelectQuizeId
-                    );
-                    resolve();
-                });
-            } catch (error) {
-                console.error('subscribe leader select failed:', error);
-                throw error;
-            }
-        };
+        
 
         fetchQuizData();
         

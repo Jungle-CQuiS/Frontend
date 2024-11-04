@@ -148,6 +148,9 @@ export const useRoom = (roomId: string) => {
             // 또는 다른 에러 처리
         }
 
+        
+
+
         // Navigate Game Page
         navigate("/multi/game");
     };

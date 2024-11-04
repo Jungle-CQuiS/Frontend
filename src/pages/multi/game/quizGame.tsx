@@ -8,14 +8,19 @@ import { useGameState } from "../../../contexts/GameStateContext/useGameState";
 import { GamePhase, GamePlayEvents } from "../../../types/game";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
+import { useStompContext } from "../../../contexts/StompContext";
+import { gameRoomSocketEvents } from "../../../hook/gameRoomSocketEvents";
 import DefendPage from "../defend/defend";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-    const { gamePhase, isLoading, roomUserId, setIsLoaded, changeGamePhase } = useGameState();
+    const { stompClient } = useStompContext();
+    const { gamePhase, isLoading, roomUserId, _roomId , 
+        setIsLoaded, changeGamePhase , initLeaderSelectQuizeId } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
+    const teamId = user?.team == 'BLUE' ? 1 : 2;
 
     const handleCompleteSelection = (quiz: Quiz) => {
         setSelectedQuiz(quiz);
@@ -39,9 +44,40 @@ export default function QuizGamePage() {
                 console.error('게임 정보 로딩 실패:', error);
             }
         };
+        const subscribeData = async () => {
+            try {
+                const client = stompClient.current;
+                if (!client) {
+                    throw new Error('Stomp client is not initialized');
+                }
+
+                await new Promise<void>((resolve) => {
+                    gameRoomSocketEvents.subscribeLeaderSelect(
+                        client,  // null이 아님이 확인된 client 사용
+                        _roomId,
+                        teamId === 1 ? 'blue' : 'red',
+                        initLeaderSelectQuizeId
+                    );
+                    resolve();
+                });
+            } catch (error) {
+                console.error('subscribe leader select failed:', error);
+                throw error;
+            }
+        };
+
+        const setUpGameRoom = async() =>{
+            try {
+                await loadGameUserInfo();
+                await subscribeData();
+                
+            } catch (error) {
+                console.error("GameRoom을 세팅하는데 실패했습니다.", error);
+            }
+        }
 
         if (isLoading) {
-            loadGameUserInfo();
+            setUpGameRoom();
         }
     }, [isLoading, roomUserId, fetchUserGameProfile, setIsLoaded]);
 
