@@ -11,44 +11,51 @@ import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-    const { gamePhase, isLoading, roomUserId,setIsLoaded, changeGamePhase } = useGameState();
+    const { gamePhase, isLoading, roomUserId, setIsLoaded, changeGamePhase } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam } = useTeamState();
+    const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
 
     const handleCompleteSelection = (quiz: Quiz) => {
-        setSelectedQuiz(quiz); // ATTACK PAGE에서 주제 선택 후 넘겨 줌..
-        changeGamePhase(GamePlayEvents.SUB_SELECT_END); // 주제 선택 완료 이벤트
+        setSelectedQuiz(quiz);
+        changeGamePhase(GamePlayEvents.SUB_SELECT_END);
     };
 
     useEffect(() => {
-        // 게임 유저 정보를 받아온다.
         const loadGameUserInfo = async () => {
             try {
+                console.log("Loading user info...");
                 const uInfo = await fetchUserGameProfile(roomUserId);
 
-                if (uInfo)
-                    setIsLoaded(); // 함수 내부에서 true로 만들어줌.
-                else
+                if (uInfo) {
+                    setIsLoaded();
+                    setUserLoaded(true);  // 유저 정보 로딩 완료
+                    console.log("User info loaded:", uInfo);
+                } else {
                     console.error('게임 정보 로딩 실패: null');
-
+                }
             } catch (error) {
                 console.error('게임 정보 로딩 실패:', error);
             }
         };
-        // FIXME: 중간에 유저 정보가 소실될 가능성도 있는가? 예외 처리 해야될지도..?
-        if (isLoading) // 아직 로딩되지 않았다면! 전역으로 관리됨.
+
+        if (isLoading) {
             loadGameUserInfo();
+        }
+    }, [isLoading, roomUserId, fetchUserGameProfile, setIsLoaded]);
 
-    }, []);
+    // 로딩 중이거나 유저 정보가 없으면 로딩 화면 표시
+    if (isLoading || !userLoaded || !user) {
+        return <div>로딩 중입니다...</div>;
+    }
 
-
+    // 유저 정보가 있을 때만 렌더링
     return (
         <div>
-            { user?.team === attackTeam ? (
+            {user.team === attackTeam ? (
                 <AttackPage onSelectionComplete={handleCompleteSelection} />
             ) : (
                 <SolvingPage selectedQuiz={selectedQuiz} />
-
             )}
         </div>
     );
