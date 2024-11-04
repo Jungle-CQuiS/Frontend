@@ -51,12 +51,13 @@ export const AddProblemTab = styled.div<{ isSelected?: boolean }>`
     cursor: pointer;
 `;
 
-export const AddProblemInputLong = styled.input`
+export const AddProblemInputLong = styled.textarea`
     padding: 10px 14px;   
     font-size: 14px;
     font-weight: 500;
     border: 1px solid #D3D3D3;
     width: 895px;
+    height: 350px;
     border-radius: 8px;
     &::placeholder{
         color: #D3D3D3;
@@ -91,4 +92,20 @@ export const AddProblemButtonWrap = styled.div`
     align-items: center;
     gap: 16px;
     justify-content: flex-end;
+`;
+
+export const CreateQuizNumber = styled.input`
+    padding: 10px 4px 10px 14px;
+    border: 1px solid #D3D3D3;
+    font-size: 12px;
+    border-radius: 8px;
+    &:hover {
+        box-shadow: 0 0px 10px #e6e8f6, 0 5px 5px #e6e8f6;
+    }
+    &:focus {
+        border: 1px solid #2F69FF;
+    }
+    &::placeholder {
+        color: #D3D3D3;
+    }
 `;

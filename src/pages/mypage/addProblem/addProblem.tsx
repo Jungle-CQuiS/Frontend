@@ -1,28 +1,101 @@
-import { useState } from "react";
+// AddProblemPage.tsx
+import { SetStateAction, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Background } from "../../../components/background/styled";
 import { PrimaryButtonMedium, SecondaryButtonSmall } from "../../../components/buttons/styled";
-import { AddProblemButtonWrap, AddProblemCategoryWrap, AddProblemContainer, AddProblemHeader, AddProblemHeaderImg, AddProblemHeaderTitle, AddProblemInput, AddProblemInputLong, AddProblemLabel, AddProblemSelectImg, AddProblemSelectRow, AddProblemTab, AddProblemWrap } from "./styled";
+import { AddProblemButtonWrap, AddProblemCategoryWrap, AddProblemContainer, AddProblemHeader, AddProblemHeaderImg, AddProblemHeaderTitle, AddProblemInputLong, AddProblemLabel, AddProblemTab, AddProblemWrap, CreateQuizNumber } from "./styled";
+import { AddProblemModal } from "../../../components/modal/mypage/addQuesttion";
 
 export default function AddProblemPage() {
     const navigate = useNavigate();
-    
+
     const [selectedTopic, setSelectedTopic] = useState("OS");
     const [selectedType, setSelectedType] = useState("객관식");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const sendCalled = useRef(false); // 중복 호출 방지
+    const [problemContent, setProblemContent] = useState("");
+    const [value, setValue] = useState(1);
+    const [modalData, setModalData] = useState([]);
 
     const handleCancel = () => {
-        navigate("/mypage")
-    }
+        navigate("/mypage");
+    };
 
-    const handleSubmit = () => {
-        console.log("제출");   //TODO : 문제 등록하기
-    }
+    const handleOpenModal = async () => {
+        await sendTextQuiz();
+        setIsModalOpen(true);
+    };
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+    const handleDone = () => {
+        setIsModalOpen(false);
+    };
+    const handleProblemContentChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+        setProblemContent(e.target.value);
+    };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(Number(e.target.value));
+    };
+
+    const sendTextQuiz = async () => {
+        if (sendCalled.current) return false;
+        sendCalled.current = true;
+
+        const userAccessToken = localStorage.getItem("AccessToken");
+        const userUuid = localStorage.getItem("uuid");
+        const API_URL = selectedType === "객관식" ? "/api/util/quiz-creation/choice-answer" : "/api/util/quiz-creation/short-answer";
+        const formattedContent = problemContent.replace(/\n/g, ""); // 줄 바꿈 없애기
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${userAccessToken}`,
+                    "uuid": `${userUuid}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    textData: formattedContent,
+                    quizCount: value
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Received data:", data);
+
+                const quizData = data.data || [];
+                const formattedData = quizData.map((quiz: any) => {
+                    if (selectedType === "객관식") {
+                        return {
+                            ...quiz,
+                            displayText: `${quiz.quizName}\n1) ${quiz.choice1}\n2) ${quiz.choice2}\n3) ${quiz.choice3}\n4) ${quiz.choice4}\n정답: ${quiz[`choice${quiz.answer}`]}`
+                        };
+                    } else {
+                        return {
+                            ...quiz,
+                            displayText: `${quiz.quizName}\n답: ${quiz.koreanAnswer}\n답: ${quiz.englishAnswer}`
+                        };
+                    }
+                });
+                setModalData(formattedData);
+                console.log("Quiz data make successfully");
+                return true;
+            } else {
+                console.error("Failed to make quiz data:", response.status);
+                return false;
+            }
+        } catch (error) {
+            console.error("Error make quiz data:", error);
+            return false;
+        }
+    };
 
     return (
         <Background>
             <AddProblemContainer>
                 <AddProblemHeader>
-                    <AddProblemHeaderImg src="/icons/edit.svg"/>
+                    <AddProblemHeaderImg src="/icons/edit.svg" />
                     <AddProblemHeaderTitle>문제 등록하기</AddProblemHeaderTitle>
                 </AddProblemHeader>
                 <AddProblemCategoryWrap>
@@ -49,38 +122,35 @@ export default function AddProblemPage() {
                         </AddProblemTab>
                     ))}
                 </AddProblemCategoryWrap>
+                <CreateQuizNumber
+                    type="number"
+                    id="participants"
+                    name="participants"
+                    min="1"
+                    max="10"
+                    value={value}
+                    onChange={handleChange}
+                />
                 <AddProblemWrap>
-                    <AddProblemLabel>문제</AddProblemLabel>
-                    <AddProblemInputLong placeholder="문제를 입력해주세요"/>
+                    <AddProblemLabel>문제 만들기</AddProblemLabel>
+                    <AddProblemInputLong
+                        placeholder="공부한 내용을 입력해주세요."
+                        value={problemContent}
+                        onChange={handleProblemContentChange}
+                    />
                 </AddProblemWrap>
-
-                {selectedType === "객관식" ? (
-                    <>
-                        <AddProblemWrap>
-                            <AddProblemLabel>선택지</AddProblemLabel>
-                            {[1, 2, 3, 4].map((num) => (
-                                <AddProblemSelectRow key={num}>
-                                    <AddProblemSelectImg src={`/icons/number_${num}.svg`} />
-                                    <AddProblemInput placeholder="선택지를 입력해주세요"/>
-                                </AddProblemSelectRow>
-                            ))}
-                        </AddProblemWrap>
-                        <AddProblemWrap>
-                            <AddProblemLabel>정답 번호</AddProblemLabel>
-                            <AddProblemInputLong type="number" placeholder="정답 번호를 입력해주세요"/>
-                        </AddProblemWrap>
-                    </>
-                ) : (
-                    <AddProblemWrap>
-                        <AddProblemLabel>정답</AddProblemLabel>
-                        <AddProblemInputLong placeholder="정답을 입력해주세요"/>
-                    </AddProblemWrap>
-                )}
-
                 <AddProblemButtonWrap>
                     <SecondaryButtonSmall onClick={handleCancel}>취소하기</SecondaryButtonSmall>
-                    <PrimaryButtonMedium onClick={handleSubmit}>제출하기</PrimaryButtonMedium>
+                    <PrimaryButtonMedium onClick={handleOpenModal}>문제생성</PrimaryButtonMedium>
                 </AddProblemButtonWrap>
+                <AddProblemModal
+                    open={isModalOpen}
+                    onClose={handleCloseModal}
+                    onDone={handleDone}
+                    quizData={modalData}
+                    selectedTopic={selectedTopic}
+                    selectedType={selectedType}
+                />
             </AddProblemContainer>
         </Background>
     );
