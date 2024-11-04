@@ -20,7 +20,6 @@ export default function QuizGamePage() {
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
-    const teamId = user?.team == 'BLUE' ? 1 : 2;
 
     const handleCompleteSelection = (quiz: Quiz) => {
         setSelectedQuiz(quiz);
@@ -55,11 +54,11 @@ export default function QuizGamePage() {
                     gameRoomSocketEvents.subscribeLeaderSelect(
                         client,  // null이 아님이 확인된 client 사용
                         _roomId,
-                        teamId === 1 ? 'blue' : 'red',
                         initLeaderSelectQuizeId
                     );
                     resolve();
                 });
+                setIsLoaded();
             } catch (error) {
                 console.error('subscribe leader select failed:', error);
                 throw error;
@@ -76,11 +75,11 @@ export default function QuizGamePage() {
                     gameRoomSocketEvents.subscribeLeaderFinalSelect(
                         client,  // null이 아님이 확인된 client 사용
                         _roomId,
-                        teamId === 1 ? 'blue' : 'red',
                         handleCompleteSelection
                     );
                     resolve();
                 });
+                setIsLoaded();
             } catch (error) {
                 console.error('subscribe leader select failed:', error);
                 throw error;
@@ -101,7 +100,7 @@ export default function QuizGamePage() {
         if (isLoading) {
             setUpGameRoom();
         }
-    }, [isLoading, roomUserId, fetchUserGameProfile, setIsLoaded]);
+    }, []);
 
     // 로딩 중이거나 유저 정보가 없으면 로딩 화면 표시
     if (isLoading || !userLoaded || !user) {

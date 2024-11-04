@@ -107,9 +107,11 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
     const handleSelectionComplete = () => {
         if(user?.isLeader == 1) return;
-        
-        if (selectedQuizId) {
+
+        const selectedQuiz = quizData.find(quiz => quiz.quizId === selectedQuizId);
+        if (selectedQuizId && selectedQuiz) {
             gameRoomSocketEvents.selectQuizeLeaderFinal(stompClient, _roomId, selectedQuizId );
+            onSelectionComplete(selectedQuiz);
         }
     };
 

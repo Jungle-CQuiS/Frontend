@@ -15,7 +15,9 @@ export const SOCKET_DESTINATIONS = {
                 GAME_STATE : (roomId : string )=> `/topic/game/${roomId}/general`,
 
                 // 사용자 입력 실시간 공유
-                LEADER_SELECT_QUIZE: (roomId:string, team:string) =>  `/topic/game/${roomId}/${team}`,// 공격팀 리더의 퀴즈 주제 선택 공유
+                LEADER_SELECT_QUIZE: (roomId:string) =>  `/topic/game/${roomId}/select/option`,// 공격팀 리더의 퀴즈 주제 선택 공유
+                // 리더 최종 선택 공우
+                LEADER_FINAL_SELECT : (roomId:string) => `/topic/game/${roomId}/select/quiz`,
 
                 // HP 업데이트 구독
                 UPDATE_HP :  (roomId:string) => `/topic/game/${roomId}/general`
