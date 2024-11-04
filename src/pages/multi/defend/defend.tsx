@@ -3,18 +3,19 @@ import { TeamHeaderComponent } from "../../../modules/quiz/components/multi/Team
 import { Background } from "../../../components/background/styled";
 import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/WaitingScreen";
 import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
-
-
+import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
+import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
 export default function DefendPage() {
     //수비팀 선택
-    const [teamId, setTeamId] = useState(2);
-    const [isAttackTeam, setIsAttackTeam] = useState(false);
-    
-    return(
+    const { user } = useGameUser();
+    const teamId = user?.team == 'BLUE' ? 1 : 2;
+    const { attackTeam } = useTeamState();
+
+    return (
         <Background>
-            <TeamHeaderComponent teamId={teamId} isAttackTeam={isAttackTeam} />
+            <TeamHeaderComponent teamId={teamId} isAttackTeam={user?.team == attackTeam ? true : false} />
             <WaitingScreen teamId={teamId} />
-            <UserTagsComponent teamId={teamId}/>
+            <UserTagsComponent teamId={teamId} />
         </Background>
     )
 }
