@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { SERVICES } from "../../../../config/api/constants";
 import { TeamHeaderTag } from "../../../../modules/quiz/components/multi/TeamHeader/styled";
 import { TeamHeaderProps } from "../../../../types/room";
 import { Background } from "../../../../components/background/styled";
@@ -18,7 +20,7 @@ export const SolvingPage = ({ selectedQuiz}: { selectedQuiz: any}) => {
     const [teamId, setTeamId] = useState(2); // TODO: 게임 유저 상태 정보에서 받아와야함.
     const [isLeader, setIsLeader] = useState(true);
     const [isHost, setisHost] = useState(false);
-
+    const navigate = useNavigate();
     const customConfirm = useConfirm(); 
     const { stompClient } = useStompContext();
     const {roomUserId,_roomId} = useGameState();
@@ -35,6 +37,8 @@ export const SolvingPage = ({ selectedQuiz}: { selectedQuiz: any}) => {
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
             readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
+
+            navigate(SERVICES.MULTI);
         }
     };
 

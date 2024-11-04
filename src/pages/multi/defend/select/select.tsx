@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { SERVICES } from "../../../../config/api/constants";
 import { Background } from "../../../../components/background/styled"
 import { BlackButtonSmall, SecondaryButtonSmall } from "../../../../components/buttons/styled"
 import { SolvingHeaderComponent } from "../../../../modules/quiz/components/multi/SolvingHeader/SolvingHeader"
@@ -13,22 +15,23 @@ import { useGameState } from "../../../../contexts/GameStateContext/useGameState
 
 export const SelectAnswerPage = () => {
     const [teamId, setTeamId] = useState(2);
-    const {stompClient}= useStompContext();
-    const {roomUserId, _roomId} = useGameState();
-
-    return(
+    const { stompClient } = useStompContext();
+    const { roomUserId, _roomId } = useGameState();
+    const navigate = useNavigate();
+    return (
         <Background>
             <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
             <SelectAnswerContainer>
-                    <SolvingHeaderComponent />
+                <SolvingHeaderComponent />
                 <AnswerSelectComponent />
-                    <SelectAnswerButtonWrap>
-                        <SecondaryButtonSmall onClick= {()=>{
-                            readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId)
-                        }}>나가기</SecondaryButtonSmall>
-                        <BlackButtonSmall>선택완료</BlackButtonSmall>
-                    </SelectAnswerButtonWrap>
-                <UserTagsComponent teamId={teamId}  />
+                <SelectAnswerButtonWrap>
+                    <SecondaryButtonSmall onClick={() => {
+                        readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
+                        navigate(SERVICES.MULTI);
+                    }}>나가기</SecondaryButtonSmall>
+                    <BlackButtonSmall>선택완료</BlackButtonSmall>
+                </SelectAnswerButtonWrap>
+                <UserTagsComponent teamId={teamId} />
             </SelectAnswerContainer>
         </Background>
     )
