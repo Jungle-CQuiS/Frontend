@@ -1,12 +1,12 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { TeamUser, TeamRole, TeamType, UserRole } from '../../types/teamuser';
 
-interface GameUser {
+export interface GameUser {
     roomUserId: string;
     username: string;
     role: UserRole;
     team: TeamType;
-    isLeader: TeamRole;
+    isLeader: number;
 }
 
 interface GameUserContextType {
@@ -47,7 +47,7 @@ export const GameUserProvider = ({ children }: { children: ReactNode }) => {
                 username: responseData.data.username,
                 role: responseData.data.role as UserRole,
                 team: responseData.data.team as TeamType,
-                isLeader: responseData.data.isLeader ? 'leader' : 'member' as TeamRole,
+                isLeader: responseData.data.isLeader
             };
 
             console.log("<GameUserInfo>", userinfo);
