@@ -10,7 +10,7 @@ export default function MainPage(){
                 <Link to="/single" style={{ textDecoration: "none" }}>
                     <GameModeButton>
                         <Icon src="/icons/mdi_user.svg" alt="Single Play Icon" />
-                        <span>Play</span>
+                        <span>Single Play</span>
                     </GameModeButton>
                 </Link>
                 <Link to="/multi" style={{ textDecoration: "none" }}>
