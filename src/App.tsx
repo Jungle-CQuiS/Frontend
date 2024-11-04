@@ -94,7 +94,7 @@ function App() {
             </TeamStateProvider>
           </GameStateProvider>
         }
-        />
+        >
           <Route
             path="/room/:id"
             element={
@@ -153,6 +153,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        </Route>
       </Routes>
     </>
   );
