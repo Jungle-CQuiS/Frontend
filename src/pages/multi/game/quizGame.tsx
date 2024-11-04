@@ -8,6 +8,7 @@ import { useGameState } from "../../../contexts/GameStateContext/useGameState";
 import { GamePhase, GamePlayEvents } from "../../../types/game";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
+import DefendPage from "../defend/defend";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
@@ -55,7 +56,11 @@ export default function QuizGamePage() {
             {user.team === attackTeam ? (
                 <AttackPage onSelectionComplete={handleCompleteSelection} />
             ) : (
-                <SolvingPage selectedQuiz={selectedQuiz} />
+                gamePhase === GamePhase.ATTACK? (
+                    <DefendPage />
+                ) : (
+                    <SolvingPage selectedQuiz={selectedQuiz} />
+                )
             )}
         </div>
     );
