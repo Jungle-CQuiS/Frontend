@@ -181,9 +181,6 @@ export const useRoom = (roomId: string) => {
         
 
         return () => {
-            if (stompClient.current?.active) {
-                stompClient.current.deactivate();
-            }
         };
     }, []);
 

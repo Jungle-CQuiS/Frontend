@@ -113,7 +113,7 @@ export default function Room() {
           team={firstAttackTeam}
           onClose={() => {
             setIsFirstAttackModalOpen(false)
-            updateAttackTeam(firstAttackTeam == "BLUE" ? 'BLUE' : 'RED'); // 전역에 first attack team을 저장.
+            updateAttackTeam(firstAttackTeam == "1팀" ? 'BLUE' : 'RED'); // 전역에 first attack team을 저장.
             navigateToGamePage(); // 팀 별로 다른 페이지 리다이렉트
           }}
         />

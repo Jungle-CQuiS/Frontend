@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
+import { SERVICES } from "../../../../config/api/constants";
 import { Background } from "../../../../components/background/styled";
 import { SecondaryButtonSmall, PrimaryButtonMedium } from "../../../../components/buttons/styled";
 import CategoryComponent from "../../../../components/Category";
@@ -21,14 +23,13 @@ interface AttackPageProps {
 }
 
 export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
-    console.log("AttackPage 컴포넌트 렌더링 시작");
     const customConfirm = useConfirm();
     const [timeLeft, setTimeLeft] = useState(60);
     const [quizData, setQuizData] = useState<Quiz[]>([]);
     const [selectedCategory, setSelectedCategory] = useState("OS");
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null); // TODO: 소켓 동기화 되어야 하는것.
     const fetchCalled = useRef(false); // API 중복 호출 방지용 ref
-
+    const navigate = useNavigate();
     // CONTEXT
     const { stompClient } = useStompContext();
     const { roomUserId, _roomId } = useGameState();
@@ -53,11 +54,12 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
         if (confirmed) {
             console.log("나감");  // TODO: 방 나감
             readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
+
+            navigate(SERVICES.MULTI);
         }
     };
 
     useEffect(() => {
-        console.log("AttackPage useEffect 실행 시작");
         const fetchQuizData = async () => {
             if (fetchCalled.current) return; // 이미 호출된 경우 실행하지 않음
             fetchCalled.current = true;
@@ -90,6 +92,8 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
             } catch (error) {
                 console.error("Error fetching quiz data:", error);
             }
+
+            subscribeData(); // FIXME: 혹시 비동기 문제가 있는지 체크하기.
         };
 
         const subscribeData = async () => {
@@ -116,7 +120,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
         fetchQuizData();
         
-        subscribeData(); // FIXME: 혹시 비동기 문제가 있는지 체크하기.
+        
     }, []);
 
     const filteredQuizData = quizData.filter(quiz => quiz.categoryType === selectedCategory).slice(0, 2);
@@ -139,6 +143,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
     // Leader가 선택한 것을 구독해서 받은 결과를 업데이트
     const subscribeLeaderSelect = (leaderSelect: number) => {
+        if(user?.isLeader) return;
         setSelectedQuizId(leaderSelect);
     }
 

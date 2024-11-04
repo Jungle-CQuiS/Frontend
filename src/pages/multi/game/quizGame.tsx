@@ -7,11 +7,13 @@ import { GameStateContext } from "../../../contexts/GameStateContext/GameStateCo
 import { useGameState } from "../../../contexts/GameStateContext/useGameState";
 import { GamePhase, GamePlayEvents } from "../../../types/game";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
+import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-    const { gamePhase, isLoading, roomUserId, setIsLoaded, changeGamePhase } = useGameState();
-    const { fetchUserGameProfile } = useGameUser();
+    const { gamePhase, isLoading, roomUserId,setIsLoaded, changeGamePhase } = useGameState();
+    const { user, fetchUserGameProfile } = useGameUser();
+    const { attackTeam } = useTeamState();
 
     const handleCompleteSelection = (quiz: Quiz) => {
         setSelectedQuiz(quiz); // ATTACK PAGE에서 주제 선택 후 넘겨 줌..
@@ -21,7 +23,6 @@ export default function QuizGamePage() {
     useEffect(() => {
         // 게임 유저 정보를 받아온다.
         const loadGameUserInfo = async () => {
-            console.log(roomUserId);
             try {
                 const uInfo = await fetchUserGameProfile(roomUserId);
 
@@ -43,7 +44,7 @@ export default function QuizGamePage() {
 
     return (
         <div>
-            { gamePhase === GamePhase.ATTACK ? (
+            { user?.team === attackTeam ? (
                 <AttackPage onSelectionComplete={handleCompleteSelection} />
             ) : (
                 <SolvingPage selectedQuiz={selectedQuiz} />
