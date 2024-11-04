@@ -1,7 +1,7 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { TeamUser, TeamRole, TeamType, UserRole } from '../../types/teamuser';
 
-interface GameUser {
+export interface GameUser {
     roomUserId: string;
     username: string;
     role: UserRole;

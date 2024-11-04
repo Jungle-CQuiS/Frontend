@@ -1,6 +1,6 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { GameStatus, GameReadyEvents, GamePlayEvents, GamePhase } from '../../types/game';
-import { TeamUser } from '../../types/teamuser';
+import { GameUser } from '../GameUserContext/GameUserContext';
 
 interface GameStateContextType {
     // 게임방 정보
@@ -10,7 +10,7 @@ interface GameStateContextType {
 
     //GAMEPLAYING
     gamePhase: GamePhase | null;
-
+    selectedQuizId : number | null;
     // 유저 정보
     _roomId: string;
     roomUserId: string;
@@ -22,6 +22,7 @@ interface GameStateContextType {
     setRoomId: (roomId: string) => void;
     setIsLoaded: () => void;
     changeGamePhase: (event: GamePlayEvents) => void;
+    initLeaderSelectQuizeId : (leaderselect : number) => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -34,6 +35,9 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
     const [_roomId, set_RoomId] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
+
+    // Select 관련
+    const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null); // TODO: 소켓 동기화 되어야 하는것.
 
     const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
@@ -86,6 +90,11 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [])
 
+    const initLeaderSelectQuizeId = (leaderSelect : number) => {
+        setSelectedQuizId(leaderSelect);
+    }
+
+
     return (
         <GameStateContext.Provider value={{
             gameState,
@@ -94,11 +103,13 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             gamePhase,
             roomUserId,
             _roomId,
+            selectedQuizId,
             handleReadyRoomEvent,
             setRoomUserIdWithState,
             setRoomId,
             setIsLoaded,
             changeGamePhase,
+            initLeaderSelectQuizeId,
             roomUserIdError
         }}>
             {children}

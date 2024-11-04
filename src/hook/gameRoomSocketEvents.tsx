@@ -4,6 +4,7 @@ import { TeamUser } from '../types/teamuser';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { subscribe } from 'diagnostics_channel';
 import { GamePlayEvents } from '../types/game';
+import { GameUser } from '../contexts/GameUserContext/GameUserContext';
 export const gameRoomSocketEvents = {
     // SUBSCRIBE -----------------------------------------------------------------
     // blueteam 구독
@@ -63,7 +64,7 @@ export const gameRoomSocketEvents = {
     },
 
     // 방장의 선택 구독 ✅
-    subscribeLeaderSelect: (client: Client, roomId: string, team: string, updateLeaderSelect: (leaderSelect: number) => void) => {
+    subscribeLeaderSelect: (client: Client, roomId: string, team: string, initLeaderSelectQuizeId: (leaderSelect: number) => void) => {
         try {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.LEADER_SELECT_QUIZE(roomId, team),
@@ -77,7 +78,7 @@ export const gameRoomSocketEvents = {
                         switch (eventType) {
                             case GamePlayEvents.QUIZ_SELECT: // 문제 선택(공격팀 리더)
                                 console.log(response.number);
-                                updateLeaderSelect(response.number);
+                                initLeaderSelectQuizeId(response.number);
                                 break;
                             // FIXME: 다른 case가 없다면 조건문 없애도 됩니다.
                             default:
@@ -126,7 +127,6 @@ export const gameRoomSocketEvents = {
     selectQuiz: async (
         stompClient: React.RefObject<Client>,
         roomId: string,
-        team: string,
         selected: number
     ) => {
         try {
@@ -136,7 +136,7 @@ export const gameRoomSocketEvents = {
             }
 
             // 1. PACKING MESSAGE
-            const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.LEADER_SELECT_QUIZE(roomId, team);// FIXME: API 수정해야함.
+            const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.QUIZE_SELECT;// FIXME: API 수정해야함.
             const message = {
                 responseStatus: "QUIZ_SELECT",
                 number: selected,

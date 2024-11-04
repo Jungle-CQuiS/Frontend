@@ -27,12 +27,12 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
     const [timeLeft, setTimeLeft] = useState(60);
     const [quizData, setQuizData] = useState<Quiz[]>([]);
     const [selectedCategory, setSelectedCategory] = useState("OS");
-    const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null); // TODO: 소켓 동기화 되어야 하는것.
     const fetchCalled = useRef(false); // API 중복 호출 방지용 ref
     const navigate = useNavigate();
+
     // CONTEXT
     const { stompClient } = useStompContext();
-    const { roomUserId, _roomId } = useGameState();
+    const { roomUserId, _roomId , selectedQuizId, initLeaderSelectQuizeId } = useGameState();
     const { user } = useGameUser(); // User Info
     const { attackTeam } = useTeamState();
     const teamId = user?.team == 'BLUE' ? 1 : 2;
@@ -84,7 +84,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
                     const osQuizzes = responseData.data.randomQuizList.filter((quiz: any) => quiz.categoryType === "OS");
                     if (osQuizzes.length > 0) {
-                        setSelectedQuizId(osQuizzes[0].quizId);
+                        initLeaderSelectQuizeId(osQuizzes[0].quizId);
                     }
                 } else {
                     console.error("Failed to fetch quiz data:", response.status);
@@ -107,8 +107,8 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                     gameRoomSocketEvents.subscribeLeaderSelect(
                         client,  // null이 아님이 확인된 client 사용
                         _roomId,
-                        teamId === 1 ? 'BLUE' : 'RED',
-                        subscribeLeaderSelect
+                        teamId === 1 ? 'blue' : 'red',
+                        initLeaderSelectQuizeId
                     );
                     resolve();
                 });
@@ -136,16 +136,11 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
     // Leader가 선택한 것을 APP으로 보낸다. 소켓 함수에 넣을 함수.
     const updateLeaderSelect = (leaderSelect: number) => {
-        setSelectedQuizId(leaderSelect); // CSS적으로 함.
         // 리더가 선택 한 답을 서버로 보낸다.
-        gameRoomSocketEvents.selectQuiz(stompClient, _roomId, teamId === 1 ? 'BLUE' : 'RED', leaderSelect);
+        gameRoomSocketEvents.selectQuiz(stompClient, _roomId,leaderSelect);
     }
 
-    // Leader가 선택한 것을 구독해서 받은 결과를 업데이트
-    const subscribeLeaderSelect = (leaderSelect: number) => {
-        if(user?.isLeader) return;
-        setSelectedQuizId(leaderSelect);
-    }
+   
 
     
     
@@ -169,7 +164,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                                         src={quiz.quizId === selectedQuizId ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
                                         onClick={() => {
                                             if (user?.isLeader == 1){ //Leader만 선택 가능하다.
-                                                setSelectedQuizId(quiz.quizId);
+                                                initLeaderSelectQuizeId(quiz.quizId);
                                                 // 소켓 통신으로 다른 팀원들과 선택한 것 공유
                                                 updateLeaderSelect(quiz.quizId);}
                                         }}
