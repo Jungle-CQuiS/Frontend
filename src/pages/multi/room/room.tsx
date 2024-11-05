@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useNavigationType } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
@@ -12,7 +12,9 @@ import FlipCoin from '../../../components/modal/room/flipcoin';
 import { FlipCoinBackdrop, FlipCoinScreen } from '../../../components/modal/room/flipcoin/styled';
 import { SOCKET_DESTINATIONS } from '../../../config/websocket/constants';
 import { useTeamState } from '../../../contexts/TeamStateContext/useTeamState';
-import { TeamType } from '../../../types/teamuser';
+import { usePageLeave } from '../../../hook/pageLeaveHandler';
+
+
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
@@ -28,6 +30,8 @@ export default function Room() {
   const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(5);
   const [isCountDownModalOpen, setIsCountDownModalOpen] = useState(false);
+
+  usePageLeave();
 
   // Ready CountDown Modal Logic
   useEffect(() => {

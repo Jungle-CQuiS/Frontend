@@ -17,6 +17,7 @@ import { useGameState } from "../../../../contexts/GameStateContext/useGameState
 import { useGameUser } from "../../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState";
 import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
+import { usePageLeave } from "../../../../hook/pageLeaveHandler";
 
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
@@ -29,6 +30,8 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
     const [selectedCategory, setSelectedCategory] = useState("OS");
     const fetchCalled = useRef(false); // API 중복 호출 방지용 ref
     const navigate = useNavigate();
+
+    usePageLeave();
 
     // CONTEXT
     const { stompClient } = useStompContext();

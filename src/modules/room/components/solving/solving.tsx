@@ -17,13 +17,14 @@ import { useStompContext } from "../../../../contexts/StompContext";
 import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
 import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
 import { Quiz } from "../../../../types/quiz";
+import { usePageLeave } from "../../../../hook/pageLeaveHandler";
 
 export interface SolvingPageProps {
     selectedQuiz: Quiz | null;
 }
 
 
-export const SolvingPage = ({ selectedQuiz }:  SolvingPageProps ) => {
+export const SolvingPage = ({ selectedQuiz }:  SolvingPageProps) => {
     const { user } = useGameUser();
     const teamId = user?.team == 'BLUE' ? 1 : 2;
 
@@ -35,6 +36,8 @@ export const SolvingPage = ({ selectedQuiz }:  SolvingPageProps ) => {
     const [answer, setAnswer] = useState<string>("");
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     
+
+    usePageLeave();
 
     const handleSubmitAnswer = async () => {
         const confirmed = await customConfirm("제출 하시겠습니까?");
