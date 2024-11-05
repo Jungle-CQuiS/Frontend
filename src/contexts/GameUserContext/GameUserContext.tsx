@@ -6,7 +6,7 @@ export interface GameUser {
     username: string;
     role: UserRole;
     team: TeamType;
-    isLeader: number;
+    isLeader: boolean;
 }
 
 interface GameUserContextType {
