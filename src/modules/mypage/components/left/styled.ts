@@ -106,7 +106,6 @@ export const MyPagePlayStatisticsBarWrap = styled.div`
 `;
 
 export const MyPagePlayStatisticsBar = styled.div`
-    width: 70%; /* 정답률에 따라 변경 가능 */
     height: 100%;
     background-color: #2F69FF;
 `;

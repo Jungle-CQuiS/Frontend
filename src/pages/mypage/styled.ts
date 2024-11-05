@@ -18,7 +18,7 @@ export const MyPageHeaderImg = styled.img`
 `;
 
 export const MyPageHeaderTitle = styled.div`
-    font-size: 18px;
+    font-size: 40px;
     font-weight: 700;
 `;
 

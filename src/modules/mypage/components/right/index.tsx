@@ -11,7 +11,7 @@ export default function MyPageRightSection() {
 
     return (
         <MyPageWrap>
-            <MyPageLabel>틀린 문제</MyPageLabel>
+            <MyPageLabel>내가 틀렸던 문제</MyPageLabel>
             <MyPageRightWrap>
                 <MyPageCategoryContainer>
                     {["OS", "알고리즘", "네트워크", "자료구조", "데이터베이스"].map((category) => (
