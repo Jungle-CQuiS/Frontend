@@ -1,6 +1,6 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { GameStatus, GameReadyEvents, GamePlayEvents, GamePhase } from '../../types/game';
-import { GameUser } from '../GameUserContext/GameUserContext';
+import { UserAnswer } from '../../types/quiz';
 
 interface GameStateContextType {
     // 게임방 정보
@@ -10,19 +10,22 @@ interface GameStateContextType {
 
     //GAMEPLAYING
     gamePhase: GamePhase | null;
-    selectedQuizId : number | null;
+    selectedQuizId: number | null;
     // 유저 정보
     _roomId: string;
     roomUserId: string;
     roomUserIdError: string | null;
 
+    // 수비팀 유저들이 제출한 답 리스트.
+    submitedUserAnswer: UserAnswer[] | null;
     // 전역 메소드
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
     setRoomUserIdWithState: (id: string) => void;
     setRoomId: (roomId: string) => void;
     setIsLoaded: () => void;
     changeGamePhase: (event: GamePlayEvents) => void;
-    initLeaderSelectQuizeId : (leaderselect : number) => void;
+    initLeaderSelectQuizeId: (leaderselect: number) => void;
+    getUserAnswer: () => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -38,6 +41,44 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
 
     // Select 관련
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null); // TODO: 소켓 동기화 되어야 하는것.
+
+    // 수비팀 유저의 제출한 답들 불러오기.
+    const [submitedUserAnswer, setSubmitedUserAnser] = useState<UserAnswer[] | null>(null);
+
+    const getUserAnswer = async () => {
+        try {
+            const userAccessToken = localStorage.getItem("AccessToken");
+            const userUuid = localStorage.getItem("uuid");
+            const API_URL = `/quiz/multi/game/${_roomId}/timeout`;
+
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                headers: {
+                    "Authorization": `Bearer ${userAccessToken}`,
+                    "uuid": `${userUuid}`,
+                    "Content-Type": "application/json;charset=UTF-8",  // charset 추가
+                    "Cache-Control": "no-cache,no-store,max-age=0,must-revalidate",
+                    "Pragma": "no-cache",
+                    "Accept": "application/json"  // Accept 헤더 추가
+                }
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch game info');
+
+            const responseData = await response.json();
+
+            const quizAnswers: UserAnswer[] = responseData.data.answerList.map((item: any) => ({
+                roomUserId: item.roomUserId,
+                answer: item.answer
+            }));
+
+            console.log("<QuizAnswers>", quizAnswers);
+            setSubmitedUserAnser(quizAnswers);
+
+        } catch (error) {
+            console.error('정답 정보 조회 실패:', error);
+        }
+    }
 
     const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
@@ -90,7 +131,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [])
 
-    const initLeaderSelectQuizeId = (leaderSelect : number) => {
+    const initLeaderSelectQuizeId = (leaderSelect: number) => {
         setSelectedQuizId(leaderSelect);
     }
 
@@ -104,12 +145,14 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             roomUserId,
             _roomId,
             selectedQuizId,
+            submitedUserAnswer,
             handleReadyRoomEvent,
             setRoomUserIdWithState,
             setRoomId,
             setIsLoaded,
             changeGamePhase,
             initLeaderSelectQuizeId,
+            getUserAnswer,
             roomUserIdError
         }}>
             {children}

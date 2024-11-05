@@ -3,42 +3,71 @@ import { Client } from '@stomp/stompjs';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { GamePlayEvents } from '../types/game';
 import { Quiz } from '../types/quiz';
+import { subscribe } from 'diagnostics_channel';
 
 export const gameRoomSocketEvents = {
     // SUBSCRIBE -----------------------------------------------------------------
     // blueteam 구독
-    subscribeBlueTeamInfo: (client: Client, roomId: string) => {
+    subscribeBlueTeamInfo: (client: Client, roomId: string, onDefenseTeamAllSubmitted : () => void) => {
         try {
             const subscription = client.subscribe(
-                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId),// FIXME: API 수정해야함.
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.TEAM_BLUE(roomId),
                 (message) => {
                     try {
-                        // TODO: 
+                        const response = JSON.parse(message.body);
+
+                        const eventType = response.responseStatus;
+
+                        switch (eventType) {
+                            case GamePlayEvents.ALL_SUBMIT: // 문제 선택(공격팀 리더)
+                                console.log(eventType);
+                                onDefenseTeamAllSubmitted();
+                                break;
+                            // FIXME: 다른 case가 없다면 조건문 없애도 됩니다.
+                            default:
+                                break;
+                        }
+
                     } catch (err) {
 
                     }
                 }
             );
+            console.log('Subscription successful:', subscription);
         } catch (err) {
-
+            console.error('Subscription error:', err);
         }
 
     },
     // redteam 구독
-    subscribeReadTeamInfo: (client: Client, roomId: string) => {
+    subscribeRedTeamInfo: (client: Client, roomId: string, onDefenseTeamAllSubmitted : () => void) => {
         try {
             const subscription = client.subscribe(
-                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId),// FIXME: API 수정해야함.
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.TEAM_RED(roomId),
                 (message) => {
                     try {
-                        // TODO: 
+                        const response = JSON.parse(message.body);
+
+                        const eventType = response.responseStatus;
+
+                        switch (eventType) {
+                            case GamePlayEvents.ALL_SUBMIT: // 문제 선택(공격팀 리더)
+                                console.log(eventType);
+                                onDefenseTeamAllSubmitted();
+                                break;
+                            // FIXME: 다른 case가 없다면 조건문 없애도 됩니다.
+                            default:
+                                break;
+                        }
+
                     } catch (err) {
 
                     }
                 }
             );
+            console.log('Subscription successful:', subscription);
         } catch (err) {
-
+            console.error('Subscription error:', err);
         }
 
     },
@@ -97,7 +126,7 @@ export const gameRoomSocketEvents = {
     },
 
     // 리더 최종 선택 구독 
-    subscribeLeaderFinalSelect: (client: Client, roomId: string,  handleCompleteSelection: (quiz: Quiz) => void) => {
+    subscribeLeaderFinalSelect: (client: Client, roomId: string, handleCompleteSelection: (quiz: Quiz) => void) => {
         try {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.LEADER_FINAL_SELECT(roomId),
@@ -149,7 +178,24 @@ export const gameRoomSocketEvents = {
 
     },
 
+    // 정답 채점 구독
+    subscribeGradingQuizeAnswer: (client: Client, roomId: string) => {
+        try {
+            const subscription = client.subscribe(
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.GRADING_RESULT(roomId),
+                (message) => {
+                    try {
+                        // TODO: 
+                    } catch (err) {
 
+                    }
+                }
+            );
+        } catch (err) {
+
+        }
+
+    },
 
     // HP 업데이트
     subscribeTeamHpUpdate: (client: Client, roomId: string) => {
@@ -242,21 +288,25 @@ export const gameRoomSocketEvents = {
     },
 
 
-    // 답안 제출( 수비팀 )
-    submitQuizAnswer: (client: Client, roomId: string) => {
-        if (!client.active) {
+    // 개인 답안 제출( 수비팀 )
+    submitQuizAnswer: (
+        stompClient: React.RefObject<Client>,
+        roomId: string,
+        roomUserId: string,
+        answer: string
+    ) => {
+        if (!stompClient.current?.active) {
             throw new Error('No active connection');
         }
-
-        const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;// FIXME: API 수정해야함.
+        const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.SUBMIT_ANSWER;
 
         const message = {
-            roomUserId: `제출한 유저의 id(int)`,
-            answer: `유저가 입력한 정답(string)`,
-            roomId: `현재 방의 id(int)`
+            roomUserId: roomUserId,
+            answer: answer,
+            roomId: roomId
         };
 
-        client.publish({
+        stompClient.current.publish({
             destination,
             body: JSON.stringify(message)
         });

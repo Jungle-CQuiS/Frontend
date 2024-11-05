@@ -15,3 +15,8 @@ export interface Quiz {
 export interface QuizTypeProps {
     type: "객관식" | "주관식";
   }
+
+export interface UserAnswer {
+    "roomUserId": number,
+    "answer": string
+}

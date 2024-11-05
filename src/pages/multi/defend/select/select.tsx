@@ -13,21 +13,32 @@ import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { useStompContext } from "../../../../contexts/StompContext";
 import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
 import { usePageLeave } from "../../../../hook/pageLeaveHandler";
-
-export const SelectAnswerPage = () => {
-    const [teamId, setTeamId] = useState(2);
+import { useGameUser } from "../../../../contexts/GameUserContext/useGameUser";
+import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState";
+import { UserAnswer } from "../../../../types/quiz";
+import { Quiz } from "../../../../types/quiz";
+// 수비팀 최종 정답 선택 페이지
+// 이 부분은 화면이 모두 공유된다!
+interface SelectAnswerPageProps {
+    selectedQuiz: Quiz | null;
+    userAnswers: UserAnswer[] | null;
+}
+export const SelectAnswerPage = ({ selectedQuiz , userAnswers }: SelectAnswerPageProps) => {
     const { stompClient } = useStompContext();
     const { roomUserId, _roomId } = useGameState();
+    const { user } = useGameUser();
+    const { attackTeam } = useTeamState();
+    const  defenceTeam = attackTeam == 'BLUE' ? 2 : 1; // 수비팀의 팀이 반드시 들어가야 하기 때문!
     const navigate = useNavigate();
 
     usePageLeave();
 
     return (
         <Background>
-            <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
+            <TeamHeaderTag teamId={defenceTeam}>{defenceTeam}팀</TeamHeaderTag>
             <SelectAnswerContainer>
                 <SolvingHeaderComponent />
-                <AnswerSelectComponent />
+                <AnswerSelectComponent selectedQuiz = {selectedQuiz} userAnswers = {userAnswers} />
                 <SelectAnswerButtonWrap>
                     <SecondaryButtonSmall onClick={() => {
                         readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
@@ -35,7 +46,8 @@ export const SelectAnswerPage = () => {
                     }}>나가기</SecondaryButtonSmall>
                     <BlackButtonSmall>선택완료</BlackButtonSmall>
                 </SelectAnswerButtonWrap>
-                <UserTagsComponent teamId={teamId} />
+                <UserTagsComponent teamId={defenceTeam} />
+                {attackTeam === user?.team ? (<UserTagsComponent teamId={attackTeam == 'BLUE' ? 1 : 2} />) : (<></>)}{/*공격팀일 경우 공격팀의 팀뱃지도 보여준다!*/}
             </SelectAnswerContainer>
         </Background>
     )

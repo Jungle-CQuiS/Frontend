@@ -99,17 +99,14 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
             
         };
 
-        
-
         fetchQuizData();
-        
-        
+    
     }, []);
 
     const filteredQuizData = quizData.filter(quiz => quiz.categoryType === selectedCategory).slice(0, 2);
 
     const handleSelectionComplete = () => {
-        if(user?.isLeader == 1) return;
+        if(!user?.isLeader) return;
 
         const selectedQuiz = quizData.find(quiz => quiz.quizId === selectedQuizId);
         if (selectedQuizId && selectedQuiz) {
@@ -147,7 +144,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                                     <MultiGameAttackQuizCheckbox
                                         src={quiz.quizId === selectedQuizId ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
                                         onClick={() => {
-                                            if (user?.isLeader == 1){ //Leader만 선택 가능하다.
+                                            if (user?.isLeader){ //Leader만 선택 가능하다.
                                                 initLeaderSelectQuizeId(quiz.quizId);
                                                 // 소켓 통신으로 다른 팀원들과 선택한 것 공유
                                                 updateLeaderSelect(quiz.quizId);}
