@@ -1,5 +1,6 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useNavigationType } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { SERVICES } from '../../../config/api/constants';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
@@ -13,6 +14,10 @@ import { FlipCoinBackdrop, FlipCoinScreen } from '../../../components/modal/room
 import { SOCKET_DESTINATIONS } from '../../../config/websocket/constants';
 import { useTeamState } from '../../../contexts/TeamStateContext/useTeamState';
 import { TeamType } from '../../../types/teamuser';
+import { useConfirm } from '../../../components/confirmPopup';
+import { useStompContext } from '../../../contexts/StompContext';
+import { useGameState } from '../../../contexts/GameStateContext/useGameState';
+import { readyRoomSocketEvents } from '../../../hook/readyRoomSocketEvent';
 export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
@@ -28,6 +33,43 @@ export default function Room() {
   const [firstAttackTeam, setFirstAttackTeam] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(5);
   const [isCountDownModalOpen, setIsCountDownModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const navigationType = useNavigationType();
+  const customConfirm = useConfirm();
+  const { stompClient } = useStompContext();
+  const { roomUserId, _roomId } = useGameState();
+
+  useEffect(() => {
+    const handleClose = async (event: any) => {
+      if (_roomId) {
+        event.preventDefault();
+        event.returnValue = "";
+        const confirmed = await customConfirm("정말 나가시겠습니까?");
+        if (confirmed) {
+          readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
+          navigate(SERVICES.MULTI);
+        }
+      }
+    };
+    window.addEventListener("beforeunload", handleClose);
+    window.addEventListener("popstate", handleClose);
+
+    // if (navigationType === 'POP') {
+    //   (async () => {
+    //     const confirmed = await customConfirm("정말 나가시겠습니까?");
+    //     if (confirmed) {
+    //       readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
+    //       navigate(SERVICES.MULTI);
+    //     } else {
+    //       window.history.pushState(null, "", window.location.href);
+    //     }
+    //   })();
+    // }
+    return () => {
+      window.removeEventListener("beforeunload", handleClose);
+      window.removeEventListener("popstate", handleClose);
+    };
+  }, [customConfirm, stompClient, _roomId, roomUserId, navigate]);
 
   // Ready CountDown Modal Logic
   useEffect(() => {
