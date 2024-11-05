@@ -3,6 +3,7 @@ import { Client } from '@stomp/stompjs';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { GamePlayEvents } from '../types/game';
 import { Quiz } from '../types/quiz';
+import { subscribe } from 'diagnostics_channel';
 
 export const gameRoomSocketEvents = {
     // SUBSCRIBE -----------------------------------------------------------------
@@ -173,6 +174,25 @@ export const gameRoomSocketEvents = {
             console.log('Subscription successful:', subscription);
         } catch (err) {
             console.error('Subscription error:', err);
+        }
+
+    },
+
+    // 정답 채점 구독
+    subscribeGradingQuizeAnswer: (client: Client, roomId: string) => {
+        try {
+            const subscription = client.subscribe(
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.GRADING_RESULT(roomId),
+                (message) => {
+                    try {
+                        // TODO: 
+                    } catch (err) {
+
+                    }
+                }
+            );
+        } catch (err) {
+
         }
 
     },

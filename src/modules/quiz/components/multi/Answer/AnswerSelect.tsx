@@ -2,21 +2,28 @@ import { useState } from "react";
 import { BlackButtonSmall } from "../../../../../components/buttons/styled";
 import { AnswerSelectContainer, AnswerSelectWrap, AnswerSelectCheckbox, AnswerSelectText, AnswerSelectRow } from "./styled";
 import { LookQuestionModal } from "../../../../../components/modal/lookQuestion";
+import { UserAnswer } from "../../../../../types/quiz";
+import { Quiz } from "../../../../../types/quiz";
 
 interface Answer {
   value: string;
   isSelected: boolean;
 }
 
-export default function AnswerSelectComponent() {
+interface SelectAnswerPageProps {
+    selectedQuiz: Quiz | null;
+    userAnswers: UserAnswer[] | null;
+}
+
+export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: SelectAnswerPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [answers, setAnswers] = useState<Answer[]>([
-        { value: "1", isSelected: true }, 
-        { value: "2", isSelected: false },
-        { value: "2", isSelected: false },
-        { value: "4", isSelected: false },
-        { value: "3", isSelected: false },
-    ]);
+ 
+    const [answers, setAnswers] = useState<Answer[]>(() => 
+        userAnswers?.map((item , index) => ({
+            value: item.answer,
+            isSelected: index === 0    // 첫 번째 항목만 true
+        })) ?? []
+    );
 
     const handleSelect = (index: number) => {
         setAnswers(answers.map((answer, i) => ({

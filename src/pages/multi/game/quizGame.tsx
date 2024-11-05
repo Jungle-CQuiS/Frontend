@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import AttackPage from "../../../modules/room/components/attack/attack";
 import { SolvingPage } from "../../../modules/room/components/solving/solving";
 import { SelectAnswerPage } from "../defend/select/select";
-import { Quiz } from "../../../types/quiz";
+import { Quiz, UserAnswer } from "../../../types/quiz";
 import { TeamHeaderTag } from "../../../modules/quiz/components/multi/TeamHeader/styled";
 import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/WaitingScreen";
 import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
@@ -18,22 +18,32 @@ import DefendPage from "../defend/defend";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+
     const { stompClient } = useStompContext();
     const { gamePhase, isLoading, roomUserId, _roomId,
-        setIsLoaded, changeGamePhase, initLeaderSelectQuizeId } = useGameState();
+        submitedUserAnswer,
+        setIsLoaded, changeGamePhase, initLeaderSelectQuizeId , getUserAnswer } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
     const [waiting, setWaiting] = useState<boolean>(true); // 모든 수비 팀원이 답을 제출할 때까지 대기
     const [teamId, setTeamID] = useState<number>(1);
 
+
     const handleCompleteSelection = (quiz: Quiz) => {
         setSelectedQuiz(quiz);
         changeGamePhase(GamePlayEvents.SUB_SELECT_END);
     };
 
-    const onDefenseTeamAllSubmitted = () => {
-        setWaiting(false);
+    // 모두가 제출 완료 됐다는 구독 메세지를 받는다면 호출된다.
+    const onDefenseTeamAllSubmitted = async () => {
+        try {
+            await getUserAnswer();
+            // answers 데이터 처리가 필요한 경우 여기서 처리
+            setWaiting(false);
+        } catch (error) {
+            console.error('답안 조회 중 에러 발생:', error);
+        }
     }
 
     useEffect(() => {
@@ -151,28 +161,30 @@ export default function QuizGamePage() {
     // 유저 정보가 있을 때만 렌더링
     return (
         <div>
+            {/*수비가 정답을 모두 제출하면 SELECT로 이동*/}
             {user.team === attackTeam ? (
                 gamePhase === GamePhase.ATTACK ? (
                     <AttackPage onSelectionComplete={handleCompleteSelection} />
                 ) : (
                     waiting ? (
-                        <Background>
+                        <Background>{/*화면 공유 페이지*/}
                             <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
-                            <WaitingScreen teamId={teamId} /> // 수비가 정답을 모두 제출하면 SELECT로 이동
-                            <UserTagsComponent teamId={teamId} />
+                            <WaitingScreen teamId={teamId} />
+                            <UserTagsComponent teamId={teamId == 1 ? 2 : 1} />{/*다른 팀의 팀 뱃지*/}
+                            <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </Background>
                     ) : (
-                        <SelectAnswerPage />
+                        <SelectAnswerPage selectedQuiz = {selectedQuiz} userAnswers = {submitedUserAnswer}/>
                     )
                 )
             ) : (
                 gamePhase === GamePhase.ATTACK ? (
-                    <DefendPage /> // 수비가 정답을 모두 제출하면 SELECT로 이동
+                    <DefendPage />
                 ) : (
                     waiting ? (
                         <SolvingPage selectedQuiz={selectedQuiz} />
                     ) : (
-                        <SelectAnswerPage />
+                        <SelectAnswerPage selectedQuiz = {selectedQuiz} userAnswers = {submitedUserAnswer}/>
                     )
                 )
             )}

@@ -7,18 +7,21 @@ export const SOCKET_DESTINATIONS = {
                 USER_JOIN: `user/queue/rooms/join`,
                 READY_STATUS: (roomId: string) => `/topic/rooms/${roomId}/status`,
 
-                // 팀별 이벤트 관련 구독 
+                // 팀별 이벤트 관련 구독 ✅
                 TEAM_BLUE : (roomId : string )=> `/topic/game/${roomId}/blue`,
                 TEAM_RED : (roomId : string )=> `/topic/game/${roomId}/red`,
                 
                 // 게임 전체 진행 관련 구독
                 GAME_STATE : (roomId : string )=> `/topic/game/${roomId}/general`,
 
-                // 사용자 입력 실시간 공유
+                // 사용자 입력 실시간 공유 ✅
                 LEADER_SELECT_QUIZE: (roomId:string) =>  `/topic/game/${roomId}/select/option`,// 공격팀 리더의 퀴즈 주제 선택 공유
-                // 리더 최종 선택 공우
+                // 리더 최종 선택 공우 ✅
                 LEADER_FINAL_SELECT : (roomId:string) => `/topic/game/${roomId}/select/quiz`,
 
+                // 채점 결과 구독 ✅
+                GRADING_RESULT : (roomId:string) => `/topic/game/${roomId}/grading`,
+                
                 // HP 업데이트 구독
                 UPDATE_HP :  (roomId:string) => `/topic/game/${roomId}/general`
             },
