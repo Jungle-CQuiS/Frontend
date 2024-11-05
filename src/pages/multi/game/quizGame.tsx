@@ -9,20 +9,21 @@ import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/Wa
 import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
 import { Background } from "../../../components/background/styled";
 import { useGameState } from "../../../contexts/GameStateContext/useGameState";
-import { GamePhase, GamePlayEvents } from "../../../types/game";
+import { GamePhase, GamePlayEvents, GameReadyEvents } from "../../../types/game";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
 import { useStompContext } from "../../../contexts/StompContext";
 import { gameRoomSocketEvents } from "../../../hook/gameRoomSocketEvents";
+import { GameStatus } from "../../../types/game";
 import DefendPage from "../defend/defend";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
 
     const { stompClient } = useStompContext();
-    const { gamePhase, isLoading, roomUserId, _roomId,
-        submitedUserAnswer,
-        setIsLoaded, changeGamePhase, initLeaderSelectQuizeId , getUserAnswer } = useGameState();
+    const { gameState, gamePhase, isLoading, roomUserId, _roomId,
+        submitedUserAnswer, handleReadyRoomEvent,
+        setIsLoaded, changeGamePhase, initLeaderSelectQuizeId, getUserAnswer } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
@@ -30,9 +31,20 @@ export default function QuizGamePage() {
     const [teamId, setTeamID] = useState<number>(1);
 
 
-    const handleCompleteSelection = (quiz: Quiz) => {
+    const handleCompleteSelection = async (quiz: Quiz) => {
         setSelectedQuiz(quiz);
+        // setState 후 상태 변화를 기다리기 위해 Promise 사용
+        await new Promise(resolve => setTimeout(resolve, 0));
+
+        if (gameState !== GameStatus.PLAYING) {
+            handleReadyRoomEvent(GameReadyEvents.GAME_START);
+            await new Promise(resolve => setTimeout(resolve, 0));
+        }
+
         changeGamePhase(GamePlayEvents.SUB_SELECT_END);
+
+        console.log("<GamePhase Changed>", gamePhase);
+
     };
 
     // 모두가 제출 완료 됐다는 구독 메세지를 받는다면 호출된다.
@@ -112,10 +124,6 @@ export default function QuizGamePage() {
                 if (!client) {
                     throw new Error('Stomp client is not initialized');
                 }
-                if (!user?.team) {
-                    throw new Error('subscribe Team Info : theres no user team data');
-                }
-
 
                 const teamtypeSubscribe = teamId === 1
                     ? gameRoomSocketEvents.subscribeBlueTeamInfo : gameRoomSocketEvents.subscribeRedTeamInfo;
@@ -150,6 +158,7 @@ export default function QuizGamePage() {
 
         if (isLoading) {
             setUpGameRoom();
+
         }
     }, []);
 
@@ -174,7 +183,7 @@ export default function QuizGamePage() {
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </Background>
                     ) : (
-                        <SelectAnswerPage selectedQuiz = {selectedQuiz} userAnswers = {submitedUserAnswer}/>
+                        <SelectAnswerPage selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
                     )
                 )
             ) : (
@@ -184,7 +193,7 @@ export default function QuizGamePage() {
                     waiting ? (
                         <SolvingPage selectedQuiz={selectedQuiz} />
                     ) : (
-                        <SelectAnswerPage selectedQuiz = {selectedQuiz} userAnswers = {submitedUserAnswer}/>
+                        <SelectAnswerPage selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
                     )
                 )
             )}
