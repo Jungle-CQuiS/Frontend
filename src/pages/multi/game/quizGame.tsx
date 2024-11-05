@@ -15,8 +15,6 @@ import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
 import { useStompContext } from "../../../contexts/StompContext";
 import { gameRoomSocketEvents } from "../../../hook/gameRoomSocketEvents";
 import DefendPage from "../defend/defend";
-import { TeamType } from "../../../types/teamuser";
-import { error } from "console";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
@@ -105,8 +103,7 @@ export default function QuizGamePage() {
                     throw new Error('Stomp client is not initialized');
                 }
                 if (!user?.team) {
-                    console.error('subscribe Team Info : theres no user team data');
-                    throw error;
+                    throw new Error('subscribe Team Info : theres no user team data');
                 }
 
 
@@ -137,7 +134,7 @@ export default function QuizGamePage() {
                 await subscribeTeamInfo();
 
             } catch (error) {
-                console.error("GameRoom을 세팅하는데 실패했습니다.", error);
+                console.log("GameRoom을 세팅하는데 실패했습니다.", error);
             }
         }
 
