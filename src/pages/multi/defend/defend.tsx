@@ -5,11 +5,14 @@ import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/Wa
 import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
+import { usePageLeave } from "../../../hook/pageLeaveHandler";
 export default function DefendPage() {
     //수비팀 선택
     const { user } = useGameUser();
     const teamId = user?.team == 'BLUE' ? 1 : 2;
     const { attackTeam } = useTeamState();
+
+    usePageLeave();
 
     return (
         <Background>

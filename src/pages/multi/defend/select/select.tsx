@@ -12,12 +12,16 @@ import { SelectAnswerButtonWrap, SelectAnswerContainer } from "./styled"
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { useStompContext } from "../../../../contexts/StompContext";
 import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
+import { usePageLeave } from "../../../../hook/pageLeaveHandler";
 
 export const SelectAnswerPage = () => {
     const [teamId, setTeamId] = useState(2);
     const { stompClient } = useStompContext();
     const { roomUserId, _roomId } = useGameState();
     const navigate = useNavigate();
+
+    usePageLeave();
+
     return (
         <Background>
             <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>

@@ -21,18 +21,18 @@ export const GameStartCountDownModal = ({
                 event.preventDefault();
             }
         };
-        document.addEventListener("keydown", handleLock);
+        window.addEventListener("keydown", handleLock);
         return () => {
-            document.removeEventListener("keydown", handleLock);
+            window.removeEventListener("keydown", handleLock);
         }
     }, []);
 
-    const stopReadyHandler = async() => {
+    const stopReadyHandler = async () => {
         if (roomUserId !== null) {
             await handleStopReady(roomUserId);
         }
         // TODO: 모달 창 닫히도록 추가
-        if(props.onClose){
+        if (props.onClose) {
             props.onClose();
         }
     }

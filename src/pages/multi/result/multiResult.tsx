@@ -21,6 +21,7 @@ import {
   MultiResultCardWrap,
 } from "./styled";
 import { Background } from "../../../components/background/styled";
+import { usePageLeave } from "../../../hook/pageLeaveHandler";
 
 interface User {
   id: number;
@@ -34,6 +35,7 @@ export const MultiModeResultPage = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isVoteCompleted, setIsVoteCompleted] = useState(false);
 
+  usePageLeave();
 
   const users: User[] = [
     { id: 1, name: "백승현코치님", isLeader: true, votes: 1 },
