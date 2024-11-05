@@ -22,9 +22,13 @@ export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
 
     const { stompClient } = useStompContext();
-    const { gameState, gamePhase, isLoading, roomUserId, _roomId,
-        submitedUserAnswer, handleReadyRoomEvent,setDefenceQuizResult,
-        setIsLoaded, changeGamePhase, initLeaderSelectQuizeId, getUserAnswer } = useGameState();
+    const { gameState, gamePhase, isLoading,
+        roomUserId, _roomId,
+        submitedUserAnswer,
+        setIsLoaded, changeGamePhase,
+        handleReadyRoomEvent, setDefenceQuizResult,
+        initLeaderSelectQuizeId, getUserAnswer,
+        changeTeamHP } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
@@ -35,7 +39,7 @@ export default function QuizGamePage() {
 
     // ▶️ 공격팀의 문제 선택 제출되면 호출된다.
     const handleCompleteSelection = async (quiz: Quiz) => {
-        if(quiz == null)
+        if (quiz == null)
             throw new Error("공격팀이 선택한 문제를 수신 받지 못했습니다.");
 
         setSelectedQuiz(quiz);
@@ -49,7 +53,7 @@ export default function QuizGamePage() {
 
         changeGamePhase(GamePlayEvents.SUB_SELECT_END);
 
-        
+
 
         console.log("<GamePhase Changed>", gamePhase);
     };
@@ -66,7 +70,7 @@ export default function QuizGamePage() {
     }
 
     // ▶️ 수비팀 제출 답 결과가 나오면 호출된다.
-    const handleDefenseAnswerResults = async (isCorrect : boolean) => {
+    const handleDefenseAnswerResults = async (isCorrect: boolean) => {
         try {
             await new Promise<void>((resolve) => {
                 setDefenceQuizResult(isCorrect);
@@ -74,19 +78,26 @@ export default function QuizGamePage() {
             });
 
             console.log("상태 업데이트 완료");
-            
+
         } catch (error) {
             console.error('정답 결과 수신 중 에러 발생:', error);
         }
     }
 
-    const handleDefenseTeamHP = async (hp : number) => {
+    // ▶️ 수비팀 제출 답 결과가 나오면 호출된다. - HP 깎기
+    const handleDefenseTeamHP = async (hp: number) => {
         try {
-            //HP 관련 처리
+            await new Promise<void>((resolve) => {
+                changeTeamHP(attackTeam === "BLUE" ? "RED" : "BLUE", hp); //HP 관련 처리 수비 팀의 HP를 깎는다.
+                resolve();
+            });
+
+            console.log("HP 업데이트 완료");
 
         } catch (error) {
             console.error('수비팀 HP 수신 중 에러 발생:', error);
         }
+
     }
 
     useEffect(() => {

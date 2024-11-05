@@ -36,7 +36,7 @@ interface GameStateContextType {
     getUserAnswer: () => void;
     getDefenceFinalAnswer: (answer: number) => void;
     setDefenceQuizResult: (isCorrect: boolean) => void;
-    changeTeamHP: (team: TeamType) => void;
+    changeTeamHP: (team: TeamType, health : number) => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -164,23 +164,13 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         setquizResult(isCorrect);
     }
 
-    const changeTeamHP = (team: TeamType) => {
+    const changeTeamHP = (team: TeamType, health: number) => {
         switch (team) {
             case "BLUE":
-                if (teamOneHealth - 1 > 0)
-                    setTeamOneHealth(teamOneHealth - 1);
-                else {
-                    setGameState(GameStatus.ENDED);
-                    console.log("게임 종료");
-                }
+                setTeamOneHealth(health);
                 break;
             case "RED":
-                if (teamTwoHealth - 1 > 0)
-                    setTeamTwoHealth(teamTwoHealth - 1);
-                else {
-                    setGameState(GameStatus.ENDED);
-                    console.log("게임 종료");
-                }
+                setTeamTwoHealth(health);
                 break;
             default:
                 break;
