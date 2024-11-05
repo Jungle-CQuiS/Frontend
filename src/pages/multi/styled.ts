@@ -25,7 +25,7 @@ export const MainPageSearchBarWrap = styled.div`
 
 export const MainPageSearchBar = styled.input`
     padding: 10px 14px;
-    width: 1204px;
+    width: 1100px;
     border: 1px solid #D3D3D3;
     font-size: 12px;
     border-radius: 8px;
@@ -72,4 +72,22 @@ export const MainPageTableTheadTh = styled.th`
         width: 61px;
         text-align: right;
     }
+`;
+
+export const MainPageRefreshWrap = styled.div`
+    gap: 15px;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: #2F69FF;
+    ${defaultTransition}
+    &:hover {
+        color: #fff;
+        background-color: #5384FF;
+    }
+`;
+
+export const MainPageRefreshButton = styled.img`
 `;
