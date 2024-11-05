@@ -14,6 +14,7 @@ import { useConfirm } from "../../../../components/confirmPopup";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { useStompContext } from "../../../../contexts/StompContext";
 import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
+import { usePageLeave } from "../../../../hook/pageLeaveHandler";
 
 export const SolvingPage = ({ selectedQuiz}: { selectedQuiz: any}) => {
     // FIXME: UserContext 에서 정보 받아와야함.
@@ -24,6 +25,8 @@ export const SolvingPage = ({ selectedQuiz}: { selectedQuiz: any}) => {
     const customConfirm = useConfirm(); 
     const { stompClient } = useStompContext();
     const {roomUserId,_roomId} = useGameState();
+
+    usePageLeave();
 
     const handleSubmitAnswer = () => {
         // TODO: 제출 버튼은 Leader만 가능함.
