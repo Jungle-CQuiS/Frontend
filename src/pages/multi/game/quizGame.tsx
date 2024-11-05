@@ -61,7 +61,7 @@ export default function QuizGamePage() {
             // answers 데이터 처리가 필요한 경우 여기서 처리
             setWaiting(false);
         } catch (error) {
-            console.error('답안 조회 중 에러 발생:', error);
+            console.error('수비팀 제출 답안 조회 중 에러 발생:', error);
         }
     }
 
