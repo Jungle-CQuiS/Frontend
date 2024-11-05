@@ -18,6 +18,9 @@ interface GameStateContextType {
 
     // 수비팀 유저들이 제출한 답 리스트.
     submitedUserAnswer: UserAnswer[] | null;
+    defenceFinalAnswer : number | null;
+    quizResult : boolean | null;
+
     // 전역 메소드
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
     setRoomUserIdWithState: (id: string) => void;
@@ -26,6 +29,8 @@ interface GameStateContextType {
     changeGamePhase: (event: GamePlayEvents) => void;
     initLeaderSelectQuizeId: (leaderselect: number) => void;
     getUserAnswer: () => void;
+    getDefenceFinalAnswer : (answer : number)  => void;
+    setDefenceQuizResult : (isCorrect : boolean) => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -39,11 +44,16 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [_roomId, set_RoomId] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
 
+    // 공수 변경 시 초기화 되어야 함!!
     // Select 관련
-    const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null); // TODO: 소켓 동기화 되어야 하는것.
+    const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null); 
 
     // 수비팀 유저의 제출한 답들 불러오기.
-    const [submitedUserAnswer, setSubmitedUserAnser] = useState<UserAnswer[] | null>(null);
+    const [submitedUserAnswer, setSubmitedUserAnswer] = useState<UserAnswer[] | null>(null);
+    const [defenceFinalAnswer, setDefenceFinalAnswer] = useState<number|null>(null);
+
+    // 수비팀 최종 답 채점 결과.
+    const [quizResult, setquizResult] = useState<boolean | null>(null);
 
     const getUserAnswer = async () => {
         try {
@@ -73,13 +83,16 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             }));
 
             console.log("<QuizAnswers>", quizAnswers);
-            setSubmitedUserAnser(quizAnswers);
+            setSubmitedUserAnswer(quizAnswers);
 
         } catch (error) {
             console.error('정답 정보 조회 실패:', error);
         }
     }
 
+    const getDefenceFinalAnswer = (answer : number) => {
+        setDefenceFinalAnswer(answer);
+    }
     const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
         setRoomUserID(id);
@@ -110,8 +123,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 setGameState(GameStatus.WAITING);
                 break;
             case GameReadyEvents.GAME_START:
-                setGameState(GameStatus.START);
-                localStorage.setItem("GameState", JSON.stringify(GameStatus.START));// FIXME: 나중에 지우기. Context로 대체함
+                setGameState(GameStatus.PLAYING);
+                
                 break;
         }
     }, []);
@@ -129,10 +142,14 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             default:
                 break;
         }
-    }, [])
+    }, [gameState])
 
     const initLeaderSelectQuizeId = (leaderSelect: number) => {
         setSelectedQuizId(leaderSelect);
+    }
+
+    const setDefenceQuizResult = (isCorrect : boolean) => {
+        setquizResult(isCorrect);
     }
 
 
@@ -146,6 +163,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             _roomId,
             selectedQuizId,
             submitedUserAnswer,
+            defenceFinalAnswer,
+            quizResult,
             handleReadyRoomEvent,
             setRoomUserIdWithState,
             setRoomId,
@@ -153,6 +172,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             changeGamePhase,
             initLeaderSelectQuizeId,
             getUserAnswer,
+            getDefenceFinalAnswer,
+            setDefenceQuizResult,
             roomUserIdError
         }}>
             {children}

@@ -22,7 +22,7 @@ export default function QuizGamePage() {
 
     const { stompClient } = useStompContext();
     const { gameState, gamePhase, isLoading, roomUserId, _roomId,
-        submitedUserAnswer, handleReadyRoomEvent,
+        submitedUserAnswer, handleReadyRoomEvent,setDefenceQuizResult,
         setIsLoaded, changeGamePhase, initLeaderSelectQuizeId, getUserAnswer } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam } = useTeamState();
@@ -30,7 +30,9 @@ export default function QuizGamePage() {
     const [waiting, setWaiting] = useState<boolean>(true); // 모든 수비 팀원이 답을 제출할 때까지 대기
     const [teamId, setTeamID] = useState<number>(1);
 
+    // SUBSCRIBE EVENT ----------------------------------
 
+    // ▶️ 공격팀의 문제 선택 제출되면 호출된다.
     const handleCompleteSelection = async (quiz: Quiz) => {
         setSelectedQuiz(quiz);
         // setState 후 상태 변화를 기다리기 위해 Promise 사용
@@ -47,7 +49,7 @@ export default function QuizGamePage() {
 
     };
 
-    // 모두가 제출 완료 됐다는 구독 메세지를 받는다면 호출된다.
+    // ▶️ 수비팀 모두가 제출 완료 됐다는 구독 메세지를 받는다면 호출된다.
     const onDefenseTeamAllSubmitted = async () => {
         try {
             await getUserAnswer();
@@ -55,6 +57,30 @@ export default function QuizGamePage() {
             setWaiting(false);
         } catch (error) {
             console.error('답안 조회 중 에러 발생:', error);
+        }
+    }
+
+    // ▶️ 수비팀 제출 답 결과가 나오면 호출된다.
+    const handleDefenseAnswerResults = async (isCorrect : boolean) => {
+        try {
+            await new Promise<void>((resolve) => {
+                setDefenceQuizResult(isCorrect);
+                resolve();
+            });
+
+            console.log("상태 업데이트 완료");
+            
+        } catch (error) {
+            console.error('정답 결과 수신 중 에러 발생:', error);
+        }
+    }
+
+    const handleDefenseTeamHP = async (hp : number) => {
+        try {
+            //HP 관련 처리
+
+        } catch (error) {
+            console.error('수비팀 HP 수신 중 에러 발생:', error);
         }
     }
 
@@ -142,6 +168,29 @@ export default function QuizGamePage() {
                 throw error;
             }
         };
+        const subscribeResultOfQuiz = async () => {
+            try {
+                const client = stompClient.current;
+                if (!client) {
+                    throw new Error('Stomp client is not initialized');
+                }
+
+                await new Promise<void>((resolve) => {
+                    gameRoomSocketEvents.subscribeGradingQuizeAnswer(
+                        client,  // null이 아님이 확인된 client 사용
+                        _roomId,
+                        handleDefenseAnswerResults,
+                        handleDefenseTeamHP
+                    );
+                    resolve();
+                });
+                setIsLoaded();
+            } catch (error) {
+                console.error('subscribe Result Of Quiz  failed:', error);
+                throw error;
+            }
+        };
+
 
         const setUpGameRoom = async () => {
             try {
@@ -150,7 +199,8 @@ export default function QuizGamePage() {
                 await subscribeLeaderSelectData();
                 await subscribeLeaderFinalSelectQuize(); // FIXME: 구독끼리는 순서 상관없음
                 await subscribeTeamInfo();
-
+                await subscribeResultOfQuiz();
+                await subscribeResultOfQuiz();
             } catch (error) {
                 console.log("GameRoom을 세팅하는데 실패했습니다.", error);
             }
