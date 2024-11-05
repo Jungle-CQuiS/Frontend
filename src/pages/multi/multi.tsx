@@ -36,7 +36,8 @@ export default function MultiPage() {
                     <MainPageSearchBar
                         placeholder="방 이름으로 검색하기"
                         value={searchTerm}
-                        onChange={handleSearch} />
+                        onChange={handleSearch}
+                        autoComplete="off" />
                         <MainPageRefreshWrap >
                     <MainPageRefreshButton onClick={handleRefresh} src="/icons/refresh.svg" />                
                 </MainPageRefreshWrap>
