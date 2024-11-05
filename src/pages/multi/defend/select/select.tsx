@@ -12,7 +12,7 @@ import { SelectAnswerButtonWrap, SelectAnswerContainer } from "./styled"
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { useStompContext } from "../../../../contexts/StompContext";
 import { useGameState } from "../../../../contexts/GameStateContext/useGameState";
-
+// 수비팀 최종 정답 선택 페이지
 export const SelectAnswerPage = () => {
     const [teamId, setTeamId] = useState(2);
     const { stompClient } = useStompContext();
