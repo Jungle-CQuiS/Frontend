@@ -8,7 +8,7 @@ import { subscribe } from 'diagnostics_channel';
 export const gameRoomSocketEvents = {
     // SUBSCRIBE -----------------------------------------------------------------
     // blueteam 구독
-    subscribeBlueTeamInfo: (client: Client, roomId: string, onDefenseTeamAllSubmitted : () => void) => {
+    subscribeBlueTeamInfo: (client: Client, roomId: string, onDefenseTeamAllSubmitted: () => void) => {
         try {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.TEAM_BLUE(roomId),
@@ -40,7 +40,7 @@ export const gameRoomSocketEvents = {
 
     },
     // redteam 구독
-    subscribeRedTeamInfo: (client: Client, roomId: string, onDefenseTeamAllSubmitted : () => void) => {
+    subscribeRedTeamInfo: (client: Client, roomId: string, onDefenseTeamAllSubmitted: () => void) => {
         try {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.TEAM_RED(roomId),
@@ -125,7 +125,7 @@ export const gameRoomSocketEvents = {
 
     },
 
-    // 리더 최종 선택 구독 
+    // 리더 최종 선택 구독 ✅
     subscribeLeaderFinalSelect: (client: Client, roomId: string, handleCompleteSelection: (quiz: Quiz) => void) => {
         try {
             const subscription = client.subscribe(
@@ -179,22 +179,33 @@ export const gameRoomSocketEvents = {
     },
 
     // 정답 채점 구독
-    subscribeGradingQuizeAnswer: (client: Client, roomId: string) => {
+    subscribeGradingQuizeAnswer: (
+        client: Client, 
+        roomId: string,
+        handleDefenseAnswerResults : (isCorrect : boolean) => void,
+        handleDefenseTeamHP : (hp : number) => void
+    ) => {
         try {
             const subscription = client.subscribe(
-                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.GRADING_RESULT(roomId),
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.LEADER_SELECT_QUIZE(roomId),
                 (message) => {
+                    console.log('<SUB:Leader Select/ Received message:', message);
                     try {
-                        // TODO: 
-                    } catch (err) {
+                        const response = JSON.parse(message.body);
+                        
+                        // 문제의 정답: response.answer 
+                        handleDefenseAnswerResults(response.isCorrect);
+                        handleDefenseTeamHP(response.teamHp);
 
+                    } catch (err) {
+                        console.error('Error processing message:', err);
                     }
                 }
             );
+            console.log('Subscription successful:', subscription);
         } catch (err) {
-
+            console.error('Subscription error:', err);
         }
-
     },
 
     // HP 업데이트
@@ -314,20 +325,24 @@ export const gameRoomSocketEvents = {
     },
 
     // 최종 답은 선택( 수비팀 리더 )
-    selectFinalAnswer: (client: Client, roomId: string) => {
-        if (!client.active) {
+    selectFinalAnswer: (
+        stompClient: React.RefObject<Client>,
+        roomId: string,
+        answer: number | null
+    ) => {
+        if (!stompClient.current) {
             throw new Error('No active connection');
         }
 
-        const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;// FIXME: API 수정해야함.
+        const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.SELECT_FINAL_ANSWER;
 
         const message = {
             responseStatus: "ANSWER_SELECT",
-            number: `선택한 답안의 인덱스 in 리스트(int, 0 ~)`,
-            roomId: `현재 방의 id(int)`
+            number: answer,
+            roomId: roomId
         };
 
-        client.publish({
+        stompClient.current.publish({
             destination,
             body: JSON.stringify(message)
         });

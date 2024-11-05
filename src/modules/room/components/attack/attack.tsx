@@ -69,7 +69,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
             const userAccessToken = localStorage.getItem("AccessToken");
             const userUuid = localStorage.getItem("uuid");
-            const API_URL = "/api/quiz/multi/random-quizzes/categories";
+            const API_URL = `/api/quiz/multi/random-quizzes/${_roomId}`;
 
             try {
                 const response = await fetch(API_URL, {

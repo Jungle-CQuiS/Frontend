@@ -4,7 +4,9 @@ import { AnswerSelectContainer, AnswerSelectWrap, AnswerSelectCheckbox, AnswerSe
 import { LookQuestionModal } from "../../../../../components/modal/lookQuestion";
 import { UserAnswer } from "../../../../../types/quiz";
 import { Quiz } from "../../../../../types/quiz";
-
+import { useGameState } from "../../../../../contexts/GameStateContext/useGameState";
+import { useGameUser } from "../../../../../contexts/GameUserContext/useGameUser";
+import { useTeamState } from "../../../../../contexts/TeamStateContext/useTeamState";
 interface Answer {
   value: string;
   isSelected: boolean;
@@ -17,7 +19,9 @@ interface SelectAnswerPageProps {
 
 export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: SelectAnswerPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
- 
+    const { getDefenceFinalAnswer } = useGameState();
+    const {user} = useGameUser();
+    const {attackTeam} = useTeamState();
     const [answers, setAnswers] = useState<Answer[]>(() => 
         userAnswers?.map((item , index) => ({
             value: item.answer,
@@ -26,10 +30,14 @@ export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: Se
     );
 
     const handleSelect = (index: number) => {
+        if(!user?.isLeader || user?.team != attackTeam) return;
+
         setAnswers(answers.map((answer, i) => ({
             ...answer,
             isSelected: i === index
         })));
+
+        getDefenceFinalAnswer(index); // 정답 설정
     };
 
     const handleOpenModal = () => {
