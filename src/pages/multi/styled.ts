@@ -77,8 +77,8 @@ export const MainPageTableTheadTh = styled.th`
 export const MainPageRefreshWrap = styled.div`
     gap: 15px;
     border-radius: 4px;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     padding: 8px 12px;
     cursor: pointer;
     background-color: #2F69FF;
