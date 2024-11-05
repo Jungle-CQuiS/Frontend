@@ -134,38 +134,28 @@ export const gameRoomSocketEvents = {
                     console.log('<SUB:Leader Final Select/ Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
-                        // TODO: Quize 파싱
-                        const eventType = response.responseStatus;
+                    
+                        const quiz: Quiz = {
+                            quizId: response.quizId,
+                            name: response.name,
+                            categoryType: response.categoryType,
+                            // 객관식일 경우 choice 필드 추가
+                            ...(response.type === '객관식' && {
+                                choice1: response.choice1,
+                                choice2: response.choice2,
+                                choice3: response.choice3,
+                                choice4: response.choice4
+                            }),
+                            // 필수 필드이지만 서버에서 오지 않는 필드들에 대한 기본값 설정
+                            answer: 0, // 기본값 설정 필요
+                            quizName: response.name, // name과 동일하게 설정
+                            // 주관식일 경우 빈 문자열로 초기화
+                            koreanAnswer: response.type === '주관식' ? '' : undefined,
+                            englishAnswer: response.type === '주관식' ? '' : undefined
+                        };
 
-                        switch (eventType) {
-                            case GamePlayEvents.FINAL_SELECT:
-                                // 서버 응답을 Quiz 객체로 변환
-                                const quiz: Quiz = {
-                                    quizId: response.quizId,
-                                    name: response.name,
-                                    categoryType: response.categoryType,
-                                    // 객관식일 경우 choice 필드 추가
-                                    ...(response.type === '객관식' && {
-                                        choice1: response.choice1,
-                                        choice2: response.choice2,
-                                        choice3: response.choice3,
-                                        choice4: response.choice4
-                                    }),
-                                    // 필수 필드이지만 서버에서 오지 않는 필드들에 대한 기본값 설정
-                                    answer: 0, // 기본값 설정 필요
-                                    quizName: response.name, // name과 동일하게 설정
-                                    // 주관식일 경우 빈 문자열로 초기화
-                                    koreanAnswer: response.type === '주관식' ? '' : undefined,
-                                    englishAnswer: response.type === '주관식' ? '' : undefined
-                                };
-
-                                console.log('Converted Quiz object:', quiz);
-                                handleCompleteSelection(quiz);
-                                break;
-                            default:
-                                break;
-                        }
-
+                        console.log('Converted Quiz object:', quiz);
+                        handleCompleteSelection(quiz);
                     } catch (err) {
                         console.error('Error processing message:', err);
                     }
@@ -180,10 +170,10 @@ export const gameRoomSocketEvents = {
 
     // 정답 채점 구독
     subscribeGradingQuizeAnswer: (
-        client: Client, 
+        client: Client,
         roomId: string,
-        handleDefenseAnswerResults : (isCorrect : boolean) => void,
-        handleDefenseTeamHP : (hp : number) => void
+        handleDefenseAnswerResults: (isCorrect: boolean) => void,
+        handleDefenseTeamHP: (hp: number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -192,7 +182,7 @@ export const gameRoomSocketEvents = {
                     console.log('<SUB:Leader Select/ Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
-                        
+
                         // 문제의 정답: response.answer 
                         handleDefenseAnswerResults(response.isCorrect);
                         handleDefenseTeamHP(response.teamHp);

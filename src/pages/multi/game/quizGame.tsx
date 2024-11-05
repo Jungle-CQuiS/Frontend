@@ -17,6 +17,7 @@ import { gameRoomSocketEvents } from "../../../hook/gameRoomSocketEvents";
 import { GameStatus } from "../../../types/game";
 import DefendPage from "../defend/defend";
 
+
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
 
@@ -34,6 +35,9 @@ export default function QuizGamePage() {
 
     // ▶️ 공격팀의 문제 선택 제출되면 호출된다.
     const handleCompleteSelection = async (quiz: Quiz) => {
+        if(quiz == null)
+            throw new Error("공격팀이 선택한 문제를 수신 받지 못했습니다.");
+
         setSelectedQuiz(quiz);
         // setState 후 상태 변화를 기다리기 위해 Promise 사용
         await new Promise(resolve => setTimeout(resolve, 0));
@@ -45,8 +49,9 @@ export default function QuizGamePage() {
 
         changeGamePhase(GamePlayEvents.SUB_SELECT_END);
 
-        console.log("<GamePhase Changed>", gamePhase);
+        
 
+        console.log("<GamePhase Changed>", gamePhase);
     };
 
     // ▶️ 수비팀 모두가 제출 완료 됐다는 구독 메세지를 받는다면 호출된다.

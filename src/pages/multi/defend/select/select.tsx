@@ -65,7 +65,7 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers }: SelectAnswerPage
             <SelectAnswerContainer>
                 <SolvingHeaderComponent />
                 <AnswerSelectComponent selectedQuiz={selectedQuiz} userAnswers={userAnswers} />
-                <div> {quizResult ? "맞았습니다" : "틀렸습니다" }</div>
+                <div> {quizResult == null ? "" : quizResult == true ? "맞았습니다" : "틀렸습니다" }</div>
                 <SelectAnswerButtonWrap>
                     <SecondaryButtonSmall onClick={() => {
                         readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
