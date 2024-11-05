@@ -15,7 +15,7 @@ export const gameRoomSocketEvents = {
                 (message) => {
                     try {
                         const response = JSON.parse(message.body);
-
+               
                         const eventType = response.responseStatus;
 
                         switch (eventType) {
@@ -47,7 +47,7 @@ export const gameRoomSocketEvents = {
                 (message) => {
                     try {
                         const response = JSON.parse(message.body);
-
+                     
                         const eventType = response.responseStatus;
 
                         switch (eventType) {

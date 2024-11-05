@@ -33,7 +33,7 @@ export default function QuizGamePage() {
     const { attackTeam } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
     const [waiting, setWaiting] = useState<boolean>(true); // 모든 수비 팀원이 답을 제출할 때까지 대기
-    const [teamId, setTeamID] = useState<number>(1);
+    const teamId = user?.team == 'BLUE' ? 1 : 2; 
 
     // SUBSCRIBE EVENT ----------------------------------
 
@@ -109,8 +109,8 @@ export default function QuizGamePage() {
                 if (uInfo) {
                     setIsLoaded();
                     setUserLoaded(true);  // 유저 정보 로딩 완료
-                    setTeamID(user?.team == 'BLUE' ? 1 : 2);
                     console.log("User info loaded:", uInfo);
+                    await subscribeTeamInfo(uInfo?.team === 'BLUE' ? 1 : 2);
                 } else {
                     console.error('게임 정보 로딩 실패: null');
                 }
@@ -160,7 +160,7 @@ export default function QuizGamePage() {
                 throw error;
             }
         };
-        const subscribeTeamInfo = async () => { // 수비팀 모두가 정답 제출하면 메세지를 받는다.
+        const subscribeTeamInfo = async (teamId : number) => { // 수비팀 모두가 정답 제출하면 메세지를 받는다.
             try {
                 const client = stompClient.current;
                 if (!client) {
@@ -214,7 +214,7 @@ export default function QuizGamePage() {
 
                 await subscribeLeaderSelectData();
                 await subscribeLeaderFinalSelectQuize(); // FIXME: 구독끼리는 순서 상관없음
-                await subscribeTeamInfo();
+                
                 await subscribeResultOfQuiz();
                 await subscribeResultOfQuiz();
             } catch (error) {

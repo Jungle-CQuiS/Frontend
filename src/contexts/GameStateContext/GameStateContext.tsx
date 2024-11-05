@@ -71,7 +71,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         try {
             const userAccessToken = localStorage.getItem("AccessToken");
             const userUuid = localStorage.getItem("uuid");
-            const API_URL = `/quiz/multi/game/${_roomId}/timeout`;
+            const API_URL = `/api/quiz/multi/game/${_roomId}/timeout`;
 
             const response = await fetch(API_URL, {
                 method: 'GET',
