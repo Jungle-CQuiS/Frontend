@@ -11,42 +11,49 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-      if (username && password) {
-          try {
-              const response = await fetch(`/api/auth/login`, {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ email: username, password: password }),
-              });
+    if (username && password) {
+      try {
+        const response = await fetch(`/api/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: username, password: password }),
+        });
 
-              if (!response.ok) {
-                  throw new Error("로그인에 실패했습니다.");
-              }
+        if (!response.ok) {
+          throw new Error("로그인에 실패했습니다.");
+        }
 
-              const data = await response.json();
-              const userNickname = data.username;
+        const data = await response.json();
+        const userNickname = data.username;
 
-              if (userNickname) {
-                  setNickname(userNickname);
-                  localStorage.setItem("nickname", userNickname);
-              }
+        if (userNickname) {
+          setNickname(userNickname);
+          localStorage.setItem("nickname", userNickname);
+        }
 
-              localStorage.setItem("AccessToken", data.accessToken);
-              localStorage.setItem("RefreshToken", data.refreshToken);
-              localStorage.setItem("uuid", data.uuid);
+        localStorage.setItem("AccessToken", data.accessToken);
+        localStorage.setItem("RefreshToken", data.refreshToken);
+        localStorage.setItem("uuid", data.uuid);
 
-              setIsLoggedIn(true); // 로그인 상태 업데이트
-              navigate("/main");
-          } catch (error) {
-              console.error("로그인 에러:", error);
-              alert("로그인에 실패했습니다.");
-          }
-      } else {
-          alert("이메일과 비밀번호를 입력해주세요.");
+        setIsLoggedIn(true); // 로그인 상태 업데이트
+        navigate("/main");
+      } catch (error) {
+        console.error("로그인 에러:", error);
+        alert("로그인에 실패했습니다.");
       }
+    } else {
+      alert("이메일과 비밀번호를 입력해주세요.");
+    }
   };
+
+  function handleEnterkey(event: any) {
+    if (event.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   return (
     <>
       <LoginBackground>
@@ -65,12 +72,14 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
                 placeholder="이메일"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                onKeyDown={handleEnterkey}
               />
               <LoginInput
                 type="password"
                 placeholder="비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleEnterkey}
               />
             </LoginInputWrap>
             <LoginBottomWrap>
@@ -79,7 +88,7 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
                 <LoginLink>비밀번호 찾기</LoginLink>
                 <LoginLink>|</LoginLink>
                 <Link to={SERVICES.SIGNUP}
-                 style={{textDecoration: "none"}}>
+                  style={{ textDecoration: "none" }}>
                   <LoginLink>회원가입</LoginLink>
                 </Link>
               </LoginLinkWrap>
