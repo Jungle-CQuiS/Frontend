@@ -102,7 +102,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
         fetchQuizData();
     
-    }, []);
+    }, [attackTeam]);
 
     const filteredQuizData = quizData.filter(quiz => quiz.categoryType === selectedCategory).slice(0, 2);
 

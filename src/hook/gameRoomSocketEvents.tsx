@@ -2,6 +2,7 @@ import React from 'react';
 import { Client } from '@stomp/stompjs';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { GamePlayEvents } from '../types/game';
+import { TeamType } from '../types/teamuser';
 import { Quiz } from '../types/quiz';
 
 export const gameRoomSocketEvents = {
@@ -187,12 +188,12 @@ export const gameRoomSocketEvents = {
 
     },
 
-    // 정답 채점 구독
+    // 정답 채점 구독 ✅
     subscribeGradingQuizAnswer: (
         client: Client,
         roomId: string,
         handleDefenseAnswerResults: (isCorrect: boolean) => void,
-        handleDefenseTeamHP: (hp: number) => void
+        prepareNextRound : (event: GamePlayEvents, team: TeamType, health: number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -203,8 +204,12 @@ export const gameRoomSocketEvents = {
                         const response = JSON.parse(message.body);
 
                         // 문제의 정답: response.answer 
-                        handleDefenseAnswerResults(response.isCorrect);
-                        handleDefenseTeamHP(response.teamHp);
+                        handleDefenseAnswerResults(response.isCorrect); // 정답 여부 true false
+                        prepareNextRound(
+                            response.responseStatus, // 게임 이벤트
+                            response.nextOffenseTeam, // 다음 공격 팀
+                            response.teamHp); // 수비팀 HP
+
 
                     } catch (err) {
                         console.error('Error processing message:', err);
