@@ -20,3 +20,8 @@ export interface UserAnswer {
     "roomUserId": number,
     "answer": string
 }
+
+export interface SingleModeQuizProps {
+    quizData: any[];
+    onSubmit: (userInput: any) => Promise<void>;
+} 

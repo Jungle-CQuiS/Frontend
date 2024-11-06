@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Route, Routes, useLocation, BrowserRouter as Router } from 'react-router-dom';
+import { useState } from 'react';
+import { Route, Routes, useLocation} from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import LandingPage from './pages/landing/landing';
 import GlobalStyle from './globalstyles';
@@ -10,7 +10,6 @@ import Room from './pages/multi/room/room';
 import ProtectedRoute from './pages/loginpage/protected';
 import SignupPage from './pages/signup/signup';
 import DefendPage from './pages/multi/defend/defend';
-import { SelectAnswerPage } from './pages/multi/defend/select/select';
 import { MultiModeResultPage } from './pages/multi/result/multiResult';
 // FIXME: Provider들 한번에 관리해서 호출하기.
 import { StompProvider } from './contexts/StompContext';
@@ -23,6 +22,7 @@ import MyPage from './pages/mypage/mypage';
 import AddProblemPage from './pages/mypage/addProblem/addProblem';
 import { SingleModePage } from './pages/single/single';
 import SingleModeQuiz from './pages/single/quiz/singleQuiz';
+import { SingleResultPage } from './pages/single/result/singleResult';
 
 function App() {
   const [nickname, setNickname] = useState<string | null>(localStorage.getItem("nickname"));
@@ -142,6 +142,14 @@ function App() {
           element={
             <ProtectedRoute>
               <SingleModeQuiz />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/single/result"
+          element={
+            <ProtectedRoute>
+              <SingleResultPage />
             </ProtectedRoute>
           }
         />
