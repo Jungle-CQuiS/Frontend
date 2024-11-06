@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Route, Routes, useLocation} from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import LandingPage from './pages/landing/landing';
 import GlobalStyle from './globalstyles';
@@ -73,6 +73,32 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/single"
+          element={
+            <ProtectedRoute>
+              <SingleModePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/single/quiz"
+          element={
+            <ProtectedRoute>
+              <SingleModeQuiz />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/single/result"
+          element={
+            <ProtectedRoute>
+              <SingleResultPage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/multi"
           element={
@@ -87,9 +113,9 @@ function App() {
           <GameStateProvider>
             <TeamStateProvider>
               <GameUserProvider>
-              <StompProvider>
-                <Outlet />
-              </StompProvider>
+                <StompProvider>
+                  <Outlet />
+                </StompProvider>
               </GameUserProvider>
             </TeamStateProvider>
           </GameStateProvider>
@@ -122,38 +148,15 @@ function App() {
             }
           />
           <Route
-          path="/multi/result"
-          element={
-            <ProtectedRoute>
-              <MultiModeResultPage />
-            </ProtectedRoute>
-          }
-        />
-          <Route
-          path="/single"
-          element={
-            <ProtectedRoute>
-              <SingleModePage />
-            </ProtectedRoute>
-          }
-        />
-          <Route
-          path="/single/quiz"
-          element={
-            <ProtectedRoute>
-              <SingleModeQuiz />
-            </ProtectedRoute>
-          }
-        />
-          <Route
-          path="/single/result"
-          element={
-            <ProtectedRoute>
-              <SingleResultPage />
-            </ProtectedRoute>
-          }
-        />
+            path="/multi/result"
+            element={
+              <ProtectedRoute>
+                <MultiModeResultPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
+
       </Routes>
     </>
   );
