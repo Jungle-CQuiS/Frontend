@@ -50,7 +50,8 @@ export const useRoom = (roomId: string) => {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`, // 토큰 추가
-                    "uuid": `${userUuid}`
+                    "uuid": `${userUuid}`,
+                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                 },
                 body: JSON.stringify({
                     "uuid": `${userUuid}`

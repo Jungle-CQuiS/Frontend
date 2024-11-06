@@ -74,6 +74,7 @@ export const AddProblemModal = ({
                 headers: {
                     "Authorization": `Bearer ${userAccessToken}`,
                     "uuid": `${userUuid}`,
+                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(requestBody)

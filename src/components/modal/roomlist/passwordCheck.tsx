@@ -27,6 +27,7 @@ export const PasswordCheckModal = ({
                 headers: {
                     "Content-Type": "application/json",  // Content-Type 헤더 추가
                     "Authorization": `Bearer ${userToken}`,
+                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                 },
 
                 body: JSON.stringify({

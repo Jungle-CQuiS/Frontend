@@ -52,6 +52,7 @@ export const SingleModePage = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+            "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
           },
         });
   

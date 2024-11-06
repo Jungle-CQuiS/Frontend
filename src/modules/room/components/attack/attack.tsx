@@ -77,6 +77,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                     headers: {
                         "Authorization": `Bearer ${userAccessToken}`,
                         "uuid": `${userUuid}`,
+                        "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                         "Accept": "application/json"
                     }
                 });

@@ -45,6 +45,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`, // 토큰 추가
+                        "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                     },
                 });
     
