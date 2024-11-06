@@ -3,15 +3,9 @@ import styled from "styled-components";
 export const MyPageLeftWrap = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 64px;
+    gap: 36px;
 `;
 
-export const MyPageWrap = styled.div`
-    background-color: #fff;
-    padding: 16px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
 
 export const MyPageLabel = styled.div`
     font-size: 18px;
@@ -110,7 +104,12 @@ export const MyPagePlayStatisticsBar = styled.div`
     background-color: #2F69FF;
 `;
 
+export const MyPagePlayStatisticsBarRed = styled.div`
+    height: 100%;
+    background-color: #EE5567;
+`;
+
 
 export const MyPageLeftButtonWrap = styled.div`
-    margin-top: 150px;
 `;
+

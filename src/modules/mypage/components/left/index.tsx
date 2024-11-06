@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { PrimaryButtonMedium } from "../../../../components/buttons/styled";
-import { MyPageLeftWrap, MyPageProfileWrap, MyPageProfileImg, MyPageProfileTextWrap, MyPageProfileNameWrap, MyPageProfileName, MyPageProfileHonorWrap, MyPageProfileHonorImg, MyPageProfileHonor, MyPageProfileEmail, MyPagePlayStatistics, MyPagePlayStatisticsBar, MyPagePlayStatisticsBarContainer, MyPagePlayStatisticsBarText, MyPagePlayStatisticsBarTextWrap, MyPagePlayStatisticsBarWrap, MyPagePlayStatisticsImg, MyPageLeftButtonWrap } from "./styled";
+import { MyPageLeftWrap, MyPageProfileWrap, MyPageProfileImg, MyPageProfileTextWrap, MyPageProfileNameWrap, MyPageProfileName, MyPageProfileHonorWrap, MyPageProfileHonorImg, MyPageProfileHonor, MyPageProfileEmail, MyPagePlayStatistics, MyPagePlayStatisticsBar, MyPagePlayStatisticsBarContainer, MyPagePlayStatisticsBarText, MyPagePlayStatisticsBarTextWrap, MyPagePlayStatisticsBarWrap, MyPagePlayStatisticsImg, MyPageLeftButtonWrap, MyPagePlayStatisticsBarRed } from "./styled";
 import { MyPageLabel, MyPageWrap } from "../../../../pages/mypage/styled";
 import { useEffect, useState } from "react";
 
@@ -10,6 +10,14 @@ export default function MyPageLeftSection() {
     const [userCorrectRate, setUserCorrectRate] = useState('');
     const [userHonorCount, setUserHonorCount] = useState('');
     const navigate = useNavigate();
+    const [categoryLevels, setCategoryLevels] = useState([
+        { name: 'OS', level: 3 },
+        { name: '알고리즘', level: 1 },
+        { name: '자료구조', level: 2 },
+        { name: '네트워크', level: 1 },
+        { name: '데이터베이스', level: 1 }
+    ]);
+
     const handleAddProblem = () => {
         navigate("/mypage/addProblem");
     }
@@ -74,38 +82,6 @@ export default function MyPageLeftSection() {
         }
     }
 
-    // const updateWrongQuestion = async () => {
-    //     try {
-    //         const userAccessToken = localStorage.getItem("AccessToken");
-    //         const userUuid = localStorage.getItem("uuid");
-    //         const API_URL = `api/users/quiz-statistics`;   // 수정필요
-
-    //         const response = await fetch(API_URL, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Authorization": `Bearer ${userAccessToken}`,
-    //                 "uuid": `${userUuid}`,
-    //                 "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
-    //                 "Content-Type": "application/json"
-    //             },
-    //             body: JSON.stringify({
-    //                 singleCorrectRate: "string",
-    //                 multiHonorCount: "number"
-    //             })
-    //         });
-
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             setUserCorrectRate(data.data.singleCorrectRate);   // 수정필요
-    //             setUserHonorCount(data.data.multiHonorCount);   // 수정필요
-    //         } else {
-    //             console.error("명예 정보를 받아오는데 실패하였습니다.");
-    //         }
-    //     } catch (error) {
-    //         console.error("명예 정보를 받아오는데 실패하였습니다.", error);
-    //     }
-    // }
-
     useEffect(() => {
         updateUserInfo();
         updateStatic();
@@ -145,6 +121,22 @@ export default function MyPageLeftSection() {
                         </MyPagePlayStatisticsBarWrap>
                     </MyPagePlayStatisticsBarContainer>
                 </MyPagePlayStatistics>
+            </MyPageWrap>
+            <MyPageWrap>
+                <MyPageLabel>카테고리 레벨</MyPageLabel>
+                {categoryLevels.map((category, index) => (
+                    <MyPagePlayStatistics key={index}>
+                        <MyPagePlayStatisticsBarContainer>
+                            <MyPagePlayStatisticsBarTextWrap>
+                                <MyPagePlayStatisticsBarText>{category.name}</MyPagePlayStatisticsBarText>
+                                <MyPagePlayStatisticsBarText>LV.{category.level}</MyPagePlayStatisticsBarText>
+                            </MyPagePlayStatisticsBarTextWrap>
+                            <MyPagePlayStatisticsBarWrap>
+                                <MyPagePlayStatisticsBarRed  style={{ width: `${(category.level / 3) * 100}%` }} />
+                            </MyPagePlayStatisticsBarWrap>
+                        </MyPagePlayStatisticsBarContainer>
+                    </MyPagePlayStatistics>
+                ))}
             </MyPageWrap>
             <MyPageLeftButtonWrap>
                 <PrimaryButtonMedium onClick={handleAddProblem}>문제 등록 하기</PrimaryButtonMedium>
