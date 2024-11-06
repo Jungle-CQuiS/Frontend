@@ -46,7 +46,7 @@ export const PasswordCheckModal = ({
             }
 
             //로그인 성공시
-            onDone(); // 모달 닫힘
+            if (onDone) onDone();// 모달 닫힘
 
             // 해당 room으로 이동
             navigate(`/room/${roomId}`, {

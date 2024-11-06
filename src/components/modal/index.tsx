@@ -4,7 +4,7 @@ import { ModalBackdrop, ModalBase } from "./styled";
 export interface IModalProps {
   open: boolean;
   onClose: () => any;
-  onDone: () => any;
+  onDone?: () => void;
   width?: string;
   height?: string;
   backdrop?: boolean; // 배경 어두움 여부
