@@ -9,6 +9,7 @@ export const ProblemsContainer = styled.div`
 export const ProblemTitle = styled.div`
     font-size: 20px;
     font-weight: 700;
+    width: 830px;
 `;
 
 export const ProblemSelectContainer = styled.div`
