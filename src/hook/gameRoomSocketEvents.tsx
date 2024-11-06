@@ -178,7 +178,7 @@ export const gameRoomSocketEvents = {
         client: Client,
         roomId: string,
         handleDefenseAnswerResults: (isCorrect: boolean) => void,
-        prepareNextRound : (event: GamePlayEvents, team: TeamType, health: number) => void
+        saveGradingResponse : (event: GamePlayEvents, team: TeamType, health: number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -190,7 +190,7 @@ export const gameRoomSocketEvents = {
 
                         // 문제의 정답: response.answer 
                         handleDefenseAnswerResults(response.isCorrect); // 정답 여부 true false
-                        prepareNextRound(
+                        saveGradingResponse(
                             response.responseStatus, // 게임 이벤트
                             response.nextOffenseTeam, // 다음 공격 팀
                             response.teamHp); // 수비팀 HP

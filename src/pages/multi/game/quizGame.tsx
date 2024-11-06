@@ -19,7 +19,6 @@ import { gameRoomSocketEvents } from "../../../hook/gameRoomSocketEvents";
 import { GameStatus } from "../../../types/game";
 import DefendPage from "../defend/defend";
 
-
 export default function QuizGamePage() {
     const navigate = useNavigate();
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
@@ -30,13 +29,15 @@ export default function QuizGamePage() {
         submitedUserAnswer, winnerTeam,
         setIsLoaded, changeGamePhase,
         handleReadyRoomEvent, setDefenceQuizResult,
-        initLeaderSelectQuizeId, getUserAnswer, resetGameRoomInfo, handleGameEndEvent
+        initLeaderSelectQuizeId, getUserAnswer, resetGameRoomInfo, handleGameEndEvent,
+        saveGradingResponse, resetGradingResponse
     } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam, updateAttackTeam, changeTeamHP } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
     const [waiting, setWaiting] = useState<boolean>(true); // 모든 수비 팀원이 답을 제출할 때까지 대기
     const teamId = user?.team == 'BLUE' ? 1 : 2;
+
 
     // SUBSCRIBE EVENT ----------------------------------
 
@@ -89,7 +90,7 @@ export default function QuizGamePage() {
 
     // ▶️ 한 라운드가 종료되고 게임 정보가 리셋된다.
     const prepareNextRound = useCallback(async (event: GamePlayEvents, team: TeamType, health: number) => {
-        if(event  !== GamePlayEvents.ROUND_END ) return;
+        if (event !== GamePlayEvents.ROUND_END) return;
         try {
             // 모든 상태 업데이트를 순차적으로 처리
             changeTeamHP(attackTeam === "BLUE" ? "RED" : "BLUE", health);
@@ -99,7 +100,6 @@ export default function QuizGamePage() {
 
             // 게임 페이즈 변경
             changeGamePhase(GamePlayEvents.ROUND_END);
-
 
             await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -113,10 +113,13 @@ export default function QuizGamePage() {
 
             console.log("다음 라운드 준비 완료");
 
+            resetGradingResponse();
+
         } catch (error) {
             console.error('다음 라운드 준비 중 에러 발생:', error);
         }
     }, [attackTeam, changeTeamHP, resetGameRoomInfo, updateAttackTeam, changeGamePhase]);
+
 
     useEffect(() => {
         const loadGameUserInfo = async () => {
@@ -215,7 +218,7 @@ export default function QuizGamePage() {
                         client,  // null이 아님이 확인된 client 사용
                         _roomId,
                         handleDefenseAnswerResults,
-                        prepareNextRound
+                        saveGradingResponse
                     );
                     resolve();
                 });
@@ -275,16 +278,15 @@ export default function QuizGamePage() {
                 break;
             case GameStatus.ENDED:
                 // 2. Subscribe unconnected
-                if(winnerTeam == null)
-                {
+                if (winnerTeam == null) {
                     console.log("이긴 팀 정보가 없습니다.");
                     return;
                 }
 
                 // 3. navigate
-                navigate(`/multi/result`,{
-                    state : {
-                        winner : winnerTeam
+                navigate(`/multi/result`, {
+                    state: {
+                        winner: winnerTeam
                     }
                 });
 
@@ -294,7 +296,7 @@ export default function QuizGamePage() {
                 break;
         }
 
-        
+
     }, [gameState]);
 
     // 로딩 중이거나 유저 정보가 없으면 로딩 화면 표시
@@ -320,7 +322,10 @@ export default function QuizGamePage() {
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </Background>
                     ) : (
-                        <SelectAnswerPage selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
+                        <SelectAnswerPage
+                            selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer}
+                            prepareNextRound={prepareNextRound}
+                        />
                     )
                 )
             ) : (
@@ -330,7 +335,10 @@ export default function QuizGamePage() {
                     waiting ? (
                         <SolvingPage selectedQuiz={selectedQuiz} />
                     ) : (
-                        <SelectAnswerPage selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
+                        <SelectAnswerPage
+                            selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer}
+                            prepareNextRound={prepareNextRound}
+                        />
                     )
                 )
             )}

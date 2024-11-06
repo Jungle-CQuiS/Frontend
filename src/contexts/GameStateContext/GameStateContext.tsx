@@ -24,7 +24,7 @@ interface GameStateContextType {
 
     // 이긴 팀
     winnerTeam: TeamType | null;
-
+    gradeResponse : GradeResponse | null;
     // 전역 메소드
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
     setRoomUserIdWithState: (id: string) => void;
@@ -36,7 +36,15 @@ interface GameStateContextType {
     getDefenceFinalAnswer: (answer: number) => void;
     setDefenceQuizResult: (isCorrect: boolean) => void;
     resetGameRoomInfo: (event: GamePlayEvents) => void;
-    handleGameEndEvent : (winner :TeamType) => void;
+    handleGameEndEvent: (winner: TeamType) => void;
+    saveGradingResponse : (event: GamePlayEvents, team: TeamType, health: number) => void;
+    resetGradingResponse : () => void;
+}
+
+interface GradeResponse {
+    responseStatus: GamePlayEvents;
+    nextOffenseTeam: TeamType;
+    teamHp: number;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -63,7 +71,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [quizResult, setquizResult] = useState<boolean | null>(null);
 
     // 이긴 팀
-    const [winnerTeam , setWinnerTeam ] = useState<TeamType | null >(null);
+    const [winnerTeam, setWinnerTeam] = useState<TeamType | null>(null);
+    const [gradeResponse, setGradeResponse] = useState<GradeResponse | null>(null);
 
     const resetGameRoomInfo = async (event: GamePlayEvents) => {
 
@@ -194,8 +203,17 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         setWinnerTeam(winner);
     }
 
+    const saveGradingResponse = (event: GamePlayEvents, team: TeamType, health: number) => {
+        setGradeResponse({
+            responseStatus: event,
+            nextOffenseTeam: team,
+            teamHp: health
+        });
+    }
 
-
+    const resetGradingResponse = () => {
+        setGradeResponse(null);
+    }
 
     return (
         <GameStateContext.Provider value={{
@@ -211,6 +229,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             quizResult,
 
             winnerTeam,
+            gradeResponse,
 
             handleReadyRoomEvent,
             setRoomUserIdWithState,
@@ -223,6 +242,9 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             setDefenceQuizResult,
             resetGameRoomInfo,
             handleGameEndEvent,
+            saveGradingResponse,
+            resetGradingResponse,
+
             roomUserIdError
         }}>
             {children}
