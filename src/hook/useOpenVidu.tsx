@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { OpenVidu, Session, Subscriber, Publisher } from "openvidu-browser";
 import { useStompContext } from "../contexts/StompContext";
+
 export const useOpenVidu = (roomId: string) => {
   const [session, setSession] = useState<Session | null>(null); // OpenVidu 세션 객체
   const [publisher, setPublisher] = useState<Publisher | null>(null); // 자신의 미디어 퍼블리셔
@@ -8,13 +9,10 @@ export const useOpenVidu = (roomId: string) => {
   const { stompClient, connect, isConnected } = useStompContext();
 
   useEffect(() => {
-    /*const initOpenViduSession = async () => {
+    const initOpenViduSession = async () => {
       try {
         if (!isConnected) {
           await connect();
-        }
-        if (stompClient.current) {
-          readyRoomSocketEvents.enterRoom(stompClient, roomId);
         }
 
         const OV = new OpenVidu(); // OpenVidu 인스턴스 생성
@@ -31,9 +29,9 @@ export const useOpenVidu = (roomId: string) => {
       } catch (error) {
         console.error("Failed to initialize session", error);
       }
-    };*/
+    };
 
-    //initOpenViduSession();
+    initOpenViduSession(); // 사용자들이 구독할 session을 만든다.
 
     // 컴포넌트 언마운트 시 세션 연결 종료
     return () => {
