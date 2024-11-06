@@ -9,45 +9,81 @@ import {
     SingleModeQuizBoxBottomSelectImg,
     SingleModeQuizBoxBottomSelectWrap,
     SingleModeQuizBoxcontainer,
-    SingleModeQuizBoxNumber,
     SingleModeQuizBoxTitle,
-    SingleModeQuizBoxWrap
+    SingleModeQuizBoxWrap,
 } from "./styled";
+import { useState } from "react";
 
-export const SingleModeQuizBox = ({ type }: QuizTypeProps) => {
-    // 문제 선택지를 생성하는 함수
+interface SingleModeQuizBoxProps extends QuizTypeProps {
+    quizData: {
+        name: string;
+        choices?: string[];
+        quizId: number;
+    };
+    onChoiceSelect?: (choice: number) => void;
+}
+
+export const SingleModeQuizBox = ({ type, quizData, onChoiceSelect }: SingleModeQuizBoxProps) => {
+    const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
+    const [hasVoted, setHasVoted] = useState(false);
+
+    const handleChoiceClick = (index: number) => {
+        setSelectedChoice(index);
+        onChoiceSelect?.(index + 1);
+    };
+
+    const handleDownVote = async () => {
+        if (hasVoted) return;
+
+        setHasVoted(true);
+
+        const quizId = quizData.quizId;
+
+        try {
+            const response = await fetch("/api/quiz/downvote", {  //미완성(백엔드 api 수정)
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+                body: JSON.stringify({
+                    quizId: quizId,
+                }),
+            });
+            const result = await response.json();
+            if (response.ok) {
+            }
+        } catch (error) {
+            console.error("Error during vote:", error);
+        }
+    }
+
     const renderChoices = () => {
-        const choices = [
-            { id: 1, text: "그래프나 트리의 모든 노드를 방문하는 알고리즘이다." },
-            { id: 2, text: "너비 우선 탐색(BFS)보다 일반적으로 더 적은 메모리를 사용한다." },
-            { id: 3, text: "스택이나 재귀를 사용하여 구현할 수 있다." },
-            { id: 4, text: "최단 경로를 찾는 데 항상 최적의 결과를 보장한다." }
-        ];
-
-        return choices.map(choice => (
-            <SingleModeQuizBoxBottomSelectWrap key={choice.id}>
-                <SingleModeQuizBoxBottomSelectImg src={`/icons/number_${choice.id}.svg`} />
-                <SingleModeQuizBoxBottomSelect>{choice.text}</SingleModeQuizBoxBottomSelect>
+        return quizData.choices?.map((choice, index) => (
+            <SingleModeQuizBoxBottomSelectWrap key={index} onClick={() => handleChoiceClick(index)}>
+                <SingleModeQuizBoxBottomSelectImg
+                    src={selectedChoice === index ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
+                    alt={selectedChoice === index ? "Selected" : "Unselected"}
+                />
+                <SingleModeQuizBoxBottomSelectImg src={`/icons/number_${index + 1}.svg`} alt={`Option ${index + 1}`} />
+                <SingleModeQuizBoxBottomSelect>{choice}</SingleModeQuizBoxBottomSelect>
             </SingleModeQuizBoxBottomSelectWrap>
         ));
     };
 
     return (
         <SingleModeQuizBoxcontainer>
-            <SingleModeQuizBoxNumber>문제 1</SingleModeQuizBoxNumber>
             <SingleModeQuizBoxWrap>
-                <SingleModeQuizBoxTitle>
-                    다음 중 깊이 우선 탐색(DFS, Depth-First Search) 알고리즘에 대한 설명으로 틀린 것을 고르세요.
-                </SingleModeQuizBoxTitle>
+                <SingleModeQuizBoxTitle>{quizData.name}</SingleModeQuizBoxTitle>
                 <SingleModeQuizBoxBottom>
                     {type === "객관식" && (
                         <SingleModeQuizBoxBottomSelectContainer>
                             {renderChoices()}
                         </SingleModeQuizBoxBottomSelectContainer>
                     )}
-                    <SingleModeQuizBoxBottomBadWrap>
-                        <SingleModeQuizBoxBottomBadImg src="/icons/bad.svg" />
-                        <SingleModeQuizBoxBottomBadText>별로에요</SingleModeQuizBoxBottomBadText>
+                    <SingleModeQuizBoxBottomBadWrap onClick={handleDownVote} $hasVoted={hasVoted}>
+                        <SingleModeQuizBoxBottomBadImg src={hasVoted ? "/icons/bad_disabled.svg" : "/icons/bad.svg"}/>
+                        <SingleModeQuizBoxBottomBadText $hasVoted={hasVoted}>별로에요</SingleModeQuizBoxBottomBadText>
                     </SingleModeQuizBoxBottomBadWrap>
                 </SingleModeQuizBoxBottom>
             </SingleModeQuizBoxWrap>

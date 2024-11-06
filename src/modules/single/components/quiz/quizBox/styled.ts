@@ -23,6 +23,7 @@ export const SingleModeQuizBoxWrap = styled.div`
 export const SingleModeQuizBoxTitle = styled.div`
     font-size: 20px;
     font-weight: 700;
+    width: 790px;
 `;
 
 export const SingleModeQuizBoxBottom = styled.div`
@@ -51,18 +52,19 @@ export const SingleModeQuizBoxBottomSelectImg = styled.img`
 export const SingleModeQuizBoxBottomSelect = styled.div`
     font-size: 16px;
     font-weight: 500;
-    width: 648px;
+    width: 600px;
 `
 
-export const SingleModeQuizBoxBottomBadWrap = styled.div`
+export const SingleModeQuizBoxBottomBadWrap = styled.div<{ $hasVoted: boolean}>`
     display: flex;
     gap: 8px;
     padding: 9px 11px;
-    border: 1px solid #969696;
+    border: ${({ $hasVoted }) => ($hasVoted ? "1px solid #D3D3D3" : "1px solid #969696")};
+    background-color: ${({ $hasVoted }) => ($hasVoted ? "#E7E7E7" : "#fff")};
     border-radius: 80px;
     width: fit-content;
     height: fit-content;
-    cursor: pointer;
+    cursor: ${({ $hasVoted }) => ($hasVoted ? "default" : "pointer")};
 `;
 
 export const SingleModeQuizBoxBottomBadImg = styled.img`
@@ -70,8 +72,8 @@ export const SingleModeQuizBoxBottomBadImg = styled.img`
     height: 24px;
 `;
 
-export const SingleModeQuizBoxBottomBadText = styled.div`
+export const SingleModeQuizBoxBottomBadText = styled.div<{ $hasVoted: boolean}>`
     font-size: 16px;
     font-weight: 500;
-    color: #969696;
+    color: ${({ $hasVoted}) => ($hasVoted ? "#D3D3D3" : "#969696")};
 `;
