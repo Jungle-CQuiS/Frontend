@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Timer } from "../../../../../components/timer/timer"
 import { HealthBarUnit, SolvingHeaderContainer, SolvingHeaderTitle, SolvingHeaderTitleWrap, SolvingTimer, SolvingTimerText, SolvingTimerWrap, TeamOneHealthBarContainer, TeamOneHealthBarText, TeamOneHealthBarTop, TeamOneHealthBarTopBackground, TeamOneHealthBarTopTitle, TeamOneHealthBarWrap, TeamTwoHealthBarContainer, TeamTwoHealthBarText, TeamTwoHealthBarTop, TeamTwoHealthBarTopBackground, TeamTwoHealthBarTopTitle, TeamTwoHealthBarWrap } from "./styled"
-import { useGameState } from "../../../../../contexts/GameStateContext/useGameState";
+import { useTeamState } from "../../../../../contexts/TeamStateContext/useTeamState";
 export const SolvingHeaderComponent = () => {
-    const { teamOneHealth, teamTwoHealth } = useGameState();
+    const { teamOneHealth, teamTwoHealth } = useTeamState();
 
     const renderHealthBar = (health: number, team: number, reverse: boolean = false) => {
         const totalHealth = 3;
