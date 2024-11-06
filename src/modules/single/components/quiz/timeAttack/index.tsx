@@ -21,8 +21,22 @@ export const SingleModeQuizTimeAttack = ({ quizData, onSubmit }: SingleModeQuizP
         }
     }, [quiz]);
 
-    const handleAnswerSubmit = () => {
-        const isTimeUp = timeLeft <= 0;
+    useEffect(() => {
+        const timerId = setInterval(() => {
+            setTimeLeft(prevTimeLeft => {
+                if(prevTimeLeft <= 1) {
+                    clearInterval(timerId);
+                    handleAnswerSubmit(true);
+                    return 0;
+                }
+                return prevTimeLeft -1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timerId);
+    }, [quiz]); 
+
+    const handleAnswerSubmit = (isTimeUp = false) => {
     
         if (quiz.quizType === "객관식") {
             if (selectedAnswer !== null || isTimeUp) {
@@ -68,7 +82,7 @@ export const SingleModeQuizTimeAttack = ({ quizData, onSubmit }: SingleModeQuizP
                 onChoiceSelect={handleChoiceSelection}
             />
             <SingleModeBottomComponent                 
-                onSubmit={handleAnswerSubmit}
+                onSubmit={() => handleAnswerSubmit()}
                 userAnswer={userAnswer}
                 setUserAnswer={setUserAnswer}
                 isMultipleChoice={isMultipleChoice}
