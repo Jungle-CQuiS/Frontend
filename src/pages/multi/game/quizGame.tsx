@@ -192,7 +192,7 @@ export default function QuizGamePage() {
                 }
 
                 await new Promise<void>((resolve) => {
-                    gameRoomSocketEvents.subscribeGradingQuizeAnswer(
+                    gameRoomSocketEvents.subscribeGradingQuizAnswer(
                         client,  // null이 아님이 확인된 client 사용
                         _roomId,
                         handleDefenseAnswerResults,
@@ -215,7 +215,6 @@ export default function QuizGamePage() {
                 await subscribeLeaderSelectData();
                 await subscribeLeaderFinalSelectQuize(); // FIXME: 구독끼리는 순서 상관없음
                 
-                await subscribeResultOfQuiz();
                 await subscribeResultOfQuiz();
             } catch (error) {
                 console.log("GameRoom을 세팅하는데 실패했습니다.", error);

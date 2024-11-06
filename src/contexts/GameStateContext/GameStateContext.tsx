@@ -104,7 +104,9 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
 
     const getDefenceFinalAnswer = (answer: number) => {
         setDefenceFinalAnswer(answer);
+        console.log("final select 완료",defenceFinalAnswer ,  answer);
     }
+
     const setRoomUserIdWithState = useCallback((id: string) => {
         setroomUserIdError(null);
         setRoomUserID(id);

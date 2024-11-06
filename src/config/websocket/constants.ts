@@ -22,8 +22,6 @@ export const SOCKET_DESTINATIONS = {
                 // 채점 결과 구독 ✅
                 GRADING_RESULT : (roomId:string) => `/topic/game/${roomId}/grading`,
                 
-                // HP 업데이트 구독
-                UPDATE_HP :  (roomId:string) => `/topic/game/${roomId}/general`
             },
 
             REQUEST: {

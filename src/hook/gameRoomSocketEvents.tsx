@@ -3,19 +3,22 @@ import { Client } from '@stomp/stompjs';
 import { SOCKET_DESTINATIONS } from '../config/websocket/constants';
 import { GamePlayEvents } from '../types/game';
 import { Quiz } from '../types/quiz';
-import { subscribe } from 'diagnostics_channel';
 
 export const gameRoomSocketEvents = {
     // SUBSCRIBE -----------------------------------------------------------------
-    // blueteam 구독
-    subscribeBlueTeamInfo: (client: Client, roomId: string, onDefenseTeamAllSubmitted: () => void) => {
+    // blueteam 구독 ✅
+    subscribeBlueTeamInfo: (
+        client: Client,
+        roomId: string,
+        onDefenseTeamAllSubmitted: () => void
+    ) => {
         try {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.TEAM_BLUE(roomId),
                 (message) => {
                     try {
                         const response = JSON.parse(message.body);
-               
+
                         const eventType = response.responseStatus;
 
                         switch (eventType) {
@@ -23,7 +26,10 @@ export const gameRoomSocketEvents = {
                                 console.log(eventType);
                                 onDefenseTeamAllSubmitted();
                                 break;
-                            // FIXME: 다른 case가 없다면 조건문 없애도 됩니다.
+                            case GamePlayEvents.GAME_END:
+                                console.log('서버에서 게임 종료 메세지 수신');
+
+                                break;
                             default:
                                 break;
                         }
@@ -39,15 +45,19 @@ export const gameRoomSocketEvents = {
         }
 
     },
-    // redteam 구독
-    subscribeRedTeamInfo: (client: Client, roomId: string, onDefenseTeamAllSubmitted: () => void) => {
+    // redteam 구독 ✅
+    subscribeRedTeamInfo: (
+        client: Client,
+        roomId: string,
+        onDefenseTeamAllSubmitted: () => void
+    ) => {
         try {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.TEAM_RED(roomId),
                 (message) => {
                     try {
                         const response = JSON.parse(message.body);
-                     
+
                         const eventType = response.responseStatus;
 
                         switch (eventType) {
@@ -55,7 +65,16 @@ export const gameRoomSocketEvents = {
                                 console.log(eventType);
                                 onDefenseTeamAllSubmitted();
                                 break;
-                            // FIXME: 다른 case가 없다면 조건문 없애도 됩니다.
+                            case GamePlayEvents.GAME_END:
+                                console.log('서버에서 게임 종료 메세지 수신');
+                                /*
+                                {
+                                    "responseStatus": "GAME_END"
+                                    "teamColor": 승리 팀의 색(BLUE or RED),
+                                    "gameStatus": "GAME_END"
+                                }  
+                                */
+                                break;
                             default:
                                 break;
                         }
@@ -134,7 +153,7 @@ export const gameRoomSocketEvents = {
                     console.log('<SUB:Leader Final Select/ Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
-                    
+
                         const quiz: Quiz = {
                             quizId: response.quizId,
                             name: response.name,
@@ -169,7 +188,7 @@ export const gameRoomSocketEvents = {
     },
 
     // 정답 채점 구독
-    subscribeGradingQuizeAnswer: (
+    subscribeGradingQuizAnswer: (
         client: Client,
         roomId: string,
         handleDefenseAnswerResults: (isCorrect: boolean) => void,
@@ -177,7 +196,7 @@ export const gameRoomSocketEvents = {
     ) => {
         try {
             const subscription = client.subscribe(
-                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.LEADER_SELECT_QUIZE(roomId),
+                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.GRADING_RESULT(roomId),
                 (message) => {
                     console.log('<SUB:Leader Select/ Received message:', message);
                     try {
@@ -197,27 +216,6 @@ export const gameRoomSocketEvents = {
             console.error('Subscription error:', err);
         }
     },
-
-    // HP 업데이트
-    subscribeTeamHpUpdate: (client: Client, roomId: string) => {
-        try {
-            const subscription = client.subscribe(
-                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId),// FIXME: API 수정해야함.
-                (message) => {
-                    try {
-                        // TODO: 
-                    } catch (err) {
-
-                    }
-                }
-            );
-        } catch (err) {
-
-        }
-
-    },
-
-
 
     // 게임 종료 -> roomState랑 합쳐도 될 것 같은디!
 
@@ -255,7 +253,7 @@ export const gameRoomSocketEvents = {
         }
     },
 
-    // 문제 선택( 공격팀 리더 - 최종 선택)
+    // 문제 선택( 공격팀 리더 - 최종 선택) ✅
     selectQuizeLeaderFinal: async (
         stompClient: React.RefObject<Client>,
         roomId: string,
@@ -289,7 +287,7 @@ export const gameRoomSocketEvents = {
     },
 
 
-    // 개인 답안 제출( 수비팀 )
+    // 개인 답안 제출( 수비팀 ) ✅
     submitQuizAnswer: (
         stompClient: React.RefObject<Client>,
         roomId: string,
@@ -314,7 +312,7 @@ export const gameRoomSocketEvents = {
 
     },
 
-    // 최종 답은 선택( 수비팀 리더 )
+    // 최종 답은 선택( 수비팀 리더 ) ✅
     selectFinalAnswer: (
         stompClient: React.RefObject<Client>,
         roomId: string,
@@ -328,12 +326,18 @@ export const gameRoomSocketEvents = {
 
         const message = {
             responseStatus: "ANSWER_SELECT",
-            number: answer,
-            roomId: roomId
+            number: Number(answer),    // 또는 answer?.toString()
+            roomId: Number(roomId)     // 또는 roomId.toString()
         };
 
+        console.log(message);
+        const userAccessToken = localStorage.getItem("AccessToken");
         stompClient.current.publish({
-            destination,
+            destination: destination,
+            headers: {
+                'Authorization': `Bearer ${userAccessToken}`,  // 토큰 추가
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(message)
         });
 
