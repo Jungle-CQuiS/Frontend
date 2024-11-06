@@ -1,13 +1,50 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MyPageLabel, MyPageWrap } from "../../../../pages/mypage/styled";
 import { MyPageCategoryContainer, MyPageCategoryTab, MyPageProblemContainer, MyPageProblemSelectImg, MyPageProblemSelectRow, MyPageProblemSelectText, MyPageProblemTitle, MyPageProblemWrap, MyPageRightWrap } from "./styled";
 
 export default function MyPageRightSection() {
     const [selectedCategory, setSelectedCategory] = useState("OS");
+    const [wrongQuizIds, setWrongQuizIds] = useState('');
 
     const handleCategoryClick = (category: string) => {
         setSelectedCategory(category);
     };
+
+    const isFetched = useRef(false); // 중복호출 방지용
+
+    const updateWrongQuiz = async () => {
+        try {
+            const userAccessToken = localStorage.getItem("AccessToken");
+            const userUuid = localStorage.getItem("uuid");
+            const API_URL = `api/users/quiz-wrong`;
+
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${userAccessToken}`,
+                    "uuid": `${userUuid}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ uuid: userUuid })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setWrongQuizIds(data.data.wrongQuizIds);   
+            } else {
+                console.error("틀린문제 정보를 받아오는데 실패하였습니다.");
+            }
+        } catch (error) {
+            console.error("틀린문제 정보를 받아오는데 실패하였습니다", error);
+        }
+    }
+
+    useEffect(() => {
+        if(!isFetched.current){
+            updateWrongQuiz();
+            isFetched.current = true; // 호출 후 true로 설정하여 다시 호출되지 않도록 설정
+        }
+    }, []);
 
     return (
         <MyPageWrap>
@@ -27,10 +64,12 @@ export default function MyPageRightSection() {
                 <MyPageProblemContainer>
                     {/* OS 문제 예시 */}
                     <MyPageProblemWrap>
+                    {/* <CategoryWrongResult>
+                    </CategoryWrongResult> */}
                         <MyPageProblemTitle>
-                            다음 중 깊이 우선 탐색(DFS, Depth-First Search) 알고리즘에 대한 설명으로 틀린 것을 고르세요.
+                            {wrongQuizIds}
                         </MyPageProblemTitle>
-                        <MyPageProblemSelectRow>
+                        {/* <MyPageProblemSelectRow>
                             <MyPageProblemSelectImg src="/icons/number_1.svg" />
                             <MyPageProblemSelectText>그래프나 트리의 모든 노드를 방문하는 알고리즘이다.</MyPageProblemSelectText>
                         </MyPageProblemSelectRow>
@@ -45,7 +84,7 @@ export default function MyPageRightSection() {
                         <MyPageProblemSelectRow>
                             <MyPageProblemSelectImg src="/icons/number_4.svg" />
                             <MyPageProblemSelectText>최단 경로를 찾는 데 항상 최적의 결과를 보장한다.</MyPageProblemSelectText>
-                        </MyPageProblemSelectRow>
+                        </MyPageProblemSelectRow> */}
                     </MyPageProblemWrap>
                 </MyPageProblemContainer>
             </MyPageRightWrap>
