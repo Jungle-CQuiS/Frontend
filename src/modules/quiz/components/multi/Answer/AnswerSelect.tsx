@@ -30,13 +30,14 @@ export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: Se
     );
 
     const handleSelect = (index: number) => {
-        if(!user?.isLeader || user?.team != attackTeam) return;
+        if(!user?.isLeader || user?.team === attackTeam) return;
 
         setAnswers(answers.map((answer, i) => ({
             ...answer,
             isSelected: i === index
         })));
 
+        console.log("final select", index);
         getDefenceFinalAnswer(index); // 정답 설정
     };
 

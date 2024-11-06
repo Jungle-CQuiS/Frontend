@@ -34,10 +34,10 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers }: SelectAnswerPage
     usePageLeave();
 
     const submitFinalAnswerSelect = async () => {
-        if (!user?.isLeader || user?.team != attackTeam) return;
+        if (!user?.isLeader || user?.team === attackTeam) return;
 
         try {
-            if (defenceFinalAnswer)
+            if (defenceFinalAnswer !== null)
                 gameRoomSocketEvents.selectFinalAnswer(stompClient, _roomId, defenceFinalAnswer)
             else
                 console.error("제출 할 답이 존재하지 않습니다.");
