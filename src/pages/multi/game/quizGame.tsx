@@ -1,5 +1,6 @@
 
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import AttackPage from "../../../modules/room/components/attack/attack";
 import { SolvingPage } from "../../../modules/room/components/solving/solving";
 import { SelectAnswerPage } from "../defend/select/select";
@@ -20,15 +21,16 @@ import DefendPage from "../defend/defend";
 
 
 export default function QuizGamePage() {
+    const navigate = useNavigate();
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
 
     const { stompClient } = useStompContext();
     const { gameState, gamePhase, isLoading,
         roomUserId, _roomId,
-        submitedUserAnswer,
+        submitedUserAnswer, winnerTeam,
         setIsLoaded, changeGamePhase,
         handleReadyRoomEvent, setDefenceQuizResult,
-        initLeaderSelectQuizeId, getUserAnswer, resetGameRoomInfo
+        initLeaderSelectQuizeId, getUserAnswer, resetGameRoomInfo, handleGameEndEvent
     } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
     const { attackTeam, updateAttackTeam, changeTeamHP } = useTeamState();
@@ -87,6 +89,7 @@ export default function QuizGamePage() {
 
     // ▶️ 한 라운드가 종료되고 게임 정보가 리셋된다.
     const prepareNextRound = useCallback(async (event: GamePlayEvents, team: TeamType, health: number) => {
+        if(event  !== GamePlayEvents.ROUND_END ) return;
         try {
             // 모든 상태 업데이트를 순차적으로 처리
             changeTeamHP(attackTeam === "BLUE" ? "RED" : "BLUE", health);
@@ -189,7 +192,8 @@ export default function QuizGamePage() {
                     teamtypeSubscribe(
                         client,  // null이 아님이 확인된 client 사용
                         _roomId,
-                        onDefenseTeamAllSubmitted
+                        onDefenseTeamAllSubmitted,
+                        handleGameEndEvent
                     );
                     resolve();
                 });
@@ -247,39 +251,51 @@ export default function QuizGamePage() {
     // useEffect 부분
     useEffect(() => {
         const initializeRound = async () => {
-            if (gameState === GameStatus.START) {
-                
-                await new Promise(resolve => setTimeout(resolve, 0)); // 마이크로태스크 큐에 넣기
-                setWaiting(true);
+            await new Promise(resolve => setTimeout(resolve, 0)); // 마이크로태스크 큐에 넣기
+            setWaiting(true);
 
-                console.log("waiting 상태 설정됨");
+            console.log("waiting 상태 설정됨");
 
-                await new Promise(resolve => setTimeout(resolve, 0));
-                await handleReadyRoomEvent(GameReadyEvents.GAME_START);
+            await new Promise(resolve => setTimeout(resolve, 0));
+            await handleReadyRoomEvent(GameReadyEvents.GAME_START); // FIXME: 지워도 될지도?
 
-                console.log("게임 준비 이벤트 처리됨");
+            console.log("게임 준비 이벤트 처리됨");
 
-                await new Promise(resolve => setTimeout(resolve, 0));
-                await changeGamePhase(GamePlayEvents.DEF_CHECK_ANSWER);
+            await new Promise(resolve => setTimeout(resolve, 0));
+            await changeGamePhase(GamePlayEvents.DEF_CHECK_ANSWER);
 
-                setSelectedQuiz(null);
-                console.log("게임 페이즈 변경됨");
-            }
+            setSelectedQuiz(null);
+            console.log("게임 페이즈 변경됨");
         };
 
-        initializeRound();
+
+        switch (gameState) {
+            case GameStatus.START:
+                initializeRound();
+                break;
+            case GameStatus.ENDED:
+                // 2. Subscribe unconnected
+                if(winnerTeam == null)
+                {
+                    console.log("이긴 팀 정보가 없습니다.");
+                    return;
+                }
+
+                // 3. navigate
+                navigate(`/multi/result`,{
+                    state : {
+                        winner : winnerTeam
+                    }
+                });
+
+                break;
+
+            default:
+                break;
+        }
+
+        
     }, [gameState]);
-
-    useEffect(() => {
-        console.log('SelectAnswerPage props/context 변화:', {
-            selectedQuiz,
-            attackTeam,
-            user,
-            gamePhase,
-            waiting
-        });
-    }, [selectedQuiz, attackTeam, user, gamePhase, waiting]);
-
 
     // 로딩 중이거나 유저 정보가 없으면 로딩 화면 표시
     if (isLoading || !userLoaded || !user) {
@@ -304,7 +320,7 @@ export default function QuizGamePage() {
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </Background>
                     ) : (
-                        <SelectAnswerPage  selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
+                        <SelectAnswerPage selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
                     )
                 )
             ) : (
