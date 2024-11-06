@@ -16,6 +16,7 @@ export interface IModalProps {
   $border?: string;
   $transform?: string;
   $padding ?:string;
+  selectedQuiz ?: any;
 }
 
 export const Modal = ({

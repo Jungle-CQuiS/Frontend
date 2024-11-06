@@ -68,6 +68,7 @@ export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: Se
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 onDone={handleDone}
+                selectedQuiz={selectedQuiz}
             />
         </AnswerSelectContainer>
     );
