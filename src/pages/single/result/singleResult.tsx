@@ -107,6 +107,7 @@ export const SingleResultPage = () => {
                         headers: {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                            "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                         },
                         body: JSON.stringify(requestBody),
                     });
@@ -128,6 +129,7 @@ export const SingleResultPage = () => {
                         headers: {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                            "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                         },
                         body: JSON.stringify(categoryLevelsRequestBody),
                     });
@@ -141,6 +143,7 @@ export const SingleResultPage = () => {
                         headers: {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                            "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                         },
                         body: JSON.stringify({
                             uuid,

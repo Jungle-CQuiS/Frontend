@@ -45,6 +45,7 @@ export const SingleModeQuizBox = ({ type, quizData, onChoiceSelect }: SingleMode
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                 },
                 body: JSON.stringify({
                     quizId: quizId,

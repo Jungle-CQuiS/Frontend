@@ -77,6 +77,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 method: 'GET',
                 headers: {
                     "Authorization": `Bearer ${userAccessToken}`,
+                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                     "uuid": `${userUuid}`,
                     "Content-Type": "application/json;charset=UTF-8",  // charset 추가
                     "Cache-Control": "no-cache,no-store,max-age=0,must-revalidate",

@@ -73,6 +73,7 @@ export const CreateRoomModal = ({
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
+                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                 },
                 body: JSON.stringify(roomData),
             });
