@@ -90,6 +90,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                     if (osQuizzes.length > 0) {
                         initLeaderSelectQuizeId(osQuizzes[0].quizId);
                     }
+                    console.log("<AttackPage>새로운 문제 패치 완료");
                 } else {
                     console.error("Failed to fetch quiz data:", response.status);
                 }

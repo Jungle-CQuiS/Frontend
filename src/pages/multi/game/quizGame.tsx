@@ -248,6 +248,7 @@ export default function QuizGamePage() {
     useEffect(() => {
         const initializeRound = async () => {
             if (gameState === GameStatus.START) {
+                
                 await new Promise(resolve => setTimeout(resolve, 0)); // 마이크로태스크 큐에 넣기
                 setWaiting(true);
 
@@ -261,6 +262,7 @@ export default function QuizGamePage() {
                 await new Promise(resolve => setTimeout(resolve, 0));
                 await changeGamePhase(GamePlayEvents.DEF_CHECK_ANSWER);
 
+                setSelectedQuiz(null);
                 console.log("게임 페이즈 변경됨");
             }
         };
@@ -268,10 +270,23 @@ export default function QuizGamePage() {
         initializeRound();
     }, [gameState]);
 
+    useEffect(() => {
+        console.log('SelectAnswerPage props/context 변화:', {
+            selectedQuiz,
+            attackTeam,
+            user,
+            gamePhase,
+            waiting
+        });
+    }, [selectedQuiz, attackTeam, user, gamePhase, waiting]);
+
+
     // 로딩 중이거나 유저 정보가 없으면 로딩 화면 표시
     if (isLoading || !userLoaded || !user) {
         return <div>로딩 중입니다...</div>;
     }
+
+
 
     // 유저 정보가 있을 때만 렌더링
     return (
@@ -289,7 +304,7 @@ export default function QuizGamePage() {
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </Background>
                     ) : (
-                        <SelectAnswerPage selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
+                        <SelectAnswerPage  selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
                     )
                 )
             ) : (

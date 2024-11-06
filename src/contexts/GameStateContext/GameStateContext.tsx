@@ -158,8 +158,6 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const changeGamePhase = useCallback((event: GamePlayEvents) => {
-        if (gameState != GameStatus.PLAYING) return; // PLAYING 상태에서만 유효한 상태
-
         switch (event) {
             case GamePlayEvents.SUB_SELECT_END: // 공격이 주제선택을 다하면 SOLVING으로 넘어감.
                 setgamePhase(GamePhase.SOLVING);
