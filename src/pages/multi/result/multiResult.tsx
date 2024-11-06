@@ -22,6 +22,13 @@ import {
 } from "./styled";
 import { Background } from "../../../components/background/styled";
 import { usePageLeave } from "../../../hook/pageLeaveHandler";
+import { useLocation } from "react-router-dom";
+import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
+import { readyRoomSocketEvents } from "../../../hook/readyRoomSocketEvent";
+import { SERVICES } from "../../../config/api/constants";
+import { useNavigate } from "react-router-dom";
+import { useStompContext } from "../../../contexts/StompContext";
+import { useGameState } from "../../../contexts/GameStateContext/useGameState";
 
 interface User {
   id: number;
@@ -31,24 +38,36 @@ interface User {
 }
 
 export const MultiModeResultPage = () => {
-  const [teamId, setTeamId] = useState(2);
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const { winner } = location.state;
+  const teamId = winner == 'BLUE' ? 1 : 2;
+
+  const { stompClient } = useStompContext();
+  const { roomUserId, _roomId } = useGameState();
+
+  const { teamOneUsers, teamTwoUsers } = useTeamState();
+
+  const users = (teamId === 1 ? teamOneUsers : teamTwoUsers);
+  const mappedUsers = users.map((teamUser, index) => ({
+    id: teamUser?.roomUserId ?? index,  // undefined일 경우 index를 사용
+    name: teamUser?.username ?? "-",
+    isLeader: teamUser?.isLeader === 'leader',
+    votes: 0
+  }));
+
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isVoteCompleted, setIsVoteCompleted] = useState(false);
 
   usePageLeave();
 
-  const users: User[] = [
-    { id: 1, name: "백승현코치님", isLeader: true, votes: 1 },
-    { id: 2, name: "김현수코치님", isLeader: false, votes: 1 },
-    { id: 3, name: "백정훈코치님", isLeader: false, votes: 1 },
-    { id: 4, name: "-", isLeader: false, votes: 0 },
-    { id: 5, name: "-", isLeader: false, votes: 0 }, 
-  ];
-
   const handleUserClick = (userId: number) => {
     if (!isVoteCompleted) {
       setSelectedUserId(userId);
       setIsVoteCompleted(true);
+
+      // TODO: REST API
     }
   };
 
@@ -61,7 +80,7 @@ export const MultiModeResultPage = () => {
         </MultiResultHeader>
 
         <MultiResultCardContainer>
-          {users.map((user) => (
+          {mappedUsers.map((user) => (
             <MultiResultCardWrap key={user.id}>
               <MultiResultCard
                 onClick={() => handleUserClick(user.id)}
@@ -71,7 +90,7 @@ export const MultiModeResultPage = () => {
                   <MultiResultCardProfileImg src="/images/profile_image.png" />
                   <MultiResultCardProfileNameWrap>
                     {/* 팀장인 경우에만 아이콘 표시 */}
-                    {user.isLeader && <MultiResultCardProfileBadge src="/icons/medal.svg" />}
+                    {user?.isLeader && <MultiResultCardProfileBadge src="/icons/medal.svg" />}
                     <MultiResultCardProfileName>{user.name}</MultiResultCardProfileName>
                   </MultiResultCardProfileNameWrap>
                 </MultiResultCardProfileWrap>
@@ -93,7 +112,12 @@ export const MultiModeResultPage = () => {
         </MultiResultCardContainer>
 
         <MultiResultButtonWrap>
-          <SecondaryButtonSmall>나가기</SecondaryButtonSmall>
+          <SecondaryButtonSmall
+            onClick={() => {
+              readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
+              navigate(SERVICES.MULTI);
+            }}
+          >나가기</SecondaryButtonSmall>
           <BlackButtonSmall>한번 더 하기</BlackButtonSmall>
         </MultiResultButtonWrap>
       </MultiResultContainer>

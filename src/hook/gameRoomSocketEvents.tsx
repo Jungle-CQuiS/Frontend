@@ -11,7 +11,8 @@ export const gameRoomSocketEvents = {
     subscribeBlueTeamInfo: (
         client: Client,
         roomId: string,
-        onDefenseTeamAllSubmitted: () => void
+        onDefenseTeamAllSubmitted: () => void,
+        handleGameEndEvent : (winner : TeamType) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -29,7 +30,7 @@ export const gameRoomSocketEvents = {
                                 break;
                             case GamePlayEvents.GAME_END:
                                 console.log('서버에서 게임 종료 메세지 수신');
-
+                                handleGameEndEvent(response.teamColor);
                                 break;
                             default:
                                 break;
@@ -50,7 +51,8 @@ export const gameRoomSocketEvents = {
     subscribeRedTeamInfo: (
         client: Client,
         roomId: string,
-        onDefenseTeamAllSubmitted: () => void
+        onDefenseTeamAllSubmitted: () => void,
+        handleGameEndEvent : (winner : TeamType) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -68,6 +70,7 @@ export const gameRoomSocketEvents = {
                                 break;
                             case GamePlayEvents.GAME_END:
                                 console.log('서버에서 게임 종료 메세지 수신');
+                                handleGameEndEvent(response.teamColor);
                                 /*
                                 {
                                     "responseStatus": "GAME_END"
@@ -92,24 +95,6 @@ export const gameRoomSocketEvents = {
 
     },
 
-    // 방 상태 구독
-    subscribeGameRoomState: (client: Client, roomId: string) => {
-        try {
-            const subscription = client.subscribe(
-                SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId),// FIXME: API 수정해야함.
-                (message) => {
-                    try {
-                        // TODO: 
-                    } catch (err) {
-
-                    }
-                }
-            );
-        } catch (err) {
-
-        }
-
-    },
 
     // 리더의 선택 구독 ✅
     subscribeLeaderSelect: (client: Client, roomId: string, initLeaderSelectQuizeId: (leaderSelect: number) => void) => {
@@ -193,7 +178,7 @@ export const gameRoomSocketEvents = {
         client: Client,
         roomId: string,
         handleDefenseAnswerResults: (isCorrect: boolean) => void,
-        prepareNextRound : (event: GamePlayEvents, team: TeamType, health: number) => void
+        saveGradingResponse : (event: GamePlayEvents, team: TeamType, health: number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -205,7 +190,7 @@ export const gameRoomSocketEvents = {
 
                         // 문제의 정답: response.answer 
                         handleDefenseAnswerResults(response.isCorrect); // 정답 여부 true false
-                        prepareNextRound(
+                        saveGradingResponse(
                             response.responseStatus, // 게임 이벤트
                             response.nextOffenseTeam, // 다음 공격 팀
                             response.teamHp); // 수비팀 HP

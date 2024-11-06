@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
+import { createContext, ReactNode, useState, useCallback } from 'react';
 import { GameStatus, GameReadyEvents, GamePlayEvents, GamePhase } from '../../types/game';
 import { UserAnswer } from '../../types/quiz';
 import { TeamType } from '../../types/teamuser';
@@ -22,8 +22,9 @@ interface GameStateContextType {
     defenceFinalAnswer: number | null;
     quizResult: boolean | null;
 
-
-
+    // 이긴 팀
+    winnerTeam: TeamType | null;
+    gradeResponse : GradeResponse | null;
     // 전역 메소드
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
     setRoomUserIdWithState: (id: string) => void;
@@ -34,7 +35,16 @@ interface GameStateContextType {
     getUserAnswer: () => void;
     getDefenceFinalAnswer: (answer: number) => void;
     setDefenceQuizResult: (isCorrect: boolean) => void;
-    resetGameRoomInfo : (event: GamePlayEvents) => void;
+    resetGameRoomInfo: (event: GamePlayEvents) => void;
+    handleGameEndEvent: (winner: TeamType) => void;
+    saveGradingResponse : (event: GamePlayEvents, team: TeamType, health: number) => void;
+    resetGradingResponse : () => void;
+}
+
+interface GradeResponse {
+    responseStatus: GamePlayEvents;
+    nextOffenseTeam: TeamType;
+    teamHp: number;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -59,6 +69,10 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
 
     // 수비팀 최종 답 채점 결과.
     const [quizResult, setquizResult] = useState<boolean | null>(null);
+
+    // 이긴 팀
+    const [winnerTeam, setWinnerTeam] = useState<TeamType | null>(null);
+    const [gradeResponse, setGradeResponse] = useState<GradeResponse | null>(null);
 
     const resetGameRoomInfo = async (event: GamePlayEvents) => {
 
@@ -181,8 +195,25 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         setquizResult(isCorrect);
     }
 
-   
+    const handleGameEndEvent = async (winner: TeamType) => {
+        // 1. GameStatus 변경
+        setGameState(GameStatus.ENDED);
 
+        // 2. winner Team 설정
+        setWinnerTeam(winner);
+    }
+
+    const saveGradingResponse = (event: GamePlayEvents, team: TeamType, health: number) => {
+        setGradeResponse({
+            responseStatus: event,
+            nextOffenseTeam: team,
+            teamHp: health
+        });
+    }
+
+    const resetGradingResponse = () => {
+        setGradeResponse(null);
+    }
 
     return (
         <GameStateContext.Provider value={{
@@ -196,7 +227,10 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             submitedUserAnswer,
             defenceFinalAnswer,
             quizResult,
-            
+
+            winnerTeam,
+            gradeResponse,
+
             handleReadyRoomEvent,
             setRoomUserIdWithState,
             setRoomId,
@@ -207,6 +241,10 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             getDefenceFinalAnswer,
             setDefenceQuizResult,
             resetGameRoomInfo,
+            handleGameEndEvent,
+            saveGradingResponse,
+            resetGradingResponse,
+
             roomUserIdError
         }}>
             {children}
