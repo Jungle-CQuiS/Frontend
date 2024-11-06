@@ -10,18 +10,55 @@ interface SingleModeSelectModalProps extends IModalProps {
     selectedMode: string;
 }
 
+
 export const SingleModeSelectModal = ({
     selectedTopic,
     selectedNumber,
     selectedMode,
     ...props
 }: SingleModeSelectModalProps) => {
+
     const navigate = useNavigate();
 
-    const handleStart = () => {
-        navigate("/single/quiz", { state: { selectedMode } });
-    };
+    const categoryMapping: { [key: string]: number } = {
+        "OS": 1,
+        "알고리즘": 2,
+        "자료구조": 3,
+        "네트워크": 4,
+        "데이터베이스": 5,
+      };
 
+      const handleStart = async () => {
+        const apiUrl = selectedMode === "타임어택" ? "/api/quiz/single/mix" : (selectedMode === "객관식" ? "/api/quiz/single/choice" : "/api/quiz/single/short");
+    
+        const categoryId = categoryMapping[selectedTopic];
+    
+        const requistData = {
+            categoryIds: [categoryId],
+            quizCount: parseInt(selectedNumber),
+        };
+    
+        try {
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+                body: JSON.stringify(requistData),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                navigate("/single/quiz", { state: { selectedMode, quizData: data.data.quizList } });
+            } else {
+                console.error("Failed to fetch quiz data");
+            }
+        } catch (error) {
+            console.error("Error in handleStart", error);
+        }
+    };
+    
     return (
         <Modal {...props}>
             <SingleModeSelectModalConatiner>

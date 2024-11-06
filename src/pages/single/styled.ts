@@ -28,14 +28,14 @@ export const SingleModeTabWrap = styled.div`
     gap: 16px;
 `;
 
-export const SingleModeTab = styled.div<{ isSelected?: boolean }>`
+export const SingleModeTab = styled.div<{ $isSelected?: boolean }>`
     padding: 8px 19px;
-    border: ${({ isSelected }) => (isSelected ? "none" : "1px solid #969696")};
-    color: ${({ isSelected }) => (isSelected ? "#FFF" : "#969696")};
+    border: ${({ $isSelected }) => ($isSelected ? "none" : "1px solid #969696")};
+    color: ${({ $isSelected }) => ($isSelected ? "#FFF" : "#969696")};
     font-size: 13px;
     font-weight: 500;
     border-radius: 4px;
-    background-color: ${({ isSelected }) => (isSelected ? "#444" : "#FFF")};
+    background-color: ${({ $isSelected }) => ($isSelected ? "#444" : "#FFF")};
     cursor: pointer;
 `;
 

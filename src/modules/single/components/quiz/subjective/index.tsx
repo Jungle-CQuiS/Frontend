@@ -1,15 +1,35 @@
-import { SingleModeBottomComponent } from "../../bottom"
-import { HeaderTagComponent } from "../../headerTag"
-import { SingleModeQuizContainer } from "../multipleChoice/styled"
-import { SingleModeQuizBox } from "../quizBox"
+import { SingleModeQuizProps } from "../../../../../types/quiz";
+import { SingleModeBottomComponent } from "../../bottom";
+import { HeaderTagComponent } from "../../headerTag";
+import { SingleModeQuizContainer } from "../multipleChoice/styled";
+import { SingleModeQuizBox } from "../quizBox";
+import { useState } from "react";
 
-export const SingleModeQuizSubjective = () => {
+export const SingleModeQuizSubjective = ({ quizData, onSubmit }: SingleModeQuizProps) => {
+    const [userAnswer, setUserAnswer] = useState("");
+    const quiz = Array.isArray(quizData) ? quizData[0] : quizData;
 
-    return(
+    const handleAnswerSubmit = () => {
+        if (userAnswer !== ""){
+        onSubmit(userAnswer);
+        }
+    };
+
+    return (
         <SingleModeQuizContainer>
-            <HeaderTagComponent type="주관식"/>
-            <SingleModeQuizBox type="주관식"/>
-            <SingleModeBottomComponent />
+            <HeaderTagComponent type="주관식" />
+            <SingleModeQuizBox
+                type="주관식"
+                quizData={{
+                    name: quiz.name,
+                    quizId: quiz.quizId,
+                }}
+            />
+            <SingleModeBottomComponent
+                onSubmit={handleAnswerSubmit}
+                userAnswer={userAnswer}
+                setUserAnswer={setUserAnswer}
+            />
         </SingleModeQuizContainer>
-    )
-}
+    );
+};
