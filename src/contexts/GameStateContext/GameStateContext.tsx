@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { GameStatus, GameReadyEvents, GamePlayEvents, GamePhase } from '../../types/game';
 import { UserAnswer } from '../../types/quiz';
+import { TeamType } from '../../types/teamuser';
 
 interface GameStateContextType {
     // 게임방 정보
@@ -18,8 +19,12 @@ interface GameStateContextType {
 
     // 수비팀 유저들이 제출한 답 리스트.
     submitedUserAnswer: UserAnswer[] | null;
-    defenceFinalAnswer : number | null;
-    quizResult : boolean | null;
+    defenceFinalAnswer: number | null;
+    quizResult: boolean | null;
+
+    // HP
+    teamOneHealth: number;
+    teamTwoHealth: number;
 
     // 전역 메소드
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
@@ -29,8 +34,9 @@ interface GameStateContextType {
     changeGamePhase: (event: GamePlayEvents) => void;
     initLeaderSelectQuizeId: (leaderselect: number) => void;
     getUserAnswer: () => void;
-    getDefenceFinalAnswer : (answer : number)  => void;
-    setDefenceQuizResult : (isCorrect : boolean) => void;
+    getDefenceFinalAnswer: (answer: number) => void;
+    setDefenceQuizResult: (isCorrect: boolean) => void;
+    changeTeamHP: (team: TeamType, health : number) => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -46,20 +52,26 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
 
     // 공수 변경 시 초기화 되어야 함!!
     // Select 관련
-    const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null); 
+    const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
 
     // 수비팀 유저의 제출한 답들 불러오기.
     const [submitedUserAnswer, setSubmitedUserAnswer] = useState<UserAnswer[] | null>(null);
-    const [defenceFinalAnswer, setDefenceFinalAnswer] = useState<number|null>(null);
+    const [defenceFinalAnswer, setDefenceFinalAnswer] = useState<number | null>(null);
 
     // 수비팀 최종 답 채점 결과.
     const [quizResult, setquizResult] = useState<boolean | null>(null);
+
+    // HP 관리
+    //팀 체력
+    const [teamOneHealth, setTeamOneHealth] = useState(3);
+    const [teamTwoHealth, setTeamTwoHealth] = useState(3);
+
 
     const getUserAnswer = async () => {
         try {
             const userAccessToken = localStorage.getItem("AccessToken");
             const userUuid = localStorage.getItem("uuid");
-            const API_URL = `/quiz/multi/game/${_roomId}/timeout`;
+            const API_URL = `/api/quiz/multi/game/${_roomId}/timeout`;
 
             const response = await fetch(API_URL, {
                 method: 'GET',
@@ -90,7 +102,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const getDefenceFinalAnswer = (answer : number) => {
+    const getDefenceFinalAnswer = (answer: number) => {
         setDefenceFinalAnswer(answer);
     }
     const setRoomUserIdWithState = useCallback((id: string) => {
@@ -124,7 +136,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 break;
             case GameReadyEvents.GAME_START:
                 setGameState(GameStatus.PLAYING);
-                
+
                 break;
         }
     }, []);
@@ -148,8 +160,21 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         setSelectedQuizId(leaderSelect);
     }
 
-    const setDefenceQuizResult = (isCorrect : boolean) => {
+    const setDefenceQuizResult = (isCorrect: boolean) => {
         setquizResult(isCorrect);
+    }
+
+    const changeTeamHP = (team: TeamType, health: number) => {
+        switch (team) {
+            case "BLUE":
+                setTeamOneHealth(health);
+                break;
+            case "RED":
+                setTeamTwoHealth(health);
+                break;
+            default:
+                break;
+        }
     }
 
 
@@ -165,6 +190,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             submitedUserAnswer,
             defenceFinalAnswer,
             quizResult,
+            teamOneHealth,
+            teamTwoHealth,
             handleReadyRoomEvent,
             setRoomUserIdWithState,
             setRoomId,
@@ -174,6 +201,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             getUserAnswer,
             getDefenceFinalAnswer,
             setDefenceQuizResult,
+            changeTeamHP,
             roomUserIdError
         }}>
             {children}

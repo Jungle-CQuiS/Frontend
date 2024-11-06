@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Timer } from "../../../../../components/timer/timer"
 import { HealthBarUnit, SolvingHeaderContainer, SolvingHeaderTitle, SolvingHeaderTitleWrap, SolvingTimer, SolvingTimerText, SolvingTimerWrap, TeamOneHealthBarContainer, TeamOneHealthBarText, TeamOneHealthBarTop, TeamOneHealthBarTopBackground, TeamOneHealthBarTopTitle, TeamOneHealthBarWrap, TeamTwoHealthBarContainer, TeamTwoHealthBarText, TeamTwoHealthBarTop, TeamTwoHealthBarTopBackground, TeamTwoHealthBarTopTitle, TeamTwoHealthBarWrap } from "./styled"
-
+import { useGameState } from "../../../../../contexts/GameStateContext/useGameState";
 export const SolvingHeaderComponent = () => {
-    //팀 체력
-    const [teamOneHealth, setTeamOneHealth] = useState(10); 
-    const [teamTwoHealth, setTeamTwoHealth] = useState(10); 
+    const { teamOneHealth, teamTwoHealth } = useGameState();
 
     const renderHealthBar = (health: number, team: number, reverse: boolean = false) => {
-        const totalHealth = 10;
+        const totalHealth = 3;
         const healthBars = Array.from({ length: totalHealth }).map((_, index) => (
           <HealthBarUnit
             key={index}
@@ -28,7 +26,7 @@ export const SolvingHeaderComponent = () => {
                     <TeamOneHealthBarTopTitle>1팀</TeamOneHealthBarTopTitle>
                 </TeamOneHealthBarTop>
                 <TeamOneHealthBarWrap>
-                    <TeamOneHealthBarText>{teamOneHealth}/10</TeamOneHealthBarText>
+                    <TeamOneHealthBarText>{teamOneHealth}/3</TeamOneHealthBarText>
                     <div>{renderHealthBar(teamOneHealth, 1)}</div>
                 </TeamOneHealthBarWrap>
             </TeamOneHealthBarContainer>
@@ -47,7 +45,7 @@ export const SolvingHeaderComponent = () => {
                 </TeamTwoHealthBarTop>
                 <TeamTwoHealthBarWrap>
                     <div>{renderHealthBar(teamTwoHealth,2, true)}</div>
-                    <TeamTwoHealthBarText>{teamTwoHealth}/10</TeamTwoHealthBarText>
+                    <TeamTwoHealthBarText>{teamTwoHealth}/3</TeamTwoHealthBarText>
                 </TeamTwoHealthBarWrap>
             </TeamTwoHealthBarContainer>
         </SolvingHeaderContainer>
