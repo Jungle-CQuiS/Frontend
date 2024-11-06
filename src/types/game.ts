@@ -16,7 +16,7 @@ export enum GamePlayEvents{
     DEF_CHECK_ANSWER = 'DEF_CHECK_ANSWER', // 수비 정답 제출 후 모두가 정답을 확인하였다.
     ALL_SUBMIT = 'ALL_SUBMIT', // 수비팀이 문제를 다 제출하였다.
     ANS_SELECT_END = 'ANS_SELECT_END', // 수비팀이 정답을 고르는 것을 완료.
-
+    ROUND_END = 'ROUND_END', // 한 라운드가 종료되고 다음 라운드를 진행한다.
     GAME_END = 'GAME_END'
 };
 

@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import AttackPage from "../../../modules/room/components/attack/attack";
 import { SolvingPage } from "../../../modules/room/components/solving/solving";
 import { SelectAnswerPage } from "../defend/select/select";
@@ -12,6 +12,7 @@ import { useGameState } from "../../../contexts/GameStateContext/useGameState";
 import { GamePhase, GamePlayEvents, GameReadyEvents } from "../../../types/game";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
+import { TeamType } from "../../../types/teamuser";
 import { useStompContext } from "../../../contexts/StompContext";
 import { gameRoomSocketEvents } from "../../../hook/gameRoomSocketEvents";
 import { GameStatus } from "../../../types/game";
@@ -27,13 +28,13 @@ export default function QuizGamePage() {
         submitedUserAnswer,
         setIsLoaded, changeGamePhase,
         handleReadyRoomEvent, setDefenceQuizResult,
-        initLeaderSelectQuizeId, getUserAnswer,
-        changeTeamHP } = useGameState();
+        initLeaderSelectQuizeId, getUserAnswer, resetGameRoomInfo
+    } = useGameState();
     const { user, fetchUserGameProfile } = useGameUser();
-    const { attackTeam } = useTeamState();
+    const { attackTeam, updateAttackTeam, changeTeamHP } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
     const [waiting, setWaiting] = useState<boolean>(true); // 모든 수비 팀원이 답을 제출할 때까지 대기
-    const teamId = user?.team == 'BLUE' ? 1 : 2; 
+    const teamId = user?.team == 'BLUE' ? 1 : 2;
 
     // SUBSCRIBE EVENT ----------------------------------
 
@@ -84,21 +85,35 @@ export default function QuizGamePage() {
         }
     }
 
-    // ▶️ 수비팀 제출 답 결과가 나오면 호출된다. - HP 깎기
-    const handleDefenseTeamHP = async (hp: number) => {
+    // ▶️ 한 라운드가 종료되고 게임 정보가 리셋된다.
+    const prepareNextRound = useCallback(async (event: GamePlayEvents, team: TeamType, health: number) => {
         try {
-            await new Promise<void>((resolve) => {
-                changeTeamHP(attackTeam === "BLUE" ? "RED" : "BLUE", hp); //HP 관련 처리 수비 팀의 HP를 깎는다.
-                resolve();
-            });
+            // 모든 상태 업데이트를 순차적으로 처리
+            changeTeamHP(attackTeam === "BLUE" ? "RED" : "BLUE", health);
 
-            console.log("HP 업데이트 완료");
+            // 약간의 딜레이를 주고 다음 상태 업데이트 진행
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // 게임 페이즈 변경
+            changeGamePhase(GamePlayEvents.ROUND_END);
+
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // 공격팀 변경
+            updateAttackTeam(team);
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // 게임 상태 리셋
+            resetGameRoomInfo(event);
+
+            console.log("다음 라운드 준비 완료");
 
         } catch (error) {
-            console.error('수비팀 HP 수신 중 에러 발생:', error);
+            console.error('다음 라운드 준비 중 에러 발생:', error);
         }
-
-    }
+    }, [attackTeam, changeTeamHP, resetGameRoomInfo, updateAttackTeam, changeGamePhase]);
 
     useEffect(() => {
         const loadGameUserInfo = async () => {
@@ -160,7 +175,7 @@ export default function QuizGamePage() {
                 throw error;
             }
         };
-        const subscribeTeamInfo = async (teamId : number) => { // 수비팀 모두가 정답 제출하면 메세지를 받는다.
+        const subscribeTeamInfo = async (teamId: number) => { // 수비팀 모두가 정답 제출하면 메세지를 받는다.
             try {
                 const client = stompClient.current;
                 if (!client) {
@@ -196,7 +211,7 @@ export default function QuizGamePage() {
                         client,  // null이 아님이 확인된 client 사용
                         _roomId,
                         handleDefenseAnswerResults,
-                        handleDefenseTeamHP
+                        prepareNextRound
                     );
                     resolve();
                 });
@@ -214,7 +229,7 @@ export default function QuizGamePage() {
 
                 await subscribeLeaderSelectData();
                 await subscribeLeaderFinalSelectQuize(); // FIXME: 구독끼리는 순서 상관없음
-                
+
                 await subscribeResultOfQuiz();
             } catch (error) {
                 console.log("GameRoom을 세팅하는데 실패했습니다.", error);
@@ -227,10 +242,51 @@ export default function QuizGamePage() {
         }
     }, []);
 
+
+    // 라운드 재시작 관련.
+    // useEffect 부분
+    useEffect(() => {
+        const initializeRound = async () => {
+            if (gameState === GameStatus.START) {
+                
+                await new Promise(resolve => setTimeout(resolve, 0)); // 마이크로태스크 큐에 넣기
+                setWaiting(true);
+
+                console.log("waiting 상태 설정됨");
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+                await handleReadyRoomEvent(GameReadyEvents.GAME_START);
+
+                console.log("게임 준비 이벤트 처리됨");
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+                await changeGamePhase(GamePlayEvents.DEF_CHECK_ANSWER);
+
+                setSelectedQuiz(null);
+                console.log("게임 페이즈 변경됨");
+            }
+        };
+
+        initializeRound();
+    }, [gameState]);
+
+    useEffect(() => {
+        console.log('SelectAnswerPage props/context 변화:', {
+            selectedQuiz,
+            attackTeam,
+            user,
+            gamePhase,
+            waiting
+        });
+    }, [selectedQuiz, attackTeam, user, gamePhase, waiting]);
+
+
     // 로딩 중이거나 유저 정보가 없으면 로딩 화면 표시
     if (isLoading || !userLoaded || !user) {
         return <div>로딩 중입니다...</div>;
     }
+
+
 
     // 유저 정보가 있을 때만 렌더링
     return (
@@ -248,7 +304,7 @@ export default function QuizGamePage() {
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </Background>
                     ) : (
-                        <SelectAnswerPage selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
+                        <SelectAnswerPage  selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer} />
                     )
                 )
             ) : (

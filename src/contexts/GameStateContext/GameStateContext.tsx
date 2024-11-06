@@ -22,9 +22,7 @@ interface GameStateContextType {
     defenceFinalAnswer: number | null;
     quizResult: boolean | null;
 
-    // HP
-    teamOneHealth: number;
-    teamTwoHealth: number;
+
 
     // 전역 메소드
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
@@ -36,7 +34,7 @@ interface GameStateContextType {
     getUserAnswer: () => void;
     getDefenceFinalAnswer: (answer: number) => void;
     setDefenceQuizResult: (isCorrect: boolean) => void;
-    changeTeamHP: (team: TeamType, health : number) => void;
+    resetGameRoomInfo : (event: GamePlayEvents) => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
@@ -44,13 +42,14 @@ const GameStateContext = createContext<GameStateContextType | null>(null);
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [isAllReady, setIsAllReady] = useState(false);
     const [gameState, setGameState] = useState<GameStatus>(GameStatus.ENTER);
-    const [gamePhase, setgamePhase] = useState<GamePhase>(GamePhase.ATTACK);
     const [roomUserId, setRoomUserID] = useState<string>("none");
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
     const [_roomId, set_RoomId] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
 
     // 공수 변경 시 초기화 되어야 함!!
+    // 게임 상태 관리
+    const [gamePhase, setgamePhase] = useState<GamePhase>(GamePhase.ATTACK);
     // Select 관련
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
 
@@ -61,11 +60,26 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     // 수비팀 최종 답 채점 결과.
     const [quizResult, setquizResult] = useState<boolean | null>(null);
 
-    // HP 관리
-    //팀 체력
-    const [teamOneHealth, setTeamOneHealth] = useState(3);
-    const [teamTwoHealth, setTeamTwoHealth] = useState(3);
+    const resetGameRoomInfo = async (event: GamePlayEvents) => {
 
+        switch (event) {
+            case GamePlayEvents.ROUND_END:
+                // init game info
+                setSelectedQuizId(null);
+                setSubmitedUserAnswer(null);
+                setDefenceFinalAnswer(null);
+                setquizResult(null);
+                break;
+            case GamePlayEvents.GAME_END:
+                // GAME 종료 준비하기.
+                break;
+            default:
+                break;
+        }
+
+
+
+    }
 
     const getUserAnswer = async () => {
         try {
@@ -105,7 +119,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
 
     const getDefenceFinalAnswer = (answer: number) => {
         setDefenceFinalAnswer(answer);
-        console.log("final select 완료",defenceFinalAnswer ,  answer);
+        console.log("final select 완료", defenceFinalAnswer, answer);
     }
 
     const setRoomUserIdWithState = useCallback((id: string) => {
@@ -139,20 +153,20 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 break;
             case GameReadyEvents.GAME_START:
                 setGameState(GameStatus.PLAYING);
-
                 break;
         }
     }, []);
 
     const changeGamePhase = useCallback((event: GamePlayEvents) => {
-        if (gameState != GameStatus.PLAYING) return; // PLAYING 상태에서만 유효한 상태
-
         switch (event) {
             case GamePlayEvents.SUB_SELECT_END: // 공격이 주제선택을 다하면 SOLVING으로 넘어감.
                 setgamePhase(GamePhase.SOLVING);
                 break;
             case GamePlayEvents.DEF_CHECK_ANSWER: // 수비가 최종 답 선택을 다하면 정답 결과가 나옴.
                 setgamePhase(GamePhase.ATTACK); // 주제 선택 페이즈로 전환.
+                break;
+            case GamePlayEvents.ROUND_END:
+                setGameState(GameStatus.START);
                 break;
             default:
                 break;
@@ -167,18 +181,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         setquizResult(isCorrect);
     }
 
-    const changeTeamHP = (team: TeamType, health: number) => {
-        switch (team) {
-            case "BLUE":
-                setTeamOneHealth(health);
-                break;
-            case "RED":
-                setTeamTwoHealth(health);
-                break;
-            default:
-                break;
-        }
-    }
+   
 
 
     return (
@@ -193,8 +196,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             submitedUserAnswer,
             defenceFinalAnswer,
             quizResult,
-            teamOneHealth,
-            teamTwoHealth,
+            
             handleReadyRoomEvent,
             setRoomUserIdWithState,
             setRoomId,
@@ -204,7 +206,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             getUserAnswer,
             getDefenceFinalAnswer,
             setDefenceQuizResult,
-            changeTeamHP,
+            resetGameRoomInfo,
             roomUserIdError
         }}>
             {children}
