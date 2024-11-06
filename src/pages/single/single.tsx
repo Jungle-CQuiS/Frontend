@@ -143,7 +143,7 @@ const SingleModeOptions = ({ label, options, selectedOption, onSelect }: SingleM
       {options.map((option) => (
         <SingleModeTab
           key={option}
-          isSelected={selectedOption === option}
+          $isSelected={selectedOption === option}
           onClick={() => onSelect(option)}
         >
           {option}
