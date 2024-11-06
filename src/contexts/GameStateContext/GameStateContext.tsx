@@ -44,13 +44,14 @@ const GameStateContext = createContext<GameStateContextType | null>(null);
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [isAllReady, setIsAllReady] = useState(false);
     const [gameState, setGameState] = useState<GameStatus>(GameStatus.ENTER);
-    const [gamePhase, setgamePhase] = useState<GamePhase>(GamePhase.ATTACK);
     const [roomUserId, setRoomUserID] = useState<string>("none");
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
     const [_roomId, set_RoomId] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
 
     // 공수 변경 시 초기화 되어야 함!!
+    // 게임 상태 관리
+    const [gamePhase, setgamePhase] = useState<GamePhase>(GamePhase.ATTACK);
     // Select 관련
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
 
@@ -139,7 +140,6 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 break;
             case GameReadyEvents.GAME_START:
                 setGameState(GameStatus.PLAYING);
-
                 break;
         }
     }, []);
@@ -153,6 +153,9 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 break;
             case GamePlayEvents.DEF_CHECK_ANSWER: // 수비가 최종 답 선택을 다하면 정답 결과가 나옴.
                 setgamePhase(GamePhase.ATTACK); // 주제 선택 페이즈로 전환.
+                break;
+            case GamePlayEvents.ROUND_END:
+                setGameState(GameStatus.START);
                 break;
             default:
                 break;
