@@ -34,7 +34,7 @@ interface CategoryResultProps {
     color?: string;
 }
 
-const categoryNames: { [key: string]: string } = {
+const categoryTypes: { [key: string]: string } = {
     "1": "OS",
     "2": "알고리즘",
     "3": "자료구조",
@@ -176,7 +176,7 @@ export const SingleResultPage = () => {
                         {Object.entries(results).map(([label, { correct, total }]) => (
                             <CategoryResult
                                 key={label}
-                                label={categoryNames[label]}
+                                label={categoryTypes[label]}
                                 correctAnswers={correct}
                                 totalQuestions={total}
                             />

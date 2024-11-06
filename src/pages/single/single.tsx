@@ -21,7 +21,7 @@ const questionCounts: string[] = ["5 문제", "10 문제", "15 문제", "20 문�
 
 interface Category {
   categoryId: number;
-  categoryName: string;
+  categoryType: string;
 }
 
 interface Mode {
@@ -62,8 +62,8 @@ export const SingleModePage = () => {
   
         const result = await response.json();
         const categories: Category[] = result.data?.categories || [];
-        setTopics(categories.map((category: Category) => category.categoryName));
-        setSelectedTopic(categories[0]?.categoryName || "");
+        setTopics(categories.map((category: Category) => category.categoryType));
+        setSelectedTopic(categories[0]?.categoryType || "");
       } catch (error) {
         console.error("Error fetching categories:", error);
       }

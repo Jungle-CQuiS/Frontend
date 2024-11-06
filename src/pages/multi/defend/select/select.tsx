@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from "../../../../config/api/constants";
 import { Background } from "../../../../components/background/styled"
@@ -7,7 +7,7 @@ import { SolvingHeaderComponent } from "../../../../modules/quiz/components/mult
 import { TeamHeaderTag } from "../../../../modules/quiz/components/multi/TeamHeader/styled"
 import { UserTagsComponent } from "../../../../modules/quiz/components/multi/UserTags/UserTags"
 import AnswerSelectComponent from "../../../../modules/quiz/components/multi/Answer/AnswerSelect"
-import { SelectAnswerButtonWrap, SelectAnswerContainer } from "./styled"
+import { SelectAnswerButtonWrap, SelectAnswerContainer, SelectAnswerModalContainer, SelectAnswerModalImg, SelectAnswerModalText, SelectAnswerModalTitle, SelectAnswerModalWrap } from "./styled"
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
 import { useStompContext } from "../../../../contexts/StompContext";
@@ -17,6 +17,7 @@ import { useGameUser } from "../../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState";
 import { UserAnswer } from "../../../../types/quiz";
 import { Quiz } from "../../../../types/quiz";
+import { Modal } from "../../../../components/modal";
 // 수비팀 최종 정답 선택 페이지
 // 이 부분은 화면이 모두 공유된다!
 interface SelectAnswerPageProps {
@@ -30,6 +31,8 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers }: SelectAnswerPage
     const { attackTeam } = useTeamState();
     const defenceTeam = attackTeam == 'BLUE' ? 2 : 1; // 수비팀의 팀이 반드시 들어가야 하기 때문!
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [countdown, setCountdown] = useState(3);
 
     usePageLeave();
 
@@ -51,21 +54,42 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers }: SelectAnswerPage
     // quizResult가 변경되면 실행.
     useEffect(() => {
         if (quizResult !== null) {
+            setIsModalOpen(true);
+            setCountdown(3);
 
-            console.log("Quiz result updated:", quizResult);
-            // 모달창을 띄우고 > 사용자가 확인을 누른다든지? 몇초뒤에 모달창이 사라지면 아래의 함수들이 호출되어야한다.
+            const intervalId = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
 
-            // 아직 작성 안함.
+            const timeoutId = setTimeout(() => {
+                setIsModalOpen(false);
+                clearInterval(intervalId);
+            }, 3000);
+
+            return () => {
+                clearTimeout(timeoutId);
+                clearInterval(intervalId);
+            };
         }
     }, [quizResult]);
 
     return (
         <Background>
+            {isModalOpen && (
+                <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                    <SelectAnswerModalContainer>
+                        <SelectAnswerModalWrap>
+                            <SelectAnswerModalImg src={quizResult === true ? "/icons/correct.svg" : "/icons/wrong.svg"} />
+                            <SelectAnswerModalTitle>{quizResult === true ? "정답입니다!" : "오답입니다!"}</SelectAnswerModalTitle>
+                        </SelectAnswerModalWrap>
+                        <SelectAnswerModalText>{countdown}초 후에 창이 닫힙니다.</SelectAnswerModalText>
+                    </SelectAnswerModalContainer>
+                </Modal>
+            )}
             <TeamHeaderTag teamId={defenceTeam}>{defenceTeam}팀</TeamHeaderTag>
             <SelectAnswerContainer>
                 <SolvingHeaderComponent />
                 <AnswerSelectComponent selectedQuiz={selectedQuiz} userAnswers={userAnswers} />
-                <div> {quizResult == null ? "" : quizResult == true ? "맞았습니다" : "틀렸습니다" }</div>
                 <SelectAnswerButtonWrap>
                     <SecondaryButtonSmall onClick={() => {
                         readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
