@@ -61,7 +61,7 @@ export const MyPageProblemTitle = styled.div`
     color: #333;
     line-height: 1.4;
     word-break: break-word;
-    max-width: 640px;
+    width: 620px;
     overflow-wrap: break-word;
     display: -webkit-box;
     -webkit-line-clamp: 2;
