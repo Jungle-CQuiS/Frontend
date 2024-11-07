@@ -4,6 +4,7 @@ import { CreateQuistionModalButtonWrap, CreateQuistionModalContainer, CreateQuis
 import { BlackButtonSmall } from "../../../buttons/styled";
 import { useEffect, useState } from "react";
 import { Quiz } from "../../../../types/quiz";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface CreateQuizProps {
     quizData: Quiz[];
@@ -22,6 +23,7 @@ export const AddProblemModal = ({
     ...props
 }: IModalProps & CreateQuizProps) => {
     const [selectedProblems, setSelectedProblems] = useState<Quiz[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (props.open) {
@@ -83,6 +85,7 @@ export const AddProblemModal = ({
             if (response.ok) {
                 alert("문제 제출이 완료되었습니다!");
                 onDone();
+                navigate("/mypage");
             } else {
                 console.error("Failed to submit quiz data:", response.status);
             }
@@ -92,47 +95,47 @@ export const AddProblemModal = ({
         }
     };
 
-return (
-    <Modal {...props} open={props.open} onClose={onClose} onDone={onDone}>
-        <CreateQuistionModalContainer>
-            <CreateQuistionModalTitle>생성된 문제 보기</CreateQuistionModalTitle>
-            <div>선택된 주제: {selectedTopic}</div>
-            <div>선택된 문제 유형: {selectedType}</div>
-            <div>출제하고 싶은 문제를 선택해주세요! (중복가능)</div>
-            <CreateQuizContainer>
-                <CreateQuizWrap>
-                    {quizData.map((quiz) => (
-                        <CreateQuiz key={quiz.quizName}>
-                            <CreateQuizCheckbox
-                                src={selectedProblems.some(q => q.quizName === quiz.quizName) ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
-                                onClick={() => handleQuizSelection(quiz)}
-                            />
-                            <div>
-                                {selectedType === "객관식" ? (
-                                    <>
-                                        {quiz.quizName}
-                                        <div>1) {quiz.choice1}</div>
-                                        <div>2) {quiz.choice2}</div>
-                                        <div>3) {quiz.choice3}</div>
-                                        <div>4) {quiz.choice4}</div>
-                                        <div>정답: {quiz.answer}</div>
-                                    </>
-                                ) : (
-                                    <>
-                                        {quiz.quizName}
-                                        <div>정답: {quiz.koreanAnswer}</div>
-                                    </>
-                                )}
-                            </div>
-                        </CreateQuiz>
-                    ))}
-                </CreateQuizWrap>
-            </CreateQuizContainer>
-            <CreateQuistionModalButtonWrap>
-                <BlackButtonSmall onClick={handleSubmitQuiz}>제출하기</BlackButtonSmall>
-                <BlackButtonSmall onClick={onClose}>닫기</BlackButtonSmall>
-            </CreateQuistionModalButtonWrap>
-        </CreateQuistionModalContainer>
-    </Modal>
-);
+    return (
+        <Modal {...props} open={props.open} onClose={onClose} onDone={onDone}>
+            <CreateQuistionModalContainer>
+                <CreateQuistionModalTitle>생성된 문제 보기</CreateQuistionModalTitle>
+                <div>선택된 주제: {selectedTopic}</div>
+                <div>선택된 문제 유형: {selectedType}</div>
+                <div>출제하고 싶은 문제를 선택해주세요! (중복가능)</div>
+                <CreateQuizContainer>
+                    <CreateQuizWrap>
+                        {quizData.map((quiz) => (
+                            <CreateQuiz key={quiz.quizName}>
+                                <CreateQuizCheckbox
+                                    src={selectedProblems.some(q => q.quizName === quiz.quizName) ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
+                                    onClick={() => handleQuizSelection(quiz)}
+                                />
+                                <div>
+                                    {selectedType === "객관식" ? (
+                                        <>
+                                            {quiz.quizName}
+                                            <div>1) {quiz.choice1}</div>
+                                            <div>2) {quiz.choice2}</div>
+                                            <div>3) {quiz.choice3}</div>
+                                            <div>4) {quiz.choice4}</div>
+                                            <div>정답: {quiz.answer}</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {quiz.quizName}
+                                            <div>정답: {quiz.koreanAnswer}</div>
+                                        </>
+                                    )}
+                                </div>
+                            </CreateQuiz>
+                        ))}
+                    </CreateQuizWrap>
+                </CreateQuizContainer>
+                <CreateQuistionModalButtonWrap>
+                    <BlackButtonSmall onClick={handleSubmitQuiz}>제출하기</BlackButtonSmall>
+                    <BlackButtonSmall onClick={onClose}>닫기</BlackButtonSmall>
+                </CreateQuistionModalButtonWrap>
+            </CreateQuistionModalContainer>
+        </Modal>
+    );
 }

@@ -123,15 +123,18 @@ export default function AddProblemPage() {
                         </AddProblemTab>
                     ))}
                 </AddProblemCategoryWrap>
-                <CreateQuizNumber
-                    type="number"
-                    id="participants"
-                    name="participants"
-                    min="1"
-                    max="10"
-                    value={value}
-                    onChange={handleChange}
-                />
+                <AddProblemCategoryWrap>
+                    <AddProblemLabel>문제수</AddProblemLabel>
+                    <CreateQuizNumber
+                        type="number"
+                        id="participants"
+                        name="participants"
+                        min="1"
+                        max="10"
+                        value={value}
+                        onChange={handleChange}
+                    />
+                </AddProblemCategoryWrap>
                 <AddProblemWrap>
                     <AddProblemLabel>문제 만들기</AddProblemLabel>
                     <AddProblemInputLong
