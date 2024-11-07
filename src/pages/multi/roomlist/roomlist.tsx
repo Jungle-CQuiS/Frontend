@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Room } from "../../../types/room"
 import { PasswordCheckModal } from '../../../components/modal/roomlist/passwordCheck';
 import { QUIZ_MULTI_ENDPOINTS } from '../../../config/api/endpoints/quiz-multi.endpoints';
-
+import { RoomListLoading } from '../../../modules/room/roomListLoading';
 interface RoomListProps {
     searchTerm: string;
 }
@@ -12,14 +12,14 @@ interface RoomListProps {
 const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [roomID, setRoomId] = useState<string>();
-    const [roomName, setRoomName] = useState<string>(); 
+    const [roomName, setRoomName] = useState<string>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleOpenModal = (roomId: string, roomName:string) => {
+    const handleOpenModal = (roomId: string, roomName: string) => {
         setRoomId(roomId);
         setRoomName(roomName);
         setIsModalOpen(true);
@@ -39,7 +39,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                 if (!token) {
                     throw new Error("로그인이 필요합니다."); // 토큰이 없으면 에러 처리
                 }
-    
+
                 // API 요청에 Authorization 헤더 포함
                 const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOMS.LIST, {
                     headers: {
@@ -48,12 +48,12 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                         "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                     },
                 });
-    
+
                 if (!response.ok) {
                     console.log(response);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-    
+
                 const data = await response.json();
                 setRooms(data.data.rooms);
                 setIsLoading(false);
@@ -64,10 +64,10 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                 setIsLoading(false);
             }
         };
-    
+
         fetchRooms();
     }, []);
-    
+
 
     const handleRowClick = (roomId: string, roomName: string) => {
         navigate(`/room/${roomId}`, {
@@ -78,33 +78,44 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
         });
     };
 
-    
+
     const filteredRooms = rooms.filter(room =>
         room.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (isLoading) return <div>Loading rooms...</div>;
+    if (isLoading) return <RoomListLoading />;
+
     if (error) return <div>Error: {error}</div>;
 
     return (
         <>
             <MainPageTableTbody>
-                {filteredRooms.map((room) => (
-                    <MainPageTableTbodyTr key={room.gameRoomId} onClick={() => room.isLocked ? handleOpenModal(room.gameRoomId, room.name) : handleRowClick(room.gameRoomId, room.name) }>
-                        <MainPageTableTbodyTd>{room.name}</MainPageTableTbodyTd>
-                        <MainPageTableTbodyTd>
-                            {room.isLocked && <MainPageTableTbodyIcon src="/icons/lock.svg" alt="Lock" />}
-                        </MainPageTableTbodyTd>
-                        <MainPageTableTbodyTd>{room.currentUsers}/{room.maxUsers}</MainPageTableTbodyTd>
-                    </MainPageTableTbodyTr>
-                ))}
+                {filteredRooms.length === 0 ? (
+                    <RoomListLoading />
+                ) : (
+                    filteredRooms.map((room) => (
+                        <MainPageTableTbodyTr
+                            key={room.gameRoomId}
+                            onClick={() => room.isLocked
+                                ? handleOpenModal(room.gameRoomId, room.name)
+                                : handleRowClick(room.gameRoomId, room.name)
+                            }
+                        >
+                            <MainPageTableTbodyTd>{room.name}</MainPageTableTbodyTd>
+                            <MainPageTableTbodyTd>
+                                {room.isLocked && <MainPageTableTbodyIcon src="/icons/lock.svg" alt="Lock" />}
+                            </MainPageTableTbodyTd>
+                            <MainPageTableTbodyTd>{room.currentUsers}/{room.maxUsers}</MainPageTableTbodyTd>
+                        </MainPageTableTbodyTr>
+                    ))
+                )}
             </MainPageTableTbody>
             <PasswordCheckModal
-                roomId = {roomID}
-                roomName = {roomName}
+                roomId={roomID}
+                roomName={roomName}
                 open={isModalOpen}
                 onClose={handleCloseModal}
-                onDone= {handleDone} 
+                onDone={handleDone}
             />
         </>
     );
