@@ -1,10 +1,9 @@
 
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import AttackPage from "../../../modules/room/components/attack/attack";
 import { SolvingPage } from "../../../modules/room/components/solving/solving";
 import { SelectAnswerPage } from "../defend/select/select";
-import { Quiz, UserAnswer } from "../../../types/quiz";
+import { Quiz } from "../../../types/quiz";
 import { TeamHeaderContainer, TeamHeaderTag, TeamHeaderTitle } from "../../../modules/quiz/components/multi/TeamHeader/styled";
 import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/WaitingScreen";
 import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
@@ -21,13 +20,12 @@ import { LoadingScreen } from "../../../modules/LoadingScreen";
 import DefendPage from "../defend/defend";
 
 export default function QuizGamePage() {
-    const navigate = useNavigate();
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
 
     const { stompClient } = useStompContext();
     const { gameState, gamePhase, isLoading,
         roomUserId, _roomId,
-        submitedUserAnswer, winnerTeam,
+        submitedUserAnswer, 
         setIsLoaded, changeGamePhase,
         handleReadyRoomEvent, setDefenceQuizResult,
         initLeaderSelectQuizeId, getUserAnswer, resetGameRoomInfo, handleGameEndEvent,
@@ -272,31 +270,8 @@ export default function QuizGamePage() {
             console.log("게임 페이즈 변경됨");
         };
 
-
-        switch (gameState) {
-            case GameStatus.START:
-                initializeRound();
-                break;
-            case GameStatus.ENDED:
-                // 2. Subscribe unconnected
-                if (winnerTeam == null) {
-                    console.log("이긴 팀 정보가 없습니다.");
-                    return;
-                }
-
-                // 3. navigate
-                navigate(`/multi/result`, {
-                    state: {
-                        winner: winnerTeam
-                    }
-                });
-
-                break;
-
-            default:
-                break;
-        }
-
+        if(gameState === GameStatus.START)
+            initializeRound();
 
     }, [gameState]);
 

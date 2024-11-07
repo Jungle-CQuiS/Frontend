@@ -18,7 +18,7 @@ import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState
 import { UserAnswer } from "../../../../types/quiz";
 import { Quiz } from "../../../../types/quiz";
 import { Modal } from "../../../../components/modal";
-import { GamePlayEvents } from "../../../../types/game";
+import { GamePlayEvents, GameStatus } from "../../../../types/game";
 import { TeamType } from "../../../../types/teamuser";
 
 // 수비팀 최종 정답 선택 페이지
@@ -28,9 +28,9 @@ interface SelectAnswerPageProps {
     userAnswers: UserAnswer[] | null;
     prepareNextRound: (event: GamePlayEvents, team: TeamType, health: number) => Promise<void>;
 }
-export const SelectAnswerPage = ({ selectedQuiz, userAnswers , prepareNextRound}: SelectAnswerPageProps) => {
+export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }: SelectAnswerPageProps) => {
     const { stompClient } = useStompContext();
-    const { roomUserId, _roomId, defenceFinalAnswer, quizResult , gradeResponse } = useGameState();
+    const { roomUserId, _roomId, gameState, defenceFinalAnswer, quizResult, gradeResponse, winnerTeam } = useGameState();
     const { user } = useGameUser();
     const { attackTeam } = useTeamState();
     const defenceTeam = attackTeam == 'BLUE' ? 2 : 1; // 수비팀의 팀이 반드시 들어가야 하기 때문!
@@ -79,7 +79,28 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers , prepareNextRound}
 
 
     useEffect(() => {
+
+        // 종료 시그널이 없다면 재시작.
         if (countdown === 0 && gradeResponse) {
+            // 게임 종료가 나오면 화면이동
+            if (gameState === GameStatus.ENDED) {
+
+                // 2. Subscribe unconnected
+                if (winnerTeam == null) {
+                    console.log("이긴 팀 정보가 없습니다.");
+                    return;
+                }
+
+                // 3. navigate
+                navigate(`/multi/result`, {
+                    state: {
+                        winner: winnerTeam
+                    }
+                });
+
+                return;
+
+            }
             // 카운트다운이 끝나고 응답 데이터가 있을 때 prepareNextRound 실행
             prepareNextRound(
                 gradeResponse.responseStatus,
