@@ -98,7 +98,7 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers , prepareNextRound}
                             <SelectAnswerModalImg src={quizResult === true ? "/icons/correct.svg" : "/icons/wrong.svg"} />
                             <SelectAnswerModalTitle>{quizResult === true ? "정답입니다!" : "오답입니다!"}</SelectAnswerModalTitle>
                         </SelectAnswerModalWrap>
-                        <SelectAnswerModalText>{countdown}초 후에 창이 닫힙니다.</SelectAnswerModalText>
+                        <SelectAnswerModalText>{countdown}초 후에 공격팀이 변경됩니다.</SelectAnswerModalText>
                     </SelectAnswerModalContainer>
                 </Modal>
             )}

@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const MyPageContainer = styled.div`
     display: flex;
     gap: 100px;
-    margin-top: 72px;
+    padding: 72px 0px;
 `;
 export const MyPageHeader = styled.div`
     display: flex;

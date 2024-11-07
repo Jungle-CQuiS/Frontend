@@ -10,9 +10,6 @@ import {
   MultiResultCard,
   MultiResultCardBottom,
   MultiResultCardBottomSelected,
-  MultiResultCardBottomVoteImg,
-  MultiResultCardBottomVoteNumber,
-  MultiResultCardBottomVoteWrap,
   MultiResultCardProfileBadge,
   MultiResultCardProfileImg,
   MultiResultCardProfileName,
@@ -29,13 +26,6 @@ import { SERVICES } from "../../../config/api/constants";
 import { useNavigate } from "react-router-dom";
 import { useStompContext } from "../../../contexts/StompContext";
 import { useGameState } from "../../../contexts/GameStateContext/useGameState";
-
-interface User {
-  id: number;
-  name: string;
-  isLeader: boolean;
-  votes: number;
-}
 
 export const MultiModeResultPage = () => {
   const navigate = useNavigate();
@@ -66,10 +56,28 @@ export const MultiModeResultPage = () => {
     if (!isVoteCompleted) {
       setSelectedUserId(userId);
       setIsVoteCompleted(true);
-
-      // TODO: REST API
+  
+      fetch('/api/quiz/multi/honor', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+          "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+        },
+        body: JSON.stringify({
+          honorRoomUserId: userId, 
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('API 응답:', data);
+        })
+        .catch((error) => {
+          console.error('API 요청 오류:', error);
+        });
     }
   };
+  
 
   return (
     <Background>
@@ -81,35 +89,44 @@ export const MultiModeResultPage = () => {
 
         <MultiResultCardContainer>
           {mappedUsers.map((user) => (
-            <MultiResultCardWrap key={user.id}>
+            <MultiResultCardWrap
+              key={user.id}
+              isSelected={selectedUserId === user.id}
+              isVoted={isVoteCompleted}
+              onClick={() => {
+                if (user.name === '-' || isVoteCompleted) return;
+                handleUserClick(user.id);
+              }}
+            >
               <MultiResultCard
-                onClick={() => handleUserClick(user.id)}
-                style={{ pointerEvents: isVoteCompleted && selectedUserId !== user.id ? "none" : "auto" }}
+                onClick={() => {
+                  if (user.name === '-' || isVoteCompleted) return;
+                  handleUserClick(user.id);
+                }}
+                style={{
+                  cursor: !user.name || isVoteCompleted ? "not-allowed" : "pointer",
+                }}
               >
                 <MultiResultCardProfileWrap>
                   <MultiResultCardProfileImg src="/images/profile_image.png" />
                   <MultiResultCardProfileNameWrap>
                     {/* 팀장인 경우에만 아이콘 표시 */}
                     {user?.isLeader && <MultiResultCardProfileBadge src="/icons/medal.svg" />}
-                    <MultiResultCardProfileName>{user.name}</MultiResultCardProfileName>
+                    <MultiResultCardProfileName>{user.name || ""}</MultiResultCardProfileName>
                   </MultiResultCardProfileNameWrap>
                 </MultiResultCardProfileWrap>
 
                 <MultiResultCardBottom>
                   {/* 선택된 유저에만 체크 이미지 표시 */}
-                  <div style={{ width: "36px" }}></div>
                   {selectedUserId === user.id && (
                     <MultiResultCardBottomSelected src="/icons/vote_selected.svg" />
                   )}
-                  <MultiResultCardBottomVoteWrap>
-                    <MultiResultCardBottomVoteImg src="/icons/up_arrow.svg" />
-                    <MultiResultCardBottomVoteNumber>{user.votes}</MultiResultCardBottomVoteNumber>
-                  </MultiResultCardBottomVoteWrap>
                 </MultiResultCardBottom>
               </MultiResultCard>
             </MultiResultCardWrap>
           ))}
         </MultiResultCardContainer>
+
 
         <MultiResultButtonWrap>
           <SecondaryButtonSmall
