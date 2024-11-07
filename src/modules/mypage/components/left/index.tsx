@@ -99,8 +99,8 @@ export default function MyPageLeftSection() {
 
             if (response.ok) {
                 const data = await response.json();
-                const categoryLevelsData = data.data.categoryLevels.map((item: { categoryName: string; categoryLevel: number }) => ({
-                    name: item.categoryName,
+                const categoryLevelsData = data.data.categoryLevels.map((item: { categoryType: string; categoryLevel: number }) => ({
+                    name: item.categoryType,
                     level: item.categoryLevel
                 }));
 
@@ -124,6 +124,7 @@ export default function MyPageLeftSection() {
     }, []);
 
     const numericCorrectRate = parseFloat(userCorrectRate.replace('%', ''));
+
 
 
     return (
