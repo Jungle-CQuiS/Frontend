@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const MyPageLeftWrap = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 36px;
+    justify-content: space-between;
 `;
 
 
