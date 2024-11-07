@@ -13,7 +13,7 @@ import { FlipCoinBackdrop, FlipCoinScreen } from '../../../components/modal/room
 import { SOCKET_DESTINATIONS } from '../../../config/websocket/constants';
 import { useTeamState } from '../../../contexts/TeamStateContext/useTeamState';
 import { usePageLeave } from '../../../hook/pageLeaveHandler';
-
+import { LoadingScreen } from '../../../modules/LoadingScreen';
 
 export default function Room() {
   const { roomId } = useLocation().state;
@@ -104,7 +104,7 @@ export default function Room() {
   }
 
   if (!isTeamsLoaded) {
-    return <div>Loading teams...</div>;
+    return <LoadingScreen/>;
   }
   return (
     <Background>

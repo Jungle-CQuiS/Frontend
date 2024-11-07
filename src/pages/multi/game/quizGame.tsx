@@ -17,6 +17,7 @@ import { TeamType } from "../../../types/teamuser";
 import { useStompContext } from "../../../contexts/StompContext";
 import { gameRoomSocketEvents } from "../../../hook/gameRoomSocketEvents";
 import { GameStatus } from "../../../types/game";
+import { LoadingScreen } from "../../../modules/LoadingScreen";
 import DefendPage from "../defend/defend";
 
 export default function QuizGamePage() {
@@ -301,7 +302,7 @@ export default function QuizGamePage() {
 
     // 로딩 중이거나 유저 정보가 없으면 로딩 화면 표시
     if (isLoading || !userLoaded || !user) {
-        return <div>로딩 중입니다...</div>;
+        return <LoadingScreen/>;
     }
 
 

@@ -25,7 +25,7 @@ export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: Se
     const [answers, setAnswers] = useState<Answer[]>(() => 
         userAnswers?.map((item , index) => ({
             value: item.answer,
-            isSelected: index === 0    // 첫 번째 항목만 true
+            isSelected: false
         })) ?? []
     );
 
