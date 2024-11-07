@@ -68,7 +68,9 @@ export default function MyPageLeftSection() {
 
             if (response.ok) {
                 const data = await response.json();
-                setUserCorrectRate(data.data.singleCorrectRate);
+                // singleCorrectRate가 null일 경우 기본값 처리
+                const correctRate = data.data.singleCorrectRate ?? "0%"; // null일 경우 0%로 처리
+                setUserCorrectRate(correctRate);
                 setUserHonorCount(data.data.multiHonorCount);
             } else {
                 console.error("명예 정보를 받아오는데 실패하였습니다.");
@@ -99,8 +101,8 @@ export default function MyPageLeftSection() {
 
             if (response.ok) {
                 const data = await response.json();
-                const categoryLevelsData = data.data.categoryLevels.map((item: { categoryName: string; categoryLevel: number }) => ({
-                    name: item.categoryName,
+                const categoryLevelsData = data.data.categoryLevels.map((item: { categoryType: string; categoryLevel: number }) => ({
+                    name: item.categoryType,
                     level: item.categoryLevel
                 }));
 
@@ -123,7 +125,7 @@ export default function MyPageLeftSection() {
         }
     }, []);
 
-    const numericCorrectRate = parseFloat(userCorrectRate.replace('%', ''));
+    const numericCorrectRate = userCorrectRate ? parseFloat(userCorrectRate.replace('%', '')) : 0; // null 체크 후 변환
 
 
     return (
