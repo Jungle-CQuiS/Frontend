@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from "../../../../config/api/constants";
-import { TeamHeaderTag } from "../../../../modules/quiz/components/multi/TeamHeader/styled";
+import { TeamHeaderContainer, TeamHeaderTag, TeamHeaderTitle } from "../../../../modules/quiz/components/multi/TeamHeader/styled";
 import { WaitingScreen } from "../../../quiz/components/multi/waiting/WaitingScreen";
 import { Background } from "../../../../components/background/styled";
 import QuizProblemsComponent from "../../../../components/quiz";
@@ -24,7 +24,7 @@ export interface SolvingPageProps {
 }
 
 
-export const SolvingPage = ({ selectedQuiz }:  SolvingPageProps) => {
+export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
     const { user } = useGameUser();
     const teamId = user?.team == 'BLUE' ? 1 : 2;
 
@@ -35,7 +35,7 @@ export const SolvingPage = ({ selectedQuiz }:  SolvingPageProps) => {
 
     const [answer, setAnswer] = useState<string>("");
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
-    
+
 
     usePageLeave();
 
@@ -61,9 +61,9 @@ export const SolvingPage = ({ selectedQuiz }:  SolvingPageProps) => {
 
     return (
         <Background>
-            <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
             {isSubmit === false ? (
                 <>
+                    <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
                     <SolvingContainer>
                         <SolvingHeaderComponent />
                         <div>
@@ -83,6 +83,15 @@ export const SolvingPage = ({ selectedQuiz }:  SolvingPageProps) => {
                 </>
             ) : (
                 <>
+                    <TeamHeaderContainer>
+                        <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
+                        <TeamHeaderTitle>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                <div>수비 팀원들이 문제를 제출 중입니다.</div>
+                                <div>잠시만 기다려주세요</div>
+                            </div>
+                        </TeamHeaderTitle>
+                    </TeamHeaderContainer>
                     <WaitingScreen teamId={teamId} />
                 </>
             )}

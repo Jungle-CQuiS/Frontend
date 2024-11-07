@@ -5,7 +5,7 @@ import AttackPage from "../../../modules/room/components/attack/attack";
 import { SolvingPage } from "../../../modules/room/components/solving/solving";
 import { SelectAnswerPage } from "../defend/select/select";
 import { Quiz, UserAnswer } from "../../../types/quiz";
-import { TeamHeaderTag } from "../../../modules/quiz/components/multi/TeamHeader/styled";
+import { TeamHeaderContainer, TeamHeaderTag, TeamHeaderTitle } from "../../../modules/quiz/components/multi/TeamHeader/styled";
 import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/WaitingScreen";
 import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
 import { Background } from "../../../components/background/styled";
@@ -316,9 +316,19 @@ export default function QuizGamePage() {
                 ) : (
                     waiting ? (
                         <Background>{/*화면 공유 페이지*/}
-                            <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
+                            <TeamHeaderContainer>
+                                <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
+                                <TeamHeaderTitle>
+                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                        <div>수비팀이 문제를 푸는 중입니다.</div>
+                                        <div>잠시만 기다려주세요</div>
+                                    </div>
+                                </TeamHeaderTitle>
+                            </TeamHeaderContainer>
                             <WaitingScreen teamId={teamId} />
+                            <p></p>
                             <UserTagsComponent teamId={teamId == 1 ? 2 : 1} />{/*다른 팀의 팀 뱃지*/}
+                            <p></p>
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </Background>
                     ) : (
