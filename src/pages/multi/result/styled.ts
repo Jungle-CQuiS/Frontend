@@ -38,18 +38,29 @@ export const MultiResultCardContainer = styled.div`
     justify-content: center;
 `;
 
-export const MultiResultCardWrap = styled.div`
-    background: linear-gradient(360deg, rgba(193, 17, 38, 0.5) 0%, #EE5567 100%);
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(238,85,103,0.75);
-    ${defaultTransition}
-    box-shadow: 0 6px 8px rgba(238,85,103,0.75);
-    cursor: pointer;
-    &:hover{
-        transform: scale(1.05);
-        box-shadow: 4 10px 18px rgba(238,85,103,0.75);
-    }
+export const MultiResultCardWrap = styled.div<{ isSelected: boolean; isVoted: boolean }>`
+  background: linear-gradient(360deg, rgba(193, 17, 38, 0.5) 0%, #ee5567 100%);
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(238, 85, 103, 0.75);
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 6px 8px rgba(238, 85, 103, 0.75);
+  cursor: pointer;
+
+  &:hover {
+    ${({ isSelected, isVoted }) =>
+      !isSelected && !isVoted &&
+      `
+      transform: scale(1.05);
+      box-shadow: 4px 10px 18px rgba(238, 85, 103, 0.75);
+    `}
+  }
+
+  ${({ isSelected, isVoted }) =>
+    isSelected && isVoted && `
+    transform: scale(1.05);
+    box-shadow: 4px 10px 18px rgba(238, 85, 103, 0.75);
+  `}
 `;
 
 export const MultiResultCard = styled.div`
@@ -101,7 +112,7 @@ export const MultiResultCardBottom = styled.div`
     height: 33px;
     margin-top: 90px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     width: 170px;
 `;
 
