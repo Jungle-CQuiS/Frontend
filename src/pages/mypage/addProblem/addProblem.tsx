@@ -5,6 +5,7 @@ import { Background } from "../../../components/background/styled";
 import { PrimaryButtonMedium, SecondaryButtonSmall } from "../../../components/buttons/styled";
 import { AddProblemButtonWrap, AddProblemCategoryWrap, AddProblemContainer, AddProblemHeader, AddProblemHeaderImg, AddProblemHeaderTitle, AddProblemInputLong, AddProblemLabel, AddProblemTab, AddProblemWrap, CreateQuizNumber } from "./styled";
 import { AddProblemModal } from "../../../components/modal/mypage/addQuesttion";
+import { LoadingQuestion } from "./LoadingQuestion";
 
 export default function AddProblemPage() {
     const navigate = useNavigate();
@@ -16,14 +17,19 @@ export default function AddProblemPage() {
     const [problemContent, setProblemContent] = useState("");
     const [value, setValue] = useState(1);
     const [modalData, setModalData] = useState([]);
+    const [loadingQuestion, setLoadingQuestion] = useState(false);
 
     const handleCancel = () => {
         navigate("/mypage");
     };
 
     const handleOpenModal = async () => {
-        await sendTextQuiz();
-        setIsModalOpen(true);
+        setLoadingQuestion(true);
+        const successModal = await sendTextQuiz();
+        setLoadingQuestion(false);
+        if (successModal) {
+            setIsModalOpen(true);
+        }
     };
     const handleCloseModal = () => {
         setIsModalOpen(false);
@@ -94,68 +100,70 @@ export default function AddProblemPage() {
 
     return (
         <Background>
-            <AddProblemContainer>
-                <AddProblemHeader>
-                    <AddProblemHeaderImg src="/icons/edit.svg" />
-                    <AddProblemHeaderTitle>문제 등록하기</AddProblemHeaderTitle>
-                </AddProblemHeader>
-                <AddProblemCategoryWrap>
-                    <AddProblemLabel>주제</AddProblemLabel>
-                    {["OS", "자료구조", "알고리즘", "네트워크", "데이터베이스"].map((topic) => (
-                        <AddProblemTab
-                            key={topic}
-                            isSelected={selectedTopic === topic}
-                            onClick={() => setSelectedTopic(topic)}
-                        >
-                            {topic}
-                        </AddProblemTab>
-                    ))}
-                </AddProblemCategoryWrap>
-                <AddProblemCategoryWrap>
-                    <AddProblemLabel>종류</AddProblemLabel>
-                    {["객관식", "주관식"].map((type) => (
-                        <AddProblemTab
-                            key={type}
-                            isSelected={selectedType === type}
-                            onClick={() => setSelectedType(type)}
-                        >
-                            {type}
-                        </AddProblemTab>
-                    ))}
-                </AddProblemCategoryWrap>
-                <AddProblemCategoryWrap>
-                    <AddProblemLabel>문제수</AddProblemLabel>
-                    <CreateQuizNumber
-                        type="number"
-                        id="participants"
-                        name="participants"
-                        min="1"
-                        max="10"
-                        value={value}
-                        onChange={handleChange}
+            {loadingQuestion ? (<LoadingQuestion />) :
+                (<AddProblemContainer>
+                    <AddProblemHeader>
+                        <AddProblemHeaderImg src="/icons/edit.svg" />
+                        <AddProblemHeaderTitle>문제 등록하기</AddProblemHeaderTitle>
+                    </AddProblemHeader>
+                    <AddProblemCategoryWrap>
+                        <AddProblemLabel>주제</AddProblemLabel>
+                        {["OS", "자료구조", "알고리즘", "네트워크", "데이터베이스"].map((topic) => (
+                            <AddProblemTab
+                                key={topic}
+                                isSelected={selectedTopic === topic}
+                                onClick={() => setSelectedTopic(topic)}
+                            >
+                                {topic}
+                            </AddProblemTab>
+                        ))}
+                    </AddProblemCategoryWrap>
+                    <AddProblemCategoryWrap>
+                        <AddProblemLabel>종류</AddProblemLabel>
+                        {["객관식", "주관식"].map((type) => (
+                            <AddProblemTab
+                                key={type}
+                                isSelected={selectedType === type}
+                                onClick={() => setSelectedType(type)}
+                            >
+                                {type}
+                            </AddProblemTab>
+                        ))}
+                    </AddProblemCategoryWrap>
+                    <AddProblemCategoryWrap>
+                        <AddProblemLabel>문제수</AddProblemLabel>
+                        <CreateQuizNumber
+                            type="number"
+                            id="participants"
+                            name="participants"
+                            min="1"
+                            max="10"
+                            value={value}
+                            onChange={handleChange}
+                        />
+                    </AddProblemCategoryWrap>
+                    <AddProblemWrap>
+                        <AddProblemLabel>문제 만들기</AddProblemLabel>
+                        <AddProblemInputLong
+                            placeholder="공부한 내용을 입력해주세요."
+                            value={problemContent}
+                            onChange={handleProblemContentChange}
+                        />
+                    </AddProblemWrap>
+                    <AddProblemButtonWrap>
+                        <SecondaryButtonSmall onClick={handleCancel}>취소하기</SecondaryButtonSmall>
+                        <PrimaryButtonMedium onClick={handleOpenModal}>문제생성</PrimaryButtonMedium>
+                    </AddProblemButtonWrap>
+                    <AddProblemModal
+                        open={isModalOpen}
+                        onClose={handleCloseModal}
+                        onDone={handleDone}
+                        quizData={modalData}
+                        selectedTopic={selectedTopic}
+                        selectedType={selectedType}
                     />
-                </AddProblemCategoryWrap>
-                <AddProblemWrap>
-                    <AddProblemLabel>문제 만들기</AddProblemLabel>
-                    <AddProblemInputLong
-                        placeholder="공부한 내용을 입력해주세요."
-                        value={problemContent}
-                        onChange={handleProblemContentChange}
-                    />
-                </AddProblemWrap>
-                <AddProblemButtonWrap>
-                    <SecondaryButtonSmall onClick={handleCancel}>취소하기</SecondaryButtonSmall>
-                    <PrimaryButtonMedium onClick={handleOpenModal}>문제생성</PrimaryButtonMedium>
-                </AddProblemButtonWrap>
-                <AddProblemModal
-                    open={isModalOpen}
-                    onClose={handleCloseModal}
-                    onDone={handleDone}
-                    quizData={modalData}
-                    selectedTopic={selectedTopic}
-                    selectedType={selectedType}
-                />
-            </AddProblemContainer>
+                </AddProblemContainer>
+                )}
         </Background>
     );
 }
