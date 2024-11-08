@@ -101,7 +101,7 @@ export const AddProblemModal = ({
     };
 
     return (
-        <Modal {...props} open={props.open} onClose={onClose} onDone={onDone}>
+        <Modal {...props} open={props.open} onClose={onClose} onDone={onDone} > 
             <CreateQuistionModalContainer>
                 <CreateQuistionModalTitle>생성된 문제 보기</CreateQuistionModalTitle>
                 <div>선택된 주제: {selectedTopic}</div>
