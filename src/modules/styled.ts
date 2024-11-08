@@ -9,7 +9,6 @@ export const LoadingScreenContainer = styled.div`
   display: flex;
   justify-content: center; // 가로 중앙 정렬
   align-items: center; // 세로 중앙 정렬
-  opacity: 0.3;
   background-color: rgba(255, 255, 255, 0.9); // 배경색 (선택사항)
   z-index: 9999; // 다른 요소들 위에 표시
 
