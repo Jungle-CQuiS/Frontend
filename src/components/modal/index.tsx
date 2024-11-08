@@ -39,7 +39,7 @@ export const Modal = ({
   return (
     <Fragment>
       {backdrop && (
-        <ModalBackdrop $open={open} $backdropcolor = {backdropcolor} onClick={onClose} />
+        <ModalBackdrop $open={open} $backdropcolor = {backdropcolor} />
       )}
        <ModalBase
         $open={open}

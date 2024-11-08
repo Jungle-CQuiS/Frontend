@@ -10,7 +10,6 @@ import { LoadingQuestion } from "./LoadingQuestion";
 export default function AddProblemPage() {
     const navigate = useNavigate();
 
-    const [selectedTopic, setSelectedTopic] = useState("OS");
     const [selectedType, setSelectedType] = useState("객관식");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const sendCalled = useRef(false); // 중복 호출 방지
@@ -107,7 +106,7 @@ export default function AddProblemPage() {
                         <AddProblemHeaderTitle>문제 등록하기</AddProblemHeaderTitle>
                     </AddProblemHeader>
                     <AddProblemCategoryWrap>
-                        <AddProblemLabel>주제</AddProblemLabel>
+                        {/* <AddProblemLabel>주제</AddProblemLabel>
                         {["OS", "자료구조", "알고리즘", "네트워크", "데이터베이스"].map((topic) => (
                             <AddProblemTab
                                 key={topic}
@@ -116,7 +115,7 @@ export default function AddProblemPage() {
                             >
                                 {topic}
                             </AddProblemTab>
-                        ))}
+                        ))} */}
                     </AddProblemCategoryWrap>
                     <AddProblemCategoryWrap>
                         <AddProblemLabel>종류</AddProblemLabel>
@@ -137,7 +136,7 @@ export default function AddProblemPage() {
                             id="participants"
                             name="participants"
                             min="1"
-                            max="10"
+                            max="15"
                             value={value}
                             onChange={handleChange}
                         />
@@ -159,7 +158,6 @@ export default function AddProblemPage() {
                         onClose={handleCloseModal}
                         onDone={handleDone}
                         quizData={modalData}
-                        selectedTopic={selectedTopic}
                         selectedType={selectedType}
                     />
                 </AddProblemContainer>
