@@ -95,6 +95,11 @@ export const AddProblemModal = ({
         }
     };
 
+    const handleCancelQuiz = () => {
+        onClose();
+        window.location.reload();
+    };
+
     return (
         <Modal {...props} open={props.open} onClose={onClose} onDone={onDone}>
             <CreateQuistionModalContainer>
@@ -133,7 +138,7 @@ export const AddProblemModal = ({
                 </CreateQuizContainer>
                 <CreateQuistionModalButtonWrap>
                     <BlackButtonSmall onClick={handleSubmitQuiz}>제출하기</BlackButtonSmall>
-                    <BlackButtonSmall onClick={onClose}>닫기</BlackButtonSmall>
+                    <BlackButtonSmall onClick={handleCancelQuiz}>닫기</BlackButtonSmall>
                 </CreateQuistionModalButtonWrap>
             </CreateQuistionModalContainer>
         </Modal>
