@@ -32,6 +32,7 @@ export const TeamUserComponent = ({ user, onClick, teamType}: TeamUserProps) => 
   const isHost = user?.role === 'HOST'; // null 일수도 있어서 ?로 
   const isLeader = user?.isLeader === 'leader';
   const isReady = user?.isReady === 'ready';
+  const isSpeaking = user?.isSpeaking;
 
   return isBlueTeam ? (
     <RoomTeamOneUser onClick={onClick}>
@@ -40,7 +41,7 @@ export const TeamUserComponent = ({ user, onClick, teamType}: TeamUserProps) => 
           <RoomTeamOneUserName>
             {isReady && <ReadyText $align = 'left'>READY</ReadyText>}
             {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
-            {user.username}
+            {isSpeaking ? (`${user.username}💬`) : (`${user.username}`)}
             {isHost && <RoomHostIcon src="/icons/crown.svg" alt="Badge" />}
           </RoomTeamOneUserName>
           <RoomTeamOneUserProfile src={user.profileImage} alt={user.username} />
@@ -70,7 +71,7 @@ export const TeamUserComponent = ({ user, onClick, teamType}: TeamUserProps) => 
           <RoomTeamTwoUserName>
             {isReady && <ReadyText $align = 'right'>READY</ReadyText>}
             {isHost && <RoomTeamTwoUserHonorIcon src="/icons/crown.svg" alt="Badge" />}
-            {user.username}
+            {isSpeaking ? (`🗨️${user.username}`) : (`${user.username}`)}
             {isLeader && <RoomTeamLeaderIcon src="/icons/medal.svg" alt="Badge" />}
           </RoomTeamTwoUserName>
 

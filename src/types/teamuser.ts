@@ -13,5 +13,6 @@ export interface TeamUser extends User {
     team: TeamType;
     isLeader: TeamRole;
     isReady: UserState;
+    isSpeaking : boolean;
   }
   

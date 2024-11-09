@@ -1,17 +1,19 @@
 import { Client } from '@stomp/stompjs';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { readyRoomSocketEvents } from './readyRoomSocketEvent';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
 import { useGameState } from '../contexts/GameStateContext/useGameState';
 import { GameReadyEvents, GameStatus } from '../types/game';
 import { useStompContext } from '../contexts/StompContext';
+import { useOpenViduContext } from '../contexts/OpenViduContext/useOpenViduContext';
 import { useTeamState } from '../contexts/TeamStateContext/useTeamState';
 
 export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
+    const { joinRoom } = useOpenViduContext();
     const { gameState, isAllReady, roomUserId ,
         handleReadyRoomEvent, setRoomUserIdWithState, setRoomId  } = useGameState();
     const navigate = useNavigate();
@@ -25,24 +27,7 @@ export const useRoom = (roomId: string) => {
 
     }, []);
 
-
-    const fetchUserRoomId = async () => {
-        let retries = 0;
-        const maxRetries = 5;
-
-        while (retries < maxRetries) {
-            try {
-                await getUserRoomID();
-                break;
-            } catch (error) {
-                console.error(`Failed to get user room ID, retry attempt: ${retries + 1}`);
-                retries++;
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-            }
-        }
-    };
-
-    const getUserRoomID = async (): Promise<void> => {
+    const joinUserRoom = async (): Promise<void> => {
         try {
             const token = localStorage.getItem("AccessToken");
             const response = await fetch('/api/quiz/multi/rooms/join', {
@@ -64,11 +49,10 @@ export const useRoom = (roomId: string) => {
             }
 
             const data = await response.json();
-
-            // localStorage와 context 모두 업데이트
-            localStorage.setItem("roomUserId", data.data.roomUserId);
+            // session과 토큰을 받아서 세팅해준다.
             setRoomUserIdWithState(data.data.roomUserId);  // context에 roomUserId 업데이트
             setRoomId(roomId); // Context에 roomId 업데이트
+            joinRoom(data.data.session, data.data.token, data.data.roomUserId);
             console.log("<Response> roomUSerID :", data.data.roomUserId)
         } catch (e) {
             const errorMessage = e instanceof Error ? e.message : String(e);
@@ -173,7 +157,7 @@ export const useRoom = (roomId: string) => {
             try {
                 handleReadyRoomEvent(GameReadyEvents.ENTER);
                 await enterRoom(); // Active Socket Protocol
-                await fetchUserRoomId();
+                await joinUserRoom();
                 handleReadyRoomEvent(GameReadyEvents.LOADING);
             } catch (error) {
                 console.error('Room initialization failed:', error);

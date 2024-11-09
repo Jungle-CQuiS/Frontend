@@ -1,6 +1,6 @@
-import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
+import { createContext, useEffect, ReactNode, useState, useCallback } from 'react';
 import { TeamType, TeamUser } from '../../types/teamuser';
-
+import { useOpenViduContext } from '../OpenViduContext/useOpenViduContext';
 interface TeamStateContextType {
     teamOneUsers: (TeamUser | null)[];
     teamTwoUsers: (TeamUser | null)[];
@@ -8,6 +8,9 @@ interface TeamStateContextType {
     updateAttackTeam: (attackteam: TeamType) => void;
     isTeamsLoaded: boolean;
     attackTeam: TeamType | null;
+    // Voice
+    isSpeaking: boolean;
+
     // HP
     teamOneHealth: number;
     teamTwoHealth: number;
@@ -22,11 +25,15 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
     const [isTeamsLoaded, setIsTeamsLoaded] = useState(false);
     const [attackTeam, setAttackTeam] = useState<TeamType | null>(null);
 
-    // HP 관리
-    //팀 체력
+    // Team Voice
+    const { publisher, subscribers } = useOpenViduContext();
+    const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+
+    // Team HP
     const [teamOneHealth, setTeamOneHealth] = useState(3);
     const [teamTwoHealth, setTeamTwoHealth] = useState(3);
 
+    // Team State
     const updateTeams = useCallback((users: TeamUser[]) => {
         const blueTeamUsers = users.filter(user => user.team === 'BLUE');
         const redTeamUsers = users.filter(user => user.team === 'RED');
@@ -44,6 +51,69 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
         setIsTeamsLoaded(true);
     }, []);
 
+    // Team Voice
+    useEffect(() => {
+        if (publisher) {
+            // 자신의 음성 감지
+            publisher.on('publisherStartSpeaking', (event: any) => {
+                setIsSpeaking(true);
+                console.log('내가 말하기 시작함');
+            });
+
+            publisher.on('publisherStopSpeaking', (event: any) => {
+                setIsSpeaking(false);
+                console.log('내가 말하기 멈춤');
+            });
+        }
+    }, [publisher]);
+
+    useEffect(() => {
+        // 다른 참가자들의 음성 감지
+        subscribers.forEach(subscriber => {
+            const userData = JSON.parse(subscriber.stream.connection.data);
+
+            subscriber.on('streamPropertyChanged', (event: any) => {
+                if (event.changedProperty === 'audioActive') {
+                    console.log(`${userData.userId}의 오디오 상태:`, event.newValue);
+                }
+            });
+
+            subscriber.on('publisherStartSpeaking', (event: any) => {
+                // 팀 1과 팀 2의 유저 리스트를 모두 확인하여 해당 유저 업데이트
+                setTeamOneUsers(prev => prev.map(user =>
+                    user && user.roomUserId === userData.roomUserId
+                        ? { ...user, isSpeaking: true }
+                        : user
+                ));
+
+                setTeamTwoUsers(prev => prev.map(user =>
+                    user && user.roomUserId === userData.roomUserId
+                        ? { ...user, isSpeaking: true }
+                        : user
+                ));
+
+                console.log(`${userData.roomUserId} 말하기 시작`);
+            });
+
+            subscriber.on('publisherStopSpeaking', (event: any) => {
+                setTeamOneUsers(prev => prev.map(user =>
+                    user && user.roomUserId === userData.roomUserId
+                        ? { ...user, isSpeaking: false }
+                        : user
+                ));
+
+                setTeamTwoUsers(prev => prev.map(user =>
+                    user && user.roomUserId === userData.roomUserId
+                        ? { ...user, isSpeaking: false }
+                        : user
+                ));
+
+                console.log(`${userData.roomUserId} 말하기 멈춤`);
+            });
+        });
+    }, [subscribers]);
+
+    // Team Game
     const updateAttackTeam = useCallback((attackteam: TeamType) => {
         setAttackTeam(attackteam);
     }, [])
@@ -71,7 +141,8 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
             updateAttackTeam,
             teamOneHealth,
             teamTwoHealth,
-            changeTeamHP
+            changeTeamHP,
+            isSpeaking,
         }}>
             {children}
         </TeamStateContext.Provider>

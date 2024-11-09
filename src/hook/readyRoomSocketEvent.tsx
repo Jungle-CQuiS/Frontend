@@ -102,8 +102,7 @@ export const readyRoomSocketEvents = {
 
         const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.JOIN;
         const message = {
-            uuid: uuid, // 수정 요!
-
+            uuid: uuid, 
             roomId: roomId,
         };
 
