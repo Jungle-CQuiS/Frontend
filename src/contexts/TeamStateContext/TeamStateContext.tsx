@@ -25,7 +25,6 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
     // Team Voice
     const { subscribers } = useOpenViduContext();
 
-
     // Team HP
     const [teamOneHealth, setTeamOneHealth] = useState(3);
     const [teamTwoHealth, setTeamTwoHealth] = useState(3);
