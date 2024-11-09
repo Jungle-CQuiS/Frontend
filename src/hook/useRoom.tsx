@@ -13,7 +13,7 @@ export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { joinRoom } = useOpenViduContext();
+    const { joinRoom , disconnectSession} = useOpenViduContext();
     const { gameState, isAllReady, roomUserId ,
         handleReadyRoomEvent, setRoomUserIdWithState, setRoomId  } = useGameState();
     const navigate = useNavigate();
@@ -90,6 +90,8 @@ export const useRoom = (roomId: string) => {
     const exitRoom = async () => {
         try {
             await readyRoomSocketEvents.userExitRoom(stompClient, roomId,roomUserId); // 수정 요!
+
+            disconnectSession(); // session 해제
         } catch (error) {
             console.error('Room exit failed:', error);
             throw error;

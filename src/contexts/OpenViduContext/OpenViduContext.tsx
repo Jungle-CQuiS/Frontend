@@ -9,6 +9,7 @@ interface OpenViduContextType {
     joinRoom: (sessionid: string, token: any , roomUserId :string) => void;
     publishStream: () => void;
     unpublishStream: () => void;
+    disconnectSession : () => void;
 }
 
 const OpenViduContext = createContext<OpenViduContextType | null>(null);
@@ -107,6 +108,16 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
         }
     };
 
+    const disconnectSession = () => {
+        if(session)
+            session.disconnect();
+
+        unpublishStream();
+        OV.current = null;
+        setSessionId(null);
+        setSubscribers([]);
+    }
+
     return (
         <OpenViduContext.Provider
             value={{
@@ -115,7 +126,8 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 subscribers,
                 joinRoom,
                 publishStream,   // 음성 채팅 시작
-                unpublishStream  // 음성 채팅 중단
+                unpublishStream,  // 음성 채팅 중단
+                disconnectSession
             }}
         >
             {children}
