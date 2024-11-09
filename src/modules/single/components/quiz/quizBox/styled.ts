@@ -47,6 +47,7 @@ export const SingleModeQuizBoxBottomSelectWrap = styled.div`
 export const SingleModeQuizBoxBottomSelectImg = styled.img`
     width: 24px;
     height: 24px;
+    cursor: pointer;
 `;
 
 export const SingleModeQuizBoxBottomSelect = styled.div`

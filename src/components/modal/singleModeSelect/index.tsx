@@ -5,14 +5,14 @@ import { PrimaryButtonMedium, SecondaryButton } from "../../buttons/styled"
 import { SingleModeSelectModalButtonWrap, SingleModeSelectModalConatiner, SingleModeSelectModalLabel, SingleModeSelectModalRow, SingleModeSelectModalRowBottom, SingleModeSelectModalTag, SingleModeSelectModalTagWrap, SingleModeSelectModalWrap } from "./styled"
 
 interface SingleModeSelectModalProps extends IModalProps {
-    selectedTopic: string;
+    selectedTopics: string[];
     selectedNumber: string;
     selectedMode: string;
 }
 
 
 export const SingleModeSelectModal = ({
-    selectedTopic,
+    selectedTopics,
     selectedNumber,
     selectedMode,
     ...props
@@ -31,11 +31,12 @@ export const SingleModeSelectModal = ({
       const handleStart = async () => {
         const apiUrl = selectedMode === "타임어택" ? "/api/quiz/single/mix" : (selectedMode === "객관식" ? "/api/quiz/single/choice" : "/api/quiz/single/short");
     
-        const categoryId = categoryMapping[selectedTopic];
+        const categoryIds = selectedTopics.map(topic => categoryMapping[topic]);
     
         const requistData = {
-            categoryIds: [categoryId],
+            categoryIds: categoryIds,
             quizCount: parseInt(selectedNumber),
+            uuid: localStorage.getItem("uuid"),
         };
     
         try {
@@ -68,8 +69,11 @@ export const SingleModeSelectModal = ({
                     <SingleModeSelectModalRow>
                         <SingleModeSelectModalLabel>주제</SingleModeSelectModalLabel>
                         <SingleModeSelectModalTagWrap>
-                            <SingleModeSelectModalTag>{selectedTopic}</SingleModeSelectModalTag>
-                        </SingleModeSelectModalTagWrap>
+                            {selectedTopics.map((topic, index) => (
+                                <SingleModeSelectModalTag key={index}>{topic}</SingleModeSelectModalTag>
+                            ))}
+                            </SingleModeSelectModalTagWrap>
+
                     </SingleModeSelectModalRow>
                     <SingleModeSelectModalRowBottom>
                         <SingleModeSelectModalRow>

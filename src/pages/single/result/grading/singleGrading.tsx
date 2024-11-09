@@ -3,6 +3,7 @@ import { SecondaryButtonSmall, BlackButtonSmall } from "../../../../components/b
 import { useConfirm } from "../../../../components/confirmPopup";
 import { HeaderTagComponent } from "../../../../modules/single/components/headerTag";
 import { SingleGradingContainer, SingleGradingWrap, SingleGradingimg, SingleGradingResult, SingleGradingButtonWrap, SingleGradingResultText, SingleGradingResultWrap } from "./styled";
+import useButtonSoundEffect from "../../../../hook/useHoverSoundEffect";
 
 interface SingleGradingPageProps {
     isCorrect?: boolean | null;
@@ -19,6 +20,7 @@ export const SingleGradingPage = ({
 
     const confirm = useConfirm();
     const navigate = useNavigate();
+    useButtonSoundEffect()
 
 
     const handleExit = async () => {
@@ -44,8 +46,8 @@ export const SingleGradingPage = ({
                 </SingleGradingResult>
             </SingleGradingWrap>
             <SingleGradingButtonWrap>
-                <SecondaryButtonSmall onClick={handleExit}>나가기</SecondaryButtonSmall>
-                <BlackButtonSmall onClick={onNext}>다음 문제</BlackButtonSmall>
+                <SecondaryButtonSmall className="click-sound" onClick={handleExit}>나가기</SecondaryButtonSmall>
+                <BlackButtonSmall className="click-sound" onClick={onNext}>다음 문제</BlackButtonSmall>
             </SingleGradingButtonWrap>
         </SingleGradingContainer>
     );

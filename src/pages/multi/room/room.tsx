@@ -14,6 +14,7 @@ import { SOCKET_DESTINATIONS } from '../../../config/websocket/constants';
 import { useTeamState } from '../../../contexts/TeamStateContext/useTeamState';
 import { usePageLeave } from '../../../hook/pageLeaveHandler';
 import { LoadingScreen } from '../../../modules/LoadingScreen';
+import useButtonSoundEffect from '../../../hook/useHoverSoundEffect';
 
 export default function Room() {
   const { roomId } = useLocation().state;
@@ -24,6 +25,7 @@ export default function Room() {
     isAllReady, isTeamsLoaded
   } = useRoom(roomId);
   const { updateAttackTeam } = useTeamState();
+  useButtonSoundEffect();
 
   const [isCoinAnimation, setIsCoinAnimation] = useState(false);
   const [isFirstAttackModalOpen, setIsFirstAttackModalOpen] = useState(false);

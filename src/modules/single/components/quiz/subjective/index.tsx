@@ -15,6 +15,14 @@ export const SingleModeQuizSubjective = ({ quizData, onSubmit }: SingleModeQuizP
         }
     };
 
+    if (!quizData || quizData.length <= 5) {
+        return (
+            <SingleModeQuizContainer>
+                <div>해당되는 문제가 없습니다</div>
+            </SingleModeQuizContainer>
+        );
+    }
+
     return (
         <SingleModeQuizContainer>
             <HeaderTagComponent type="주관식" />

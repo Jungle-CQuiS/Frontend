@@ -49,6 +49,14 @@ export const SingleModeQuizTimeAttack = ({ quizData, onSubmit }: SingleModeQuizP
             }
         }
     };
+
+    if (!quizData || quizData.length <= 5) {
+        return (
+            <SingleModeQuizContainer>
+                <div>해당되는 문제가 없습니다</div>
+            </SingleModeQuizContainer>
+        );
+    }
     
 
     const isMultipleChoice = quiz.quizType === "객관식";

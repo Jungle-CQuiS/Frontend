@@ -4,10 +4,12 @@ import { MainPageRefreshButton, MainPageRefreshWrap, MainPageSearchBar, MainPage
 import { PrimaryButtonMedium } from "../../components/buttons/styled";
 import { Background } from "../../components/background/styled";
 import RoomList from './roomlist/roomlist';
+import useButtonSoundEffect from "../../hook/useHoverSoundEffect";
 
 export default function MultiPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    useButtonSoundEffect();
 
     const handleOpenModal = () => {
         setIsModalOpen(true);

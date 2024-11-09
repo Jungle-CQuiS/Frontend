@@ -2,10 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { PrimaryButtonLarge } from "../../components/buttons/styled";
 import { LandingPageContainer, LandingPageText, LandingPageTextContainer, LandingPageTextPrimary, LandingPageTextSecondary, LandingPageTextWrap, LandingPageWrap } from "./styled";
 import { SERVICES } from "../../config/api/constants";
+import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
 
 export default function LandingPage() {
 
     const navigate = useNavigate();
+    useHoverSoundEffect();
 
     const handleLoginStatus = () => {
         const accessToken = localStorage.getItem("AccessToken"); // 토큰이 존재하는지 확인

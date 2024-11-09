@@ -17,6 +17,7 @@ import {
     SingleResultBoxRow,
     SingleResultBoxRowLabel,
 } from "./styled";
+import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 
 interface Result {
     correct: number;
@@ -65,6 +66,7 @@ export const SingleResultPage = () => {
     const location = useLocation();
     const results: Results = useMemo(() => location.state?.results || {}, [location.state?.results]);
     const navigate = useNavigate();
+    useButtonSoundEffect()
     
     const isRequestingRef = useRef(false); 
 
@@ -102,7 +104,7 @@ export const SingleResultPage = () => {
             const sendStatistics = async () => {
                 isRequestingRef.current = true;
                 try {
-                    const response = await fetch('/api/quiz/single/statistics', {
+                    const response = await fetch('/api/users/statistics', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
