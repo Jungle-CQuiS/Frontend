@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { readyRoomSocketEvents } from './readyRoomSocketEvent';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
@@ -13,7 +13,7 @@ export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { joinRoom, publishStream, unpublishStream } = useOpenViduContext();
+    const { joinRoom } = useOpenViduContext();
     const { gameState, isAllReady, roomUserId ,
         handleReadyRoomEvent, setRoomUserIdWithState, setRoomId  } = useGameState();
     const navigate = useNavigate();

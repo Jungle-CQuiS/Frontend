@@ -12,7 +12,7 @@ export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
         <UserTagsContainer>
             {teamUsers.map((user, index) => (
                 <UserTag key={index} teamId={teamId}>
-                    {user?.isLeader === 'leader' && <UserTagImg src="/icons/medal.svg" />} {/*FIXME: 모두 리더 표시가 뜨는거같아서 한번 확인해야함!*/}
+                    {user?.isLeader === 'leader' && <UserTagImg src="/icons/medal.svg" />} 
                     {user?.username}
                 </UserTag>
             ))}
