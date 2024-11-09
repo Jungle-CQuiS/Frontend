@@ -16,6 +16,7 @@ import {
   SingleModeWrap,
 } from "./styled";
 import { SingleModeSelectModal } from "../../components/modal/singleModeSelect";
+import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
 
 const questionCounts: string[] = ["5 문제", "10 문제", "15 문제", "20 문제"];
 
@@ -36,10 +37,11 @@ const modes: Mode[] = [
 
 export const SingleModePage = () => {
   const [topics, setTopics] = useState<string[]>([]);
-  const [selectedTopic, setSelectedTopic] = useState("OS");
+  const [selectedTopics, setSelectedTopics] = useState<string[]>(["OS"]);
   const [selectedNumber, setSelectedNumber] = useState("5 문제");
   const [selectedMode, setSelectedMode] = useState("객관식");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  useHoverSoundEffect();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -63,7 +65,6 @@ export const SingleModePage = () => {
         const result = await response.json();
         const categories: Category[] = result.data?.categories || [];
         setTopics(categories.map((category: Category) => category.categoryType));
-        setSelectedTopic(categories[0]?.categoryType || "");
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -79,8 +80,21 @@ export const SingleModePage = () => {
     setIsModalOpen(false);
   };
   const handleDone = () => {
-      setIsModalOpen(false);
+    setIsModalOpen(false);
   };
+
+  const handleTopicSelect = (topic: string) => {
+    if (selectedTopics.length === 1 && selectedTopics.includes(topic)) {
+      return;
+    }
+  
+    if (selectedTopics.includes(topic)) {
+      setSelectedTopics(selectedTopics.filter((t) => t !== topic)); // 선택 해제
+    } else {
+      setSelectedTopics([...selectedTopics, topic]); // 선택 추가
+    }
+  };
+  
 
   return (
     <Background>
@@ -91,8 +105,8 @@ export const SingleModePage = () => {
             <SingleModeOptions
               label="주제"
               options={topics}
-              selectedOption={selectedTopic}
-              onSelect={setSelectedTopic}
+              selectedOptions={selectedTopics}  // 주제는 배열
+              onSelect={handleTopicSelect} 
             />
           ) : (
             <div>Loading topics...</div>
@@ -100,8 +114,8 @@ export const SingleModePage = () => {
           <SingleModeOptions
             label="문제 수"
             options={questionCounts}
-            selectedOption={selectedNumber}
-            onSelect={setSelectedNumber}
+            selectedOptions={selectedNumber}  // 문제 수는 문자열
+            onSelect={setSelectedNumber} 
           />
         </SingleModeTop>
         <SingleModeSelectModeContainer>
@@ -122,7 +136,7 @@ export const SingleModePage = () => {
         open={isModalOpen}
         onClose={handleCloseModal}
         onDone={handleDone}
-        selectedTopic={selectedTopic}
+        selectedTopics={selectedTopics} 
         selectedNumber={selectedNumber}
         selectedMode={selectedMode}
       />
@@ -133,18 +147,19 @@ export const SingleModePage = () => {
 interface SingleModeOptionsProps {
   label: string;
   options: string[];
-  selectedOption: string;
+  selectedOptions: string[] | string;
   onSelect: (option: string) => void;
 }
 
-const SingleModeOptions = ({ label, options, selectedOption, onSelect }: SingleModeOptionsProps) => (
+const SingleModeOptions = ({ label, options, selectedOptions, onSelect }: SingleModeOptionsProps) => (
   <SingleModeWrap>
     <SingleModeLabel>{label}</SingleModeLabel>
     <SingleModeTabWrap>
       {options.map((option) => (
         <SingleModeTab
+          className="click-sound"
           key={option}
-          $isSelected={selectedOption === option}
+          $isSelected={Array.isArray(selectedOptions) ? selectedOptions.includes(option) : selectedOptions === option} // 배열인지 문자열인지 체크
           onClick={() => onSelect(option)}
         >
           {option}
@@ -161,7 +176,7 @@ interface SingleModeItemProps {
 }
 
 const SingleModeItem = ({ icon, label, onOpenModal }: SingleModeItemProps) => (
-  <SingleModeSelectModeWrap onClick={onOpenModal}>
+  <SingleModeSelectModeWrap onClick={onOpenModal} className="click-sound">
     <SingleModeSelectMode>
       <SingleModeSelectModeImg src={icon} />
       <SingleModeSelectModeText>{label}</SingleModeSelectModeText>

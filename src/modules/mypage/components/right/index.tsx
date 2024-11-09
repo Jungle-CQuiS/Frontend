@@ -70,6 +70,7 @@ export default function MyPageRightSection() {
                 <MyPageCategoryContainer>
                     {["OS", "알고리즘", "네트워크", "자료구조", "데이터베이스"].map((category) => (
                         <MyPageCategoryTab
+                            className="click-sound"
                             key={category}
                             isSelected={selectedCategory === category}
                             onClick={() => handleCategoryClick(category)}

@@ -5,6 +5,7 @@ import { SignupBackground, SignUpInputContainer, SignupInputWrap, SignupLabel } 
 import { LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInput, LoginBottomWrap } from "../loginpage/styled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
 
 
 
@@ -13,6 +14,7 @@ export default function SignupPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  useHoverSoundEffect();
 
   const handleSignup = async () => {
     if (email && username && password) {

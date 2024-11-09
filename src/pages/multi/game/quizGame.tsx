@@ -18,6 +18,7 @@ import { gameRoomSocketEvents } from "../../../hook/gameRoomSocketEvents";
 import { GameStatus } from "../../../types/game";
 import { LoadingScreen } from "../../../modules/LoadingScreen";
 import DefendPage from "../defend/defend";
+import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
@@ -36,6 +37,7 @@ export default function QuizGamePage() {
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
     const [waiting, setWaiting] = useState<boolean>(true); // 모든 수비 팀원이 답을 제출할 때까지 대기
     const teamId = user?.team == 'BLUE' ? 1 : 2;
+    useButtonSoundEffect()
 
 
     // SUBSCRIBE EVENT ----------------------------------

@@ -1,3 +1,4 @@
+import useButtonSoundEffect from "../../../../../hook/useHoverSoundEffect";
 import { QuizTypeProps } from "../../../../../types/quiz";
 import {
     SingleModeQuizBoxBottom,
@@ -26,6 +27,7 @@ interface SingleModeQuizBoxProps extends QuizTypeProps {
 export const SingleModeQuizBox = ({ type, quizData, onChoiceSelect }: SingleModeQuizBoxProps) => {
     const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
     const [hasVoted, setHasVoted] = useState(false);
+    useButtonSoundEffect()
 
     const handleChoiceClick = (index: number) => {
         setSelectedChoice(index);
@@ -61,7 +63,7 @@ export const SingleModeQuizBox = ({ type, quizData, onChoiceSelect }: SingleMode
 
     const renderChoices = () => {
         return quizData.choices?.map((choice, index) => (
-            <SingleModeQuizBoxBottomSelectWrap key={index} onClick={() => handleChoiceClick(index)}>
+            <SingleModeQuizBoxBottomSelectWrap className="click-sound" key={index} onClick={() => handleChoiceClick(index)}>
                 <SingleModeQuizBoxBottomSelectImg
                     src={selectedChoice === index ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
                     alt={selectedChoice === index ? "Selected" : "Unselected"}
@@ -82,7 +84,7 @@ export const SingleModeQuizBox = ({ type, quizData, onChoiceSelect }: SingleMode
                             {renderChoices()}
                         </SingleModeQuizBoxBottomSelectContainer>
                     )}
-                    <SingleModeQuizBoxBottomBadWrap onClick={handleDownVote} $hasVoted={hasVoted}>
+                    <SingleModeQuizBoxBottomBadWrap className="click-sound" onClick={handleDownVote} $hasVoted={hasVoted}>
                         <SingleModeQuizBoxBottomBadImg src={hasVoted ? "/icons/bad_disabled.svg" : "/icons/bad.svg"}/>
                         <SingleModeQuizBoxBottomBadText $hasVoted={hasVoted}>별로에요</SingleModeQuizBoxBottomBadText>
                     </SingleModeQuizBoxBottomBadWrap>

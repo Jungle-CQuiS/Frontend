@@ -6,6 +6,7 @@ import { PrimaryButtonMedium, SecondaryButtonSmall } from "../../../components/b
 import { AddProblemButtonWrap, AddProblemCategoryWrap, AddProblemContainer, AddProblemHeader, AddProblemHeaderImg, AddProblemHeaderTitle, AddProblemInputLong, AddProblemLabel, AddProblemTab, AddProblemWrap, CreateQuizNumber } from "./styled";
 import { AddProblemModal } from "../../../components/modal/mypage/addQuesttion";
 import { LoadingQuestion } from "./LoadingQuestion";
+import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 
 export default function AddProblemPage() {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function AddProblemPage() {
     const [value, setValue] = useState(1);
     const [modalData, setModalData] = useState([]);
     const [loadingQuestion, setLoadingQuestion] = useState(false);
+    useButtonSoundEffect()
 
     const handleCancel = () => {
         navigate("/mypage");
@@ -109,6 +111,7 @@ export default function AddProblemPage() {
                         {/* <AddProblemLabel>주제</AddProblemLabel>
                         {["OS", "자료구조", "알고리즘", "네트워크", "데이터베이스"].map((topic) => (
                             <AddProblemTab
+                                className="click-sound"
                                 key={topic}
                                 isSelected={selectedTopic === topic}
                                 onClick={() => setSelectedTopic(topic)}
@@ -121,6 +124,7 @@ export default function AddProblemPage() {
                         <AddProblemLabel>종류</AddProblemLabel>
                         {["객관식", "주관식"].map((type) => (
                             <AddProblemTab
+                                className="click-sound"
                                 key={type}
                                 isSelected={selectedType === type}
                                 onClick={() => setSelectedType(type)}

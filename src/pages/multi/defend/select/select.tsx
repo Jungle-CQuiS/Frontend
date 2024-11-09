@@ -20,6 +20,7 @@ import { Quiz } from "../../../../types/quiz";
 import { Modal } from "../../../../components/modal";
 import { GamePlayEvents, GameStatus } from "../../../../types/game";
 import { TeamType } from "../../../../types/teamuser";
+import useButtonSoundEffect from "../../../../hook/useHoverSoundEffect";
 
 // 수비팀 최종 정답 선택 페이지
 // 이 부분은 화면이 모두 공유된다!
@@ -37,6 +38,7 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [countdown, setCountdown] = useState(3);
+    useButtonSoundEffect();
 
     usePageLeave();
 

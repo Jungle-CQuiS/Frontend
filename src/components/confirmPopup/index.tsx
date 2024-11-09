@@ -49,11 +49,11 @@ import { ConfirmPopupBackdrop, ConfirmPopupBase, ConfirmPopupTitle, ConfirmPopup
           <ConfirmPopupMessage>{message}</ConfirmPopupMessage>
           <ConfirmPopupButtonContainer>
             {!isAlert && (
-              <ConfirmPopupCloseButton onClick={onClose}>
+              <ConfirmPopupCloseButton className="click-sound" onClick={onClose}>
                 {closeButtonText}
               </ConfirmPopupCloseButton>
             )}
-            <ConfirmPopupConfirmButton onClick={onConfirm}>
+            <ConfirmPopupConfirmButton className="click-sound" onClick={onConfirm}>
               {confirmButtonText}
             </ConfirmPopupConfirmButton>
           </ConfirmPopupButtonContainer>

@@ -4,12 +4,13 @@ import { PrimaryButtonLong } from "../../components/buttons/styled";
 import { LoginBackground, LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInputWrap, LoginInput, LoginBottomWrap, LoginLinkWrap, LoginLink } from "./styled";
 import { SERVICES } from "../../config/api/constants";
 import { LoginPageProps } from "../../types/user";
+import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
 
 export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  useHoverSoundEffect();
   const handleLogin = async () => {
     if (username && password) {
       try {

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { BlackButtonSmall, SecondaryButtonSmall } from "../../../../components/buttons/styled";
 import { useConfirm } from "../../../../components/confirmPopup";
 import { SingleModeBottomContainer, SingleModeBottomInput, SingleModeBottomInputWrap } from "./styled";
+import useButtonSoundEffect from "../../../../hook/useHoverSoundEffect";
 
 interface SingleModeBottomComponentProps {
     onSubmit?: () => void;
@@ -13,6 +14,7 @@ interface SingleModeBottomComponentProps {
 export const SingleModeBottomComponent = ({ onSubmit, userAnswer, setUserAnswer, isMultipleChoice }: SingleModeBottomComponentProps) => {
     const confirm = useConfirm();
     const navigate = useNavigate();
+    useButtonSoundEffect()
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && onSubmit) {

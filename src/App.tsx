@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import LandingPage from './pages/landing/landing';
@@ -23,6 +23,7 @@ import AddProblemPage from './pages/mypage/addProblem/addProblem';
 import { SingleModePage } from './pages/single/single';
 import SingleModeQuiz from './pages/single/quiz/singleQuiz';
 import { SingleResultPage } from './pages/single/result/singleResult';
+import { BackgroundMusicProvider } from './components/soundEffect/BackgroundMusic';
 
 function App() {
   const [nickname, setNickname] = useState<string | null>(localStorage.getItem("nickname"));
@@ -31,9 +32,10 @@ function App() {
 
   const navBarPaths = ["/login", "/main", "/multi", "/signup", "/", "/mypage", "/mypage/addProblem", "/single"];
   const showNavBar = navBarPaths.includes(location.pathname);
-
+  
   return (
     <>
+     <BackgroundMusicProvider>
       <GlobalStyle />
       {showNavBar && (
         <NavBar
@@ -158,6 +160,7 @@ function App() {
         </Route>
 
       </Routes>
+      </BackgroundMusicProvider>
     </>
   );
 }
