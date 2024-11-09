@@ -1,4 +1,4 @@
-import { createContext,useEffect, useState, useRef, ReactNode } from "react";
+import { createContext, useEffect, useState, useRef, ReactNode } from "react";
 import { OpenVidu, Session, Subscriber, Publisher } from "openvidu-browser";
 
 interface OpenViduContextType {
@@ -70,25 +70,23 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
     };
 
     const joinRoom = async (sessionid: string, token: any, roomUserId: string) => {
-        if (sessionid && token) {
-            try {
-                // 1. 세션 세팅
-                setSessionId(sessionid);
+        try {
+            // 1. 세션 세팅
+            setSessionId(sessionid);
 
-                // 2. 세션 초기화
-                await initOpenViduSession();
+            // 2. 세션 초기화
+            await initOpenViduSession();
 
-                // 3. 세션에 연결
-                if (session) {
-                    console.log("세션 연결시작:" , session);
-                    await session.connect(token, { userId: roomUserId });
-                    console.log("세션 연결 완료" , session);
-                    // 4. 연결 후 스트림 발행 시작
-                    await publishStream();
-                }
-            } catch (error) {
-                console.error('Error:', error);
+            // 3. 세션에 연결
+            if (session) {
+                console.log("세션 연결시작:", session);
+                await session.connect(token, { userId: roomUserId });
+                console.log("세션 연결 완료", session);
+                // 4. 연결 후 스트림 발행 시작
+                await publishStream();
             }
+        } catch (error) {
+            console.error('Error:', error);
         }
     };
 
@@ -96,7 +94,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
     const publishStream = async () => {
         if (session && !publisher && OV.current) {
             try {
-                console.log("퍼블리셔 생성 시작작" , session);
+                console.log("퍼블리셔 생성 시작작", session);
                 const newPublisher = OV.current.initPublisher(undefined, {
                     videoSource: false,      // 비디오 사용 안 함
                     audioSource: undefined,   // 기본 마이크 사용
@@ -106,7 +104,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
 
                 // 스트림 발행 시작
                 await session.publish(newPublisher);
-                console.log("퍼블리셔 발생완료" , session);
+                console.log("퍼블리셔 발생완료", session);
                 setPublisher(newPublisher);
                 if (newPublisher)
                     console.log("<Client> 퍼블리셔 세팅 완료");
