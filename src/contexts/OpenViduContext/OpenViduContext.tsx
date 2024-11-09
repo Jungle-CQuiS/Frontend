@@ -49,7 +49,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
             try {
                 OV.current = new OpenVidu(); // OpenVidu 인스턴스 생성
                 const session = OV.current.initSession(); // 세션 생성
-
+                console.log("session Create", session);
                 // 다른 사용자의 스트림이 생성될 때 발생하는 이벤트 핸들러
                 session.on("streamCreated", (event) => {
                     const subscriber = session.subscribe(event.stream, undefined); // 스트림 구독
