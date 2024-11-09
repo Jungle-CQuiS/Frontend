@@ -50,7 +50,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
     };
 
     const joinRoom = async (sessionid: string, token: any, roomUserId : string) => {
-        if (sessionId && token) {
+        if (sessionid && token) {
             try {
                 // 1. 세션 세팅
                 setSessionId(sessionid);
@@ -84,7 +84,8 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 // 스트림 발행 시작
                 await session.publish(newPublisher);
                 setPublisher(newPublisher);
-
+                if(newPublisher)
+                    console.log("<Client> 퍼블리셔 세팅 완료");
                 // 음소거 상태 관리 등 추가 가능
                 newPublisher.on('streamPlaying', () => {
                     console.log('내 스트림이 재생 중입니다.');
