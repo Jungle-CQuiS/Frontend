@@ -4,6 +4,7 @@ import { defaultTransition } from "../../css";
 export const MultiPageTitle = styled.div`
     display: flex;
     gap: 10px;
+    margin-top: 100px;
 `;
 
 export const MultiPageTitleIcon = styled.img`

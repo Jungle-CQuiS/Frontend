@@ -7,13 +7,6 @@ export const MyPageLeftWrap = styled.div`
 `;
 
 
-export const MyPageLabel = styled.div`
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 16px;
-    color: #333;
-`;
-
 export const MyPageProfileWrap = styled.div`
     display: flex;
     gap: 24px;
