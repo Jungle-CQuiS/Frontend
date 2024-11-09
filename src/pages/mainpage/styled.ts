@@ -1,5 +1,18 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { defaultTransition } from "../../css";
+
+const backgroundMove = keyframes`
+  0% {
+    background-position: center top;
+  }
+  50% {
+    background-position: center 20px; /* 원하는 만큼 이동 */
+  }
+  100% {
+    background-position: center top;
+  }
+`;
+
 
 export const MainPageContainer = styled.div`
   width: 100%;
@@ -14,11 +27,13 @@ export const MainPageContainer = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   overflow: hidden;
+  animation: ${backgroundMove} 3s ease-in-out infinite;
 `;
 
 export const GameModeWrapper = styled.div`
   display: flex;
-  gap: 145px; 
+  gap: 145px;
+  margin-top: 60px;
 `;
 
 export const GameModeButton = styled.div<{ disabled?: boolean }>`

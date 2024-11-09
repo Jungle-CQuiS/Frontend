@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { PrimaryButtonLarge } from "../../components/buttons/styled";
-import { LandingPageContainer, LandingPageText, LandingPageTextContainer, LandingPageTextPrimary, LandingPageTextSecondary, LandingPageTextWrap, LandingPageWrap } from "./styled";
+import { LandingPageContainer, LandingPageText, LandingPageTextContainer, LandingPageTextPrimary, LandingPageTextSecondary, LandingPageTextWrap, LandingPageWrap, WaveLetter } from "./styled";
 import { SERVICES } from "../../config/api/constants";
 import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
 
@@ -27,7 +27,11 @@ export default function LandingPage() {
                     <LandingPageTextContainer>
                         <LandingPageTextWrap>
                             <LandingPageText>공부를 더 &nbsp;</LandingPageText>
-                            <LandingPageTextPrimary>즐겁게</LandingPageTextPrimary>
+                            <LandingPageTextPrimary>
+                                <WaveLetter delay="0s">즐</WaveLetter>
+                                <WaveLetter delay="0.1s">겁</WaveLetter>
+                                <WaveLetter delay="0.2s">게</WaveLetter>
+                            </LandingPageTextPrimary>
                             <LandingPageText>!</LandingPageText>
                         </LandingPageTextWrap>
                         <LandingPageTextWrap>

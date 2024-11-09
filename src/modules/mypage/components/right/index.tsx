@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { MyPageWrap } from "../../../../pages/mypage/styled";
+import { MyPageLabel, MyPageWrap } from "../../../../pages/mypage/styled";
 import { Quiz } from "../../../../types/quiz";
-import { MyPageLabel } from "../left/styled";
 import { MyPageRightWrap, MyPageCategoryContainer, MyPageCategoryTab, MyPageProblemContainer, MyPageProblemWrap, MyPageProblemTitle, MyPageProblemSelectRow, MyPageProblemSelectImg, MyPageProblemSelectText } from "./styled";
 
 export default function MyPageRightSection() {

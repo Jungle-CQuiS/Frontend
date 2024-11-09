@@ -4,7 +4,8 @@ import styled from "styled-components";
 export const AddProblemContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
+    margin-top: 80px;
 `;
 
 export const AddProblemHeader = styled.div`
