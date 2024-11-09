@@ -38,7 +38,7 @@ export const MyPageCategoryTab = styled.div<{ isSelected: boolean }>`
 export const MyPageProblemContainer = styled.div`
     display: flex;
     flex-direction: column;
-    max-height: 560px;
+    max-height: 400px;
     overflow-y: auto;
     background-color: #fff;
     padding: 36px 64px;

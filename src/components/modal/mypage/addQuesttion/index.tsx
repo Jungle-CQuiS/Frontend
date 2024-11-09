@@ -7,6 +7,7 @@ import { Quiz } from "../../../../types/quiz";
 import { useNavigate } from "react-router-dom";
 import { MyPageCategoryContainer, MyPageCategoryTab } from "../../../../modules/mypage/components/right/styled";
 import { useAlert } from "../../../confirmPopup";
+import useButtonSoundEffect from "../../../../hook/useHoverSoundEffect";
 
 interface CreateQuizProps {
     quizData: Quiz[];
@@ -27,6 +28,7 @@ export const AddProblemModal = ({
     const [isQuizDataValid, setIsQuizDataValid] = useState(true);
     const navigate = useNavigate();
     const customAlert = useAlert();
+    useButtonSoundEffect()
 
     useEffect(() => {
         if (props.open) {
@@ -117,6 +119,7 @@ export const AddProblemModal = ({
                 <MyPageCategoryContainer>
                     {["OS", "알고리즘", "네트워크", "자료구조", "데이터베이스"].map((category) => (
                         <MyPageCategoryTab
+                            className="click-sound"
                             key={category}
                             isSelected={selectedCategory === category}
                             onClick={() => handleCategoryClick(category)}
@@ -136,6 +139,7 @@ export const AddProblemModal = ({
                                 {filteredQuizData.length > 0 ? (filteredQuizData.map((quiz) => (
                                     <CreateQuiz key={quiz.quizName}>
                                         <CreateQuizCheckbox
+                                            className="click-sound"
                                             src={selectedProblems.some(q => q.quizName === quiz.quizName) ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
                                             onClick={() => handleQuizSelection(quiz)}
                                         />
