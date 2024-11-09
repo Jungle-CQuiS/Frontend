@@ -52,7 +52,7 @@ export const useRoom = (roomId: string) => {
             // session과 토큰을 받아서 세팅해준다.
             setRoomUserIdWithState(data.data.roomUserId);  // context에 roomUserId 업데이트
             setRoomId(roomId); // Context에 roomId 업데이트
-            joinRoom(data.data.session, data.data.token, data.data.roomUserId);
+            joinRoom(data.data.sessionId, data.data.token, data.data.roomUserId);
             console.log("<Response> roomUSerID :", data.data.roomUserId)
         } catch (e) {
             const errorMessage = e instanceof Error ? e.message : String(e);
