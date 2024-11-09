@@ -54,13 +54,19 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
     }
   };
 
+  const handleGoogleLogin = async () => {
+    const redirectUrl = `${window.location.protocol}//${window.location.host}/login/oauth2/code/google`;
+
+    window.location.href = redirectUrl;
+  }
+
   return (
     <>
       <LoginBackground>
         <LoginContainer>
           <LoginTitle>Log In</LoginTitle>
           <LoginWrap>
-            <LoginWithGoogle><img src="/icons/google.svg" alt="Google" />구글 계정으로 로그인</LoginWithGoogle>
+            <LoginWithGoogle onClick={handleGoogleLogin}><img src="/icons/google.svg" alt="Google" />구글 계정으로 로그인</LoginWithGoogle>
             <LoginDividerWrap>
               <LoginLine></LoginLine>
               <LoginText>OR</LoginText>
