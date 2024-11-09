@@ -48,21 +48,21 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
         if (OV.current === null) {
             try {
                 OV.current = new OpenVidu(); // OpenVidu 인스턴스 생성
-                const session = OV.current.initSession(); // 세션 생성
+                const newsession = OV.current.initSession(); // 세션 생성
                 console.log("session Create", session);
                 // 다른 사용자의 스트림이 생성될 때 발생하는 이벤트 핸들러
-                session.on("streamCreated", (event) => {
-                    const subscriber = session.subscribe(event.stream, undefined); // 스트림 구독
+                newsession.on("streamCreated", (event) => {
+                    const subscriber = newsession.subscribe(event.stream, undefined); // 스트림 구독
                     setSubscribers((prev) => [...prev, subscriber]); // 구독자를 state에 추가
                     console.log("세션생성완료");
                 });
 
-                session.on('streamDestroyed', (event) => {
+                newsession.on('streamDestroyed', (event) => {
                     // 참가자가 나갔을 때 처리
                 });
 
                 // 세션 설정 완료, state에 세션 저장
-                setSession(session);
+                setSession(newsession);
             } catch (error) {
                 console.error("Failed to initialize session", error);
             }
