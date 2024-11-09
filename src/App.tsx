@@ -16,6 +16,7 @@ import { StompProvider } from './contexts/StompContext';
 import { GameStateProvider } from './contexts/GameStateContext/GameStateContext';
 import { TeamStateProvider } from './contexts/TeamStateContext/TeamStateContext';
 import { GameUserProvider } from './contexts/GameUserContext/GameUserContext';
+import { OpenViduProvider } from './contexts/OpenViduContext/OpenViduContext';
 import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
 import MyPage from './pages/mypage/mypage';
@@ -113,9 +114,11 @@ function App() {
           <GameStateProvider>
             <TeamStateProvider>
               <GameUserProvider>
-                <StompProvider>
-                  <Outlet />
-                </StompProvider>
+                <OpenViduProvider>
+                  <StompProvider>
+                    <Outlet />
+                  </StompProvider>
+                </OpenViduProvider>
               </GameUserProvider>
             </TeamStateProvider>
           </GameStateProvider>
@@ -125,9 +128,7 @@ function App() {
             path="/room/:id"
             element={
               <ProtectedRoute>
-
                 <Room />
-
               </ProtectedRoute>
             }
           />
