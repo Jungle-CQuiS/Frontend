@@ -1,7 +1,7 @@
 import { PrimaryButtonMiddle, SecondaryButtonShort } from "../../../components/buttons/styled";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 import { RoomButtonWrap } from "../../../pages/multi/room/styled";
-
+import { useGameState } from "../../../contexts/GameStateContext/useGameState";
 
 interface RoomButtonsProps {
   MultiReadyButton: (userRoomId: string) => void;
@@ -12,7 +12,7 @@ export const RoomButtons = ({
   MultiReadyButton,
   MultiExitButton
 }: RoomButtonsProps) => {
-  const roomUserId = localStorage.getItem("roomUserId");
+  const {roomUserId} = useGameState();
   useButtonSoundEffect();
   
   const handleReadyClick = () => {
