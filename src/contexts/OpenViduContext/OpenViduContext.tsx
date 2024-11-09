@@ -1,15 +1,16 @@
-import { createContext, useState, useRef, ReactNode } from "react";
+import { createContext,useEffect, useState, useRef, ReactNode } from "react";
 import { OpenVidu, Session, Subscriber, Publisher } from "openvidu-browser";
 
 interface OpenViduContextType {
     session: Session | null;
     publisher: Publisher | null;
     subscribers: Subscriber[];
-
-    joinRoom: (sessionid: string, token: any , roomUserId :string) => void;
+    // Voice
+    isSpeaking: boolean;
+    joinRoom: (sessionid: string, token: any, roomUserId: string) => void;
     publishStream: () => void;
     unpublishStream: () => void;
-    disconnectSession : () => void;
+    disconnectSession: () => void;
 }
 
 const OpenViduContext = createContext<OpenViduContextType | null>(null);
@@ -24,6 +25,23 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [publisher, setPublisher] = useState<Publisher | null>(null); // 자신의 미디어 퍼블리셔
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]); // 다른 사용자의 미디어 구독자
+    const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+    // Team Voice
+    useEffect(() => {
+        if (publisher) {
+            // 자신의 음성 감지
+            publisher.on('publisherStartSpeaking', (event: any) => {
+                setIsSpeaking(true);
+                console.log('내가 말하기 시작함');
+            });
+
+            publisher.on('publisherStopSpeaking', (event: any) => {
+                setIsSpeaking(false);
+                console.log('내가 말하기 멈춤');
+            });
+        }
+    }, [publisher]);
+
 
     // session을 초기화한다.
     const initOpenViduSession = async () => {
@@ -50,7 +68,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
         }
     };
 
-    const joinRoom = async (sessionid: string, token: any, roomUserId : string) => {
+    const joinRoom = async (sessionid: string, token: any, roomUserId: string) => {
         if (sessionid && token) {
             try {
                 // 1. 세션 세팅
@@ -85,7 +103,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 // 스트림 발행 시작
                 await session.publish(newPublisher);
                 setPublisher(newPublisher);
-                if(newPublisher)
+                if (newPublisher)
                     console.log("<Client> 퍼블리셔 세팅 완료");
                 // 음소거 상태 관리 등 추가 가능
                 newPublisher.on('streamPlaying', () => {
@@ -109,7 +127,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
     };
 
     const disconnectSession = () => {
-        if(session)
+        if (session)
             session.disconnect();
 
         unpublishStream();
@@ -124,6 +142,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 session,
                 publisher,
                 subscribers,
+                isSpeaking,
                 joinRoom,
                 publishStream,   // 음성 채팅 시작
                 unpublishStream,  // 음성 채팅 중단
