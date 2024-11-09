@@ -79,7 +79,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                         "uuid": `${userUuid}`,
                         "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
                         "Accept": "application/json"
-                    }
+                    },
                 });
 
                 if (response.ok) {

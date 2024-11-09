@@ -8,6 +8,7 @@ export const Background = styled.div`
   align-items: center;
   flex-direction: column;
   padding-top: 32px;
+  padding-bottom: 80px;
   background-image: url('/images/game-background.png');
   background-size: cover;
   background-position: center;

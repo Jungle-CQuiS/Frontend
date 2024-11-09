@@ -6,6 +6,7 @@ import { SingleModeQuizTimeAttack } from "../../../modules/single/components/qui
 import { SingleGradingPage } from "../result/grading/singleGrading";
 import useSingleModeExit from "../../../hook/useSingleModeExit";
 import { SingleModeQuizMultiple } from "../../../modules/single/components/quiz/multipleChoice";
+import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 
 export default function SingleModeQuiz() {
     const location = useLocation();
@@ -18,7 +19,7 @@ export default function SingleModeQuiz() {
     const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
     const [results, setResults] = useState<{ [key: string]: { correct: number; total: number } }>({});
     const [incorrectQuestionIds, setIncorrectQuestionIds] = useState<number[]>([]);
-
+    useButtonSoundEffect()
     useSingleModeExit();
     const currentQuiz = quizData[currentQuestionIndex];
 

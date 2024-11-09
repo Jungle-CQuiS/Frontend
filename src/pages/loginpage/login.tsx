@@ -4,12 +4,13 @@ import { PrimaryButtonLong } from "../../components/buttons/styled";
 import { LoginBackground, LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInputWrap, LoginInput, LoginBottomWrap, LoginLinkWrap, LoginLink } from "./styled";
 import { SERVICES } from "../../config/api/constants";
 import { LoginPageProps } from "../../types/user";
+import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
 
 export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  useHoverSoundEffect();
   const handleLogin = async () => {
     if (username && password) {
       try {
@@ -54,13 +55,19 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
     }
   };
 
+  const handleGoogleLogin = async () => {
+    const redirectUrl = `${window.location.protocol}//dev.${window.location.host}/login/oauth2/code/google`;
+
+    window.location.href = redirectUrl;
+  }
+
   return (
     <>
       <LoginBackground>
         <LoginContainer>
           <LoginTitle>Log In</LoginTitle>
           <LoginWrap>
-            <LoginWithGoogle><img src="/icons/google.svg" alt="Google" />구글 계정으로 로그인</LoginWithGoogle>
+            <LoginWithGoogle onClick={handleGoogleLogin}><img src="/icons/google.svg" alt="Google" />구글 계정으로 로그인</LoginWithGoogle>
             <LoginDividerWrap>
               <LoginLine></LoginLine>
               <LoginText>OR</LoginText>

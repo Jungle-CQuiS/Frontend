@@ -19,6 +19,14 @@ export const SingleModeQuizMultiple = ({ quizData, onSubmit }: SingleModeQuizPro
         }
     };
 
+    if (!quizData || quizData.length <= 5) {
+        return (
+            <SingleModeQuizContainer>
+                <div>해당되는 문제가 없습니다</div>
+            </SingleModeQuizContainer>
+        );
+    }
+
     return (
         <SingleModeQuizContainer>
             <HeaderTagComponent type="객관식" />
