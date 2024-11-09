@@ -1,4 +1,4 @@
-import { createContext,useEffect, useState, useRef, ReactNode } from "react";
+import { createContext, useEffect, useState, useRef, ReactNode } from "react";
 import { OpenVidu, Session, Subscriber, Publisher } from "openvidu-browser";
 
 interface OpenViduContextType {
@@ -48,21 +48,22 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
         if (OV.current === null) {
             try {
                 OV.current = new OpenVidu(); // OpenVidu 인스턴스 생성
-                const newsession = OV.current.initSession(); // 세션 생성
+                const session = OV.current.initSession(); // 세션 생성
                 console.log("session Create", session);
+
                 // 다른 사용자의 스트림이 생성될 때 발생하는 이벤트 핸들러
-                newsession.on("streamCreated", (event) => {
-                    const subscriber = newsession.subscribe(event.stream, undefined); // 스트림 구독
+                session.on("streamCreated", (event) => {
+                    const subscriber = session.subscribe(event.stream, undefined); // 스트림 구독
                     setSubscribers((prev) => [...prev, subscriber]); // 구독자를 state에 추가
                     console.log("세션생성완료");
                 });
 
-                newsession.on('streamDestroyed', (event) => {
+                session.on('streamDestroyed', (event) => {
                     // 참가자가 나갔을 때 처리
                 });
 
                 // 세션 설정 완료, state에 세션 저장
-                setSession(newsession);
+                setSession(session);
             } catch (error) {
                 console.error("Failed to initialize session", error);
             }
@@ -78,11 +79,13 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 // 2. 세션 초기화
                 await initOpenViduSession();
                 console.log("session Create 완료", session);
+
                 // 3. 세션에 연결
                 if (session) {
-                    console.log("세션 연결시작:" , session);
+                    console.log("세션 연결시작:", session);
                     await session.connect(token, { userId: roomUserId });
-                    console.log("세션 연결 완료" , session);
+                    console.log("세션 연결 완료", session);
+
                     // 4. 연결 후 스트림 발행 시작
                     await publishStream();
                 }
@@ -91,12 +94,12 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
             }
         }
     };
-
+    
     // 스트림 발행 (음성 채팅 시작)
     const publishStream = async () => {
         if (session && !publisher && OV.current) {
             try {
-                console.log("퍼블리셔 생성 시작작" , session);
+                console.log("퍼블리셔 생성 시작작", session);
                 const newPublisher = OV.current.initPublisher(undefined, {
                     videoSource: false,      // 비디오 사용 안 함
                     audioSource: undefined,   // 기본 마이크 사용
@@ -106,7 +109,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
 
                 // 스트림 발행 시작
                 await session.publish(newPublisher);
-                console.log("퍼블리셔 발생완료" , session);
+                console.log("퍼블리셔 발생완료", session);
                 setPublisher(newPublisher);
                 if (newPublisher)
                     console.log("<Client> 퍼블리셔 세팅 완료");
