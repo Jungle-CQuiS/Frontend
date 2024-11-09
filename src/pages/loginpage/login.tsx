@@ -55,7 +55,7 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
   };
 
   const handleGoogleLogin = async () => {
-    const redirectUrl = `${window.location.protocol}//${window.location.host}/login/oauth2/code/google`;
+    const redirectUrl = `${window.location.protocol}//dev.${window.location.host}/login/oauth2/code/google`;
 
     window.location.href = redirectUrl;
   }
