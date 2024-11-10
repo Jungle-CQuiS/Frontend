@@ -37,7 +37,7 @@ export const StompProvider = ({ children }: StompProviderProps) => {
             connectHeaders: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${accessToken}`,
-                "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+                "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
                 uuid: userUuid,
             },
             debug: (str) => {

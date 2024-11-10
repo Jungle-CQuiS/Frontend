@@ -45,7 +45,7 @@ export const SingleModeSelectModal = ({
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
-                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+                    "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
                 },
                 body: JSON.stringify(requistData),
             });

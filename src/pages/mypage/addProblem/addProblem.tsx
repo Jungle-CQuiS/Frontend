@@ -60,7 +60,7 @@ export default function AddProblemPage() {
                 headers: {
                     "Authorization": `Bearer ${userAccessToken}`,
                     "uuid": `${userUuid}`,
-                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+                    "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({

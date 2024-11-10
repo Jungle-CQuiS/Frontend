@@ -41,7 +41,7 @@ export const useRoom = (roomId: string) => {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
                         "uuid": `${userUuid}`,
-                        "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+                        "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
                     },
                     body: JSON.stringify({
                         "uuid": `${userUuid}`

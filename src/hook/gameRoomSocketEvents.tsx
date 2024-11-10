@@ -326,7 +326,7 @@ export const gameRoomSocketEvents = {
             destination: destination,
             headers: {
                 'Authorization': `Bearer ${userAccessToken}`,  // 토큰 추가
-                "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+                "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(message)

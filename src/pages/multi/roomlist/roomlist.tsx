@@ -47,7 +47,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`, // 토큰 추가
-                        "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+                        "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
                     },
                 });
 
@@ -95,7 +95,7 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
-                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+                    "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
                 },
             });
 
