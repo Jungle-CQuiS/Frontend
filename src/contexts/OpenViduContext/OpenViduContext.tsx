@@ -81,9 +81,16 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
             const session = await initOpenViduSession();
             console.log('세션 생성됨', session);
 
-            console.log('연결 시도', { token, roomUserId });
-            await session.connect(token, { clientData: JSON.stringify({ userId: roomUserId }) });
-            console.log('연결 성공');
+            // 토큰 형식을 OpenVidu가 기대하는 형태로 변경
+            const fullToken = `wss://voice.cquis.net:4443?sessionId=${sessionid}&token=${token}`;
+
+            console.log('연결 시도', {
+                originalToken: token,
+                fullToken: fullToken,
+                roomUserId
+            });
+
+            await session.connect(fullToken, { userId: roomUserId });
 
             await publishStream(session);
         } catch (error) {
