@@ -15,22 +15,11 @@ export const GameStartCountDownModal = ({
     handleStopReady,
     ...props
 }: CountDownModalProps) => {
-    const roomUserId = localStorage.getItem("roomUserId");
-    useEffect(() => {
-        const handleLock = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
-                event.preventDefault();
-            }
-        };
-        window.addEventListener("keydown", handleLock);
-        return () => {
-            window.removeEventListener("keydown", handleLock);
-        }
-    }, []);
+    const uuid = localStorage.getItem("uuid");
 
     const stopReadyHandler = async () => {
-        if (roomUserId !== null) {
-            await handleStopReady(roomUserId);
+        if (uuid !== null) {
+            await handleStopReady(uuid);
         }
         // TODO: 모달 창 닫히도록 추가
         if (props.onClose) {

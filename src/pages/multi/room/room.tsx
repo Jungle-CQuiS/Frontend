@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useNavigationType } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
@@ -58,7 +58,6 @@ export default function Room() {
   }, [isAllReady]);
 
   const handleStopReady = async () => {
-    await SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY;
     userReady();
   };
 
@@ -67,9 +66,9 @@ export default function Room() {
     if (isCoinAnimation) {
       const animationTimer = setTimeout(() => {
         setIsCoinAnimation(false);
-       
+
         setIsFirstAttackModalOpen(true);
-      }, 5000);
+      }, 3000);
       return () => clearTimeout(animationTimer);
     }
   }, [isCoinAnimation]);
@@ -96,7 +95,7 @@ export default function Room() {
 
       if (response.ok) {
         const data = await response.json();
-        const selectedTeam = data.data.teamColor ===  "BLUE" ?'1팀' : '2팀';   // 백엔드에서 랜덤 받아와야 할 듯!
+        const selectedTeam = data.data.teamColor === "BLUE" ? '1팀' : '2팀';   // 백엔드에서 랜덤 받아와야 할 듯!
         setFirstAttackTeam(selectedTeam);
       }
 
@@ -106,7 +105,7 @@ export default function Room() {
   }
 
   if (!isTeamsLoaded) {
-    return <LoadingScreen/>;
+    return <LoadingScreen />;
   }
   return (
     <Background>
@@ -136,7 +135,7 @@ export default function Room() {
         backdrop={true}
       />}
 
-      {isCoinAnimation && (
+      {isAllReady && isCoinAnimation && (
         <FlipCoinBackdrop>
           <FlipCoinScreen>
             <FlipCoin />
@@ -144,7 +143,7 @@ export default function Room() {
         </FlipCoinBackdrop>
       )}
 
-      {isFirstAttackModalOpen && firstAttackTeam && (
+      {isAllReady && isFirstAttackModalOpen && firstAttackTeam && (
         <FirstAttackModal
           team={firstAttackTeam}
           onClose={() => {

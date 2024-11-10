@@ -48,7 +48,7 @@ export const AddProblemModal = ({
     };
 
     const handleSelectAll = () => {
-        const filteredQuizData = quizData.filter(quiz => Array.isArray(quiz.categoryType) && quiz.categoryType.includes(selectedCategory));
+        const filteredQuizData = quizData.filter(quiz => quiz.categoryType === selectedCategory && quiz.categoryType.includes(selectedCategory));
         if (selectedProblems.length === filteredQuizData.length) {
             setSelectedProblems([]); // 전체 선택 해제
         } else {
@@ -119,7 +119,7 @@ export const AddProblemModal = ({
         window.location.reload();
     };
 
-    const filteredQuizData = quizData.filter(quiz => Array.isArray(quiz.categoryType) && quiz.categoryType.includes(selectedCategory));
+    const filteredQuizData = quizData.filter(quiz => quiz.categoryType === selectedCategory);
 
     return (
         <Modal {...props} open={props.open} onClose={onClose} onDone={onDone} >
