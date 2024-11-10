@@ -20,7 +20,7 @@ export function usePageLeave() {
                 event.preventDefault();
                 event.returnValue = '';
                 const confirmed = await customConfirm('정말 나가시겠습니까?');
-                if (confirmed) {
+                if (confirmed && roomUserId) {
                     readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
                     navigate(SERVICES.MULTI);
                 }

@@ -54,7 +54,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
 
     const handleLeaveRoom = async () => {
         const confirmed = await customConfirm("정말 나가시겠습니까?");
-        if (confirmed) {
+        if (confirmed && roomUserId) {
             console.log("나감");  // TODO: 방 나감
             readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
 

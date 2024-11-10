@@ -131,8 +131,9 @@ export const MultiModeResultPage = () => {
         <MultiResultButtonWrap>
           <SecondaryButtonSmall
             onClick={() => {
+              if(roomUserId){
               readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
-              navigate(SERVICES.MULTI);
+              navigate(SERVICES.MULTI);}
             }}
           >나가기</SecondaryButtonSmall>
           <BlackButtonSmall>한번 더 하기</BlackButtonSmall>

@@ -131,8 +131,9 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
                 <AnswerSelectComponent selectedQuiz={selectedQuiz} userAnswers={userAnswers} />
                 <SelectAnswerButtonWrap>
                     <SecondaryButtonSmall onClick={() => {
+                        if(roomUserId){
                         readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
-                        navigate(SERVICES.MULTI);
+                        navigate(SERVICES.MULTI);}
                     }}>나가기</SecondaryButtonSmall>
                     <BlackButtonSmall onClick={submitFinalAnswerSelect}>선택완료</BlackButtonSmall>
                 </SelectAnswerButtonWrap>
