@@ -84,7 +84,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
 
                     // 3. 세션에 연결
                     console.log("세션 연결시작:", session);
-                    await session.connect(token, { userId: roomUserId });
+                    await session.connect(token, { userId: `${roomUserId}` });
                     console.log("세션 연결 완료", session);
 
                     // 4. 연결 후 스트림 발행 시작
