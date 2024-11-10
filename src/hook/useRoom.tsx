@@ -29,35 +29,56 @@ export const useRoom = (roomId: string) => {
     }, []);
 
     const joinUserRoom = async (): Promise<void> => {
-        try {
-            const token = localStorage.getItem("AccessToken");
-            const response = await fetch('/api/quiz/multi/rooms/join', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, // 토큰 추가
-                    "uuid": `${userUuid}`,
-                    "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
-                },
-                body: JSON.stringify({
-                    "uuid": `${userUuid}`
-                })
-            });
+        const maxRetries = 3;  // 최대 재시도 횟수
+        const retryDelay = 1000;  // 재시도 간격 (1초)
 
-            if (!response.ok) {
-                console.log(response);
-                throw new Error(`HTTP error! status: ${response.status}`);
+        const attemptFetch = async (retryCount: number): Promise<void> => {
+            try {
+                const token = localStorage.getItem("AccessToken");
+                const response = await fetch('/api/quiz/multi/rooms/join', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                        "uuid": `${userUuid}`,
+                        "RefreshToken": `${localStorage.getItem("RefreshToken")}`,
+                    },
+                    body: JSON.stringify({
+                        "uuid": `${userUuid}`
+                    })
+                });
+
+                if (!response.ok) {
+                    console.log('Response error:', response);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setRoomUserIdWithState(data.data.roomUserId);
+                setRoomId(roomId);
+                joinRoom(data.data.sessionId, data.data.token, data.data.roomUserId);
+                console.log("<Response> roomUSerID :", data.data.roomUserId);
+
+            } catch (e) {
+                const errorMessage = e instanceof Error ? e.message : String(e);
+                console.error(`Fetch attempt ${retryCount + 1} failed:`, errorMessage);
+
+                if (retryCount < maxRetries - 1) {
+                    console.log(`Retrying in ${retryDelay / 1000} seconds... (${retryCount + 1}/${maxRetries})`);
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                    return attemptFetch(retryCount + 1);
+                } else {
+                    console.error("Max retry attempts reached");
+                    throw e;
+                }
             }
+        };
 
-            const data = await response.json();
-            // session과 토큰을 받아서 세팅해준다.
-            setRoomUserIdWithState(data.data.roomUserId);  // context에 roomUserId 업데이트
-            setRoomId(roomId); // Context에 roomId 업데이트
-            joinRoom(data.data.sessionId, data.data.token, data.data.roomUserId);
-            console.log("<Response> roomUSerID :", data.data.roomUserId)
+        try {
+            await attemptFetch(0);
         } catch (e) {
             const errorMessage = e instanceof Error ? e.message : String(e);
-            console.error("Fetching roomUuid failed:", errorMessage);
+            console.error("All fetch attempts failed:", errorMessage);
             throw e;
         }
     };
