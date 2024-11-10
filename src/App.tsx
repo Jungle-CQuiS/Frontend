@@ -25,6 +25,7 @@ import { SingleModePage } from './pages/single/single';
 import SingleModeQuiz from './pages/single/quiz/singleQuiz';
 import { SingleResultPage } from './pages/single/result/singleResult';
 import { BackgroundMusicProvider } from './components/soundEffect/BackgroundMusic';
+import VolumeSlider from './components/soundEffect/VolumeSlider';
 
 function App() {
   const [nickname, setNickname] = useState<string | null>(localStorage.getItem("nickname"));
@@ -161,6 +162,7 @@ function App() {
           </Route>
 
         </Routes>
+        <VolumeSlider />
       </BackgroundMusicProvider>
     </>
   );

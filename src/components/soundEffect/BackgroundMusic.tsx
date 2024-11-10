@@ -1,21 +1,26 @@
-import React, { createContext, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const BackgroundMusicContext = createContext<HTMLAudioElement | null>(null);
+const BackgroundMusicContext = createContext<{
+  audio: HTMLAudioElement | null;
+  setVolume: (volume: number) => void;
+} | null>(null);
 
 export const BackgroundMusicProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const location = useLocation();
+  
+  // localStorage에서 볼륨 불러오기 (없으면 0.1로 초기 설정)
+  const initialVolume = parseFloat(localStorage.getItem('backgroundVolume') || '0.1');
+  const [volume, setVolume] = useState(initialVolume);
 
   useEffect(() => {
     if (!audioRef.current) {
-      // 새로 Audio 객체를 생성해서 ref에 할당
       audioRef.current = new Audio('/sounds/Aquarium.mp3');
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.1;
+      audioRef.current.volume = volume;
     }
 
-    // 새로고침 시에도 항상 클릭 이벤트를 추가
     const handleUserInteraction = () => {
       audioRef.current?.play().catch(error => {
         console.error("오디오 재생 실패:", error);
@@ -24,7 +29,6 @@ export const BackgroundMusicProvider: React.FC<{ children: React.ReactNode }> = 
 
     document.addEventListener("click", handleUserInteraction);
 
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       document.removeEventListener("click", handleUserInteraction);
     };
@@ -33,34 +37,39 @@ export const BackgroundMusicProvider: React.FC<{ children: React.ReactNode }> = 
   useEffect(() => {
     const audio = audioRef.current;
     if (audio) {
-      // 페이지에 따라 배경음악을 변경하고 자동 재생 시도
+      const setNewAudioSource = (src: string) => {
+        if (audio.src !== window.location.origin + src) {
+          audio.src = src;
+          audio.load();
+          audio.play().catch(error => console.error("오디오 재생 실패:", error));
+        }
+      };
+
       if (location.pathname.startsWith("/single")) {
-        if (audio.src !== window.location.origin + "/sounds/Aquaroad.mp3") {
-          audio.src = "/sounds/Aquaroad.mp3";
-          audio.load(); // src 변경 시 load() 호출하여 새로운 파일을 불러옴
-          audio.play().catch(error => console.error("오디오 재생 실패:", error));
-        }
-        audio.volume = 0.1;
+        setNewAudioSource("/sounds/Aquaroad.mp3");
       } else if (location.pathname.startsWith("/room/") || location.pathname.startsWith("/multi/")) {
-        if (audio.src !== window.location.origin + "/sounds/where_stars_rest.mp3") {
-          audio.src = "/sounds/where_stars_rest.mp3";
-          audio.load();
-          audio.play().catch(error => console.error("오디오 재생 실패:", error));
-        }
-        audio.volume = 0.02;
+        setNewAudioSource("/sounds/where_stars_rest.mp3");
       } else {
-        if (audio.src !== window.location.origin + "/sounds/Aquarium.mp3") {
-          audio.src = "/sounds/Aquarium.mp3";
-          audio.load();
-          audio.play().catch(error => console.error("오디오 재생 실패:", error));
-        }
-        audio.volume = 0.1;
+        setNewAudioSource("/sounds/Aquarium.mp3");
       }
     }
   }, [location]);
 
+  // 볼륨이 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+      localStorage.setItem('backgroundVolume', volume.toString());
+    }
+  }, [volume]);
+
   return (
-    <BackgroundMusicContext.Provider value={audioRef.current}>
+    <BackgroundMusicContext.Provider
+      value={{
+        audio: audioRef.current,
+        setVolume,
+      }}
+    >
       {children}
     </BackgroundMusicContext.Provider>
   );
