@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import { useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { readyRoomSocketEvents } from './readyRoomSocketEvent';
 import { useNavigate } from 'react-router-dom';
 import { SERVICES } from '../config/api/constants';
@@ -13,9 +13,11 @@ export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { joinRoom , disconnectSession} = useOpenViduContext();
-    const { gameState, isAllReady, roomUserId ,
-        handleReadyRoomEvent, setRoomUserIdWithState, setRoomId  } = useGameState();
+    const { joinRoom, disconnectSession } = useOpenViduContext();
+    const { gameState, isAllReady, roomUserId,
+        handleReadyRoomEvent, setRoomUserIdWithState, setRoomId } = useGameState();
+    // ref를 사용하여 초기화 여부 추적
+    const isInitialized = useRef(false);
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
 
@@ -89,9 +91,9 @@ export const useRoom = (roomId: string) => {
 
     const exitRoom = async () => {
         try {
-            if(roomUserId)
-                await readyRoomSocketEvents.userExitRoom(stompClient, roomId,roomUserId); // 수정 요!
-            else{
+            if (roomUserId)
+                await readyRoomSocketEvents.userExitRoom(stompClient, roomId, roomUserId); // 수정 요!
+            else {
                 console.error('Room exit failed: no roomUserId');
             }
 
@@ -106,9 +108,9 @@ export const useRoom = (roomId: string) => {
 
     const userReady = async () => {
         try {
-            if(roomUserId)
+            if (roomUserId)
                 await readyRoomSocketEvents.updateUserState(stompClient, roomId, roomUserId);
-            else{
+            else {
                 console.error('User Ready failed:no roomUserId');
             }
         } catch (error) {
@@ -119,9 +121,9 @@ export const useRoom = (roomId: string) => {
 
     const teamSwitch = async (clickedTeam: string) => {
         try {
-            if(roomUserId)
+            if (roomUserId)
                 await readyRoomSocketEvents.changeUserTeam(stompClient, roomId, roomUserId);
-            else{
+            else {
                 console.error('Team switch failed: no roomUserId');
             }
         } catch (error) {
@@ -147,7 +149,7 @@ export const useRoom = (roomId: string) => {
             // 또는 다른 에러 처리
         }
 
-        
+
 
 
         // Navigate Game Page
@@ -163,32 +165,32 @@ export const useRoom = (roomId: string) => {
 
 
     useEffect(() => {
-        // 게임 준비 상태일 때만. 해당 훅을 실행한다.
-        if (gameState !== GameStatus.ENTER) return;
-        if (Connected.current) return;
+
+
+        if (gameState !== GameStatus.ENTER || isInitialized.current) return;
 
         const initializeRoom = async () => {
             try {
+                isInitialized.current = true;
+  
                 handleReadyRoomEvent(GameReadyEvents.ENTER);
-                await enterRoom(); // Active Socket Protocol
+
+                await enterRoom();
                 await joinUserRoom();
                 handleReadyRoomEvent(GameReadyEvents.LOADING);
             } catch (error) {
                 console.error('Room initialization failed:', error);
                 handleReadyRoomEvent(GameReadyEvents.ENTER);
+                isInitialized.current = false;
             }
         };
 
-        if(roomUserId === null)
-            initializeRoom();
-        else{
-            handleReadyRoomEvent(GameReadyEvents.ENTER);
-        }
-        
+        initializeRoom();
 
         return () => {
+            isInitialized.current = false;
         };
-    }, []);
+    }, [roomId]);
 
     return {
         teamOneUsers,

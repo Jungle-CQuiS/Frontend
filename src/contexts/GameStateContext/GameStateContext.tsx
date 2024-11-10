@@ -52,7 +52,7 @@ const GameStateContext = createContext<GameStateContextType | null>(null);
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [isAllReady, setIsAllReady] = useState(false);
     const [gameState, setGameState] = useState<GameStatus>(GameStatus.ENTER);
-    const [roomUserId, setRoomUserID] = useState<string>("none");
+    const [roomUserId, setRoomUserID] = useState<string | null>(null);
     const [roomUserIdError, setroomUserIdError] = useState<string | null>(null);
     const [_roomId, set_RoomId] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
