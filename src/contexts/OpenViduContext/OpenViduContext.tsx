@@ -32,7 +32,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
             // 자신의 음성 감지
             publisher.on('publisherStartSpeaking', (event: any) => {
                 setIsSpeaking(true);
-                console.log('내가 말하기 시작함');
+                console.log('내가 말하기 시작함', publisher.stream.getMediaStream()?.getAudioTracks());
             });
 
             publisher.on('publisherStopSpeaking', (event: any) => {
@@ -59,12 +59,20 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
             const session = OV.current.initSession();
             console.log("session Create", session);
 
+            session.on('streamPropertyChanged', (event) => {
+                if (event.changedProperty === 'audioActive') {
+                    console.log('Audio state changed:', event);
+                }
+            });
+
+
+
             // 이벤트 핸들러 설정
             session.on("streamCreated", (event) => {
                 const subscriber = session.subscribe(event.stream, undefined,
-                   { subscribeToAudio: true}
+                    { subscribeToAudio: true }
                 );
-                //subscriber.subscribeToAudio(true);
+                console.log('Stream audio active:', event.stream.audioActive);
                 setSubscribers((prev) => [...prev, subscriber]);
                 console.log("스트림 생성됨");
             });
@@ -104,7 +112,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
 
             await session.connect(fullToken, {
                 clientData: JSON.stringify({
-                    username : roomUserId,
+                    username: roomUserId,
                     roomUserId: roomUserId  // subscriber에서 사용할 데이터
                 }),
                 audio: true,
@@ -131,11 +139,14 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                     publishVideo: false,     // 비디오 비활성화
 
 
+
                 });
 
                 // 스트림 발행 시작
                 await session.publish(newPublisher);
                 console.log("퍼블리셔 발생완료", session);
+                console.log('Audio Tracks:', newPublisher.stream.getMediaStream().getAudioTracks());
+                console.log('Audio Active:', newPublisher.stream.audioActive);
                 setPublisher(newPublisher);
                 if (newPublisher)
                     console.log("<Client> 퍼블리셔 세팅 완료");
@@ -150,6 +161,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 newPublisher.on('streamCreated', () => {
                     console.log('내 스트림이 생성되었스니다입니다.');
                 });
+
             } catch (error) {
                 console.error('스트림 발행 실패:', error);
             }

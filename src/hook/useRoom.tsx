@@ -13,7 +13,7 @@ export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
-    const { joinRoom, disconnectSession } = useOpenViduContext();
+   // const { joinRoom, disconnectSession } = useOpenViduContext();
     const { gameState, isAllReady, roomUserId,
         handleReadyRoomEvent, setRoomUserIdWithState, setRoomId } = useGameState();
     const [hasJoinedRoom, setHasJoinedRoom] = useState(false);
@@ -56,7 +56,7 @@ export const useRoom = (roomId: string) => {
                 const data = await response.json();
                 setRoomUserIdWithState(data.data.roomUserId);
                 setRoomId(roomId);
-                joinRoom(data.data.sessionId, data.data.token, data.data.roomUserId);
+                //joinRoom(data.data.sessionId, data.data.token, data.data.roomUserId);
                 console.log("<Response> roomUSerID :", data.data.roomUserId);
 
             } catch (e) {
@@ -113,7 +113,7 @@ export const useRoom = (roomId: string) => {
         try {
             if (roomUserId){
                 await readyRoomSocketEvents.userExitRoom(stompClient, roomId, roomUserId); // 수정 요!
-                disconnectSession(); // session 해제
+                //disconnectSession(); // session 해제
                 navigate(SERVICES.MULTI);
             }
             else {

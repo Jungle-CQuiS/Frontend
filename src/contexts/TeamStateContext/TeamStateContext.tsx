@@ -23,7 +23,7 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
     const [attackTeam, setAttackTeam] = useState<TeamType | null>(null);
 
     // Team Voice
-    const { subscribers } = useOpenViduContext();
+    //const { subscribers } = useOpenViduContext();
 
     // Team HP
     const [teamOneHealth, setTeamOneHealth] = useState(3);
@@ -48,7 +48,7 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
 
-    useEffect(() => {
+   /* useEffect(() => {
         if (subscribers.length > 0) {
             console.log("팀원음성감지 UseEffect");
             subscribers.forEach(subscriber => {
@@ -64,11 +64,9 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
                         audioActive: subscriber.stream.audioActive,
                         hasAudio: subscriber.stream.hasAudio,
                         connection: subscriber.stream.connection,
-                        roomUserId: clientData.roomUserId
+                        roomUserId: clientData.roomUserId,
+                        audioTracks: subscriber.stream.getMediaStream()?.getAudioTracks()
                     });
-
-                    // 오디오 구독 활성화
-                   // subscriber.subscribeToAudio(true);
 
                     // 실제 재생 시작 확인
                     subscriber.on('streamPlaying', (event) => {
@@ -134,7 +132,7 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
                 });
             };
         }
-    }, [subscribers]);
+    }, [subscribers]);*/
     // Team Game
     const updateAttackTeam = useCallback((attackteam: TeamType) => {
         setAttackTeam(attackteam);
