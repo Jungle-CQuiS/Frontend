@@ -50,11 +50,13 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
    
     useEffect(() => {
         // 다른 참가자들의 음성 감지
+        
         if (subscribers.length > 0) {
             subscribers.forEach(subscriber => {
-                const userData = JSON.parse(subscriber.stream.connection.data).clientData;
+                const userData = JSON.parse(subscriber.stream.connection.data);
+                console.log("clientDATA :", userData);
 
-                subscriber.on('streamPropertyChanged', (event: any) => {
+                /*subscriber.on('streamPropertyChanged', (event: any) => {
                     if (event.changedProperty === 'audioActive') {
                         console.log(`${userData.roomUserId}의 오디오 상태:`, event.newValue);
                     }
@@ -91,7 +93,7 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
                     ));
 
                     console.log(`${userData.roomUserId} 말하기 멈춤`);
-                });
+                });*/
             });
         }
     }, [subscribers]);
