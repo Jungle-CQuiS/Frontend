@@ -126,6 +126,10 @@ export default function QuizGamePage() {
         const loadGameUserInfo = async () => {
             try {
                 console.log("Loading user info...");
+                if(roomUserId === null){
+                    console.error('Room fetched failed: no roomUserId');
+                    return;
+                }
                 const uInfo = await fetchUserGameProfile(roomUserId);
 
                 if (uInfo) {

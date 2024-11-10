@@ -14,7 +14,7 @@ interface GameStateContextType {
     selectedQuizId: number | null;
     // 유저 정보
     _roomId: string;
-    roomUserId: string;
+    roomUserId: string | null;
     roomUserIdError: string | null;
 
     // 수비팀 유저들이 제출한 답 리스트.

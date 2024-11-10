@@ -89,7 +89,11 @@ export const useRoom = (roomId: string) => {
 
     const exitRoom = async () => {
         try {
-            await readyRoomSocketEvents.userExitRoom(stompClient, roomId,roomUserId); // 수정 요!
+            if(roomUserId)
+                await readyRoomSocketEvents.userExitRoom(stompClient, roomId,roomUserId); // 수정 요!
+            else{
+                console.error('Room exit failed: no roomUserId');
+            }
 
             disconnectSession(); // session 해제
         } catch (error) {
@@ -102,7 +106,11 @@ export const useRoom = (roomId: string) => {
 
     const userReady = async () => {
         try {
-            await readyRoomSocketEvents.updateUserState(stompClient, roomId, roomUserId); // 수정 요!
+            if(roomUserId)
+                await readyRoomSocketEvents.updateUserState(stompClient, roomId, roomUserId);
+            else{
+                console.error('User Ready failed:no roomUserId');
+            }
         } catch (error) {
             console.error('User ready failed:', error);
             throw error;
@@ -111,7 +119,11 @@ export const useRoom = (roomId: string) => {
 
     const teamSwitch = async (clickedTeam: string) => {
         try {
-            await readyRoomSocketEvents.changeUserTeam(stompClient, roomId, roomUserId);
+            if(roomUserId)
+                await readyRoomSocketEvents.changeUserTeam(stompClient, roomId, roomUserId);
+            else{
+                console.error('Team switch failed: no roomUserId');
+            }
         } catch (error) {
             console.error('Team switch failed:', error);
             throw error;
@@ -167,7 +179,8 @@ export const useRoom = (roomId: string) => {
             }
         };
 
-        initializeRoom();
+        if(roomUserId === null)
+            initializeRoom();
         
 
         return () => {
