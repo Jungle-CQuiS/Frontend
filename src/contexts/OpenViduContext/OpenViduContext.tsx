@@ -8,7 +8,7 @@ interface OpenViduContextType {
     // Voice
     isSpeaking: boolean;
     joinRoom: (sessionid: string, token: any, roomUserId: string) => void;
-    publishStream: () => void;
+    publishStream: (session: Session) => void;
     unpublishStream: () => void;
     disconnectSession: () => void;
 }
@@ -62,12 +62,13 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                     // 참가자가 나갔을 때 처리
                 });
 
-                // 세션 설정 완료, state에 세션 저장
-                setSession(session);
+                return session; // session 객체를 반환
             } catch (error) {
                 console.error("Failed to initialize session", error);
+                return null;
             }
         }
+        return null;
     };
 
     const joinRoom = async (sessionid: string, token: any, roomUserId: string) => {
@@ -77,26 +78,27 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 setSessionId(sessionid);
 
                 // 2. 세션 초기화
-                await initOpenViduSession();
-                console.log("session Create 완료", session);
-
-                // 3. 세션에 연결
+                const session = await initOpenViduSession();
                 if (session) {
+                    console.log("session Create 완료", session);
+
+                    // 3. 세션에 연결
                     console.log("세션 연결시작:", session);
                     await session.connect(token, { userId: roomUserId });
                     console.log("세션 연결 완료", session);
 
                     // 4. 연결 후 스트림 발행 시작
-                    await publishStream();
+                    await publishStream(session);
                 }
             } catch (error) {
                 console.error('Error:', error);
             }
         }
     };
-    
+
+
     // 스트림 발행 (음성 채팅 시작)
-    const publishStream = async () => {
+    const publishStream = async (session: Session) => {
         if (session && !publisher && OV.current) {
             try {
                 console.log("퍼블리셔 생성 시작작", session);
@@ -117,13 +119,11 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 newPublisher.on('streamPlaying', () => {
                     console.log('내 스트림이 재생 중입니다.');
                 });
-
             } catch (error) {
                 console.error('스트림 발행 실패:', error);
             }
         }
     };
-
 
 
     // 스트림 발행 중지 (음성 채팅 중단)
