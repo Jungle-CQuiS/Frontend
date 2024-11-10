@@ -25,6 +25,7 @@ export const LoginContainer = styled.div`
     background-color: #fff;
     padding: 57px 93px;
     border-radius: 16px;
+    margin-top: 80px;
 `;
 
 export const LoginTitle = styled.div`

@@ -67,12 +67,6 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
         <LoginContainer>
           <LoginTitle>Log In</LoginTitle>
           <LoginWrap>
-            <LoginWithGoogle onClick={handleGoogleLogin}><img src="/icons/google.svg" alt="Google" />구글 계정으로 로그인</LoginWithGoogle>
-            <LoginDividerWrap>
-              <LoginLine></LoginLine>
-              <LoginText>OR</LoginText>
-              <LoginLine></LoginLine>
-            </LoginDividerWrap>
             <LoginInputWrap>
               <LoginInput
                 type="text"

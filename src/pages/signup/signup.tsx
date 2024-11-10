@@ -1,7 +1,7 @@
 
 import NavBar from "../../components/navbar/navbar";
 import { PrimaryButtonLong } from "../../components/buttons/styled";
-import { SignupBackground, SignUpInputContainer, SignupInputWrap, SignupLabel } from "./styled";
+import { SignupBackground, SignupContainer, SignUpInputContainer, SignupInputWrap, SignupLabel } from "./styled";
 import { LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInput, LoginBottomWrap } from "../loginpage/styled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -62,15 +62,9 @@ export default function SignupPage() {
   return (
     <>
       <SignupBackground>
-        <LoginContainer>
+        <SignupContainer>
           <LoginTitle>Sign Up</LoginTitle>
           <LoginWrap>
-            <LoginWithGoogle><img src="/icons/google.svg" alt="Google" />구글 계정으로 가입하기</LoginWithGoogle>
-            <LoginDividerWrap>
-              <LoginLine></LoginLine>
-              <LoginText>OR</LoginText>
-              <LoginLine></LoginLine>
-            </LoginDividerWrap>
             <SignUpInputContainer>
               <SignupInputWrap>
                 <SignupLabel>닉네임</SignupLabel>
@@ -101,7 +95,7 @@ export default function SignupPage() {
               <PrimaryButtonLong onClick={handleSignup}>회원가입</PrimaryButtonLong>
             </LoginBottomWrap>
           </LoginWrap>
-        </LoginContainer>
+        </SignupContainer>
       </SignupBackground>
     </>
   );
