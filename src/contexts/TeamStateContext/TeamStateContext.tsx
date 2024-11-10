@@ -52,11 +52,11 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
         // 다른 참가자들의 음성 감지
         if (subscribers.length > 0) {
             subscribers.forEach(subscriber => {
-                const userData = JSON.parse(subscriber.stream.connection.data);
+                const userData = JSON.parse(subscriber.stream.connection.data).clientData;
 
                 subscriber.on('streamPropertyChanged', (event: any) => {
                     if (event.changedProperty === 'audioActive') {
-                        console.log(`${userData.userId}의 오디오 상태:`, event.newValue);
+                        console.log(`${userData.roomUserId}의 오디오 상태:`, event.newValue);
                     }
                 });
 

@@ -90,7 +90,11 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 roomUserId
             });
 
-            await session.connect(fullToken, { userId: roomUserId });
+            await session.connect(fullToken, {
+                clientData: JSON.stringify({
+                    roomUserId: roomUserId  // subscriber에서 사용할 데이터
+                })
+            });
 
             await publishStream(session);
         } catch (error) {
