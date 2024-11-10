@@ -112,7 +112,7 @@ export const CreateQuizNumber = styled.input`
 `;
 
 export const CreateQuestion = styled.div`
-    padding-top: 500px;
+    padding-top: 150px;
     font-size: 30px;
     font-weight: 600;
 `;
