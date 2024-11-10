@@ -181,11 +181,14 @@ export const useRoom = (roomId: string) => {
 
         if(roomUserId === null)
             initializeRoom();
+        else{
+            handleReadyRoomEvent(GameReadyEvents.ENTER);
+        }
         
 
         return () => {
         };
-    }, []);
+    }, [gameState, roomUserId]);
 
     return {
         teamOneUsers,
