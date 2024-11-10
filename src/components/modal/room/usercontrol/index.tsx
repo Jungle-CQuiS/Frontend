@@ -2,7 +2,7 @@ import { Client, Stomp } from "@stomp/stompjs";
 import { Modal, IModalProps } from "../..";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { UserControlWrap, UserControlBtn, UserControlKickBtn } from "./styled";
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface UserControlInRoomProps extends IModalProps {
   user: any; // 유저 정보 타입 => 수정 필요
@@ -41,7 +41,7 @@ export const UserControlInRoom = ({
       $transform="translate(0, 0)" 
       $round = "0px"
       $border = "1px solid #333"
-      $padding = "10px 10px"
+      $padding = "10px 10px"closeOnBackdropClick={true} // 외부 클릭 닫기로 활성화
     >
       <UserControlWrap>
         <div style={{ fontWeight: 'bold' }}>{user?.name}</div>
