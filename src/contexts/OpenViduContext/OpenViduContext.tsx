@@ -61,7 +61,9 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
 
             // 이벤트 핸들러 설정
             session.on("streamCreated", (event) => {
-                const subscriber = session.subscribe(event.stream, undefined);
+                const subscriber = session.subscribe(event.stream, undefined,
+                   { subscribeToAudio: true}
+                );
                 //subscriber.subscribeToAudio(true);
                 setSubscribers((prev) => [...prev, subscriber]);
                 console.log("스트림 생성됨");
@@ -102,6 +104,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
 
             await session.connect(fullToken, {
                 clientData: JSON.stringify({
+                    username : roomUserId,
                     roomUserId: roomUserId  // subscriber에서 사용할 데이터
                 }),
                 audio: true,
