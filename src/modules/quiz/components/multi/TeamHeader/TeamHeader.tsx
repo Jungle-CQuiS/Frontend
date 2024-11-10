@@ -10,9 +10,9 @@ export const TeamHeaderComponent = ({ teamId, isAttackTeam }: TeamHeaderProps) =
 
             <TeamHeaderTitle>
                 {isAttackTeam
-                    ? "주제를 선택하세요"
+                    ? "수비팀에게 전달할 문제를 선택하세요"
                     : <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                        <div>공격팀이 주제를 선택중입니다.</div>
+                        <div>공격팀이 문제를 선택중입니다.</div>
                         <div>잠시만 기다려주세요</div>
                         </div>}
             </TeamHeaderTitle>

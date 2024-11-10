@@ -88,3 +88,91 @@ export const MultiGameAttackButtonWrap = styled.div`
     justify-content: flex-end;
     margin-top: 8px;
 `;
+
+
+export const MultiAnimationModalContainer = styled.div`
+    position: fixed;
+    top: 50%;
+    left: 25%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.7) 0%,   
+        rgba(170, 170, 170, 0.7) 23%,   
+        rgba(68, 68, 68, 0.7) 68% 
+    );
+    clip-path: polygon(0% 0, 100% 0, 90% 100%, 0% 100%);
+    padding: 40px 200px 40px 550px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    z-index: 9999;
+    opacity: 0;
+    animation: slideIn 0.5s forwards, moveRight 1.5s linear 0.5s forwards, slideOut 0.5s forwards 2s;
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    @keyframes slideIn {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) translateX(-100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateX(0);
+        }
+    }
+
+    @keyframes moveRight {
+        0% {
+            transform: translate(-50%, -50%) translateX(0);
+        }
+        100% {
+            transform: translate(-50%, -50%) translateX(20px);
+        }
+    }
+
+    @keyframes slideOut {
+        0% {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateX(20px);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(-50%, -50%) translateX(100%);
+        }
+    }
+`;
+
+
+export const MultiAnimationBackgroundOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 9998;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+`;
+
+
+export const MultiAnimationTextWrap = styled.div`
+    display: flex;
+    gap: 24px;
+    align-items: center;
+`;
+
+export const MultiAnimationTextSmall = styled.div`
+    font-size: 38px;
+    font-weight: 800;
+    font-style: italic;
+`;
+
+export const MultiAnimationTextLarge = styled.div`
+    font-size: 53px;
+    font-weight: 800;
+    font-style: italic;
+`;

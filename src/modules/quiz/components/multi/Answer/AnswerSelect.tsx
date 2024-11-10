@@ -58,6 +58,7 @@ export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: Se
                 {answers.map((answer, index) => (
                     <AnswerSelectRow key={index} onClick={() => handleSelect(index)}>
                         <AnswerSelectCheckbox 
+                            className="click-sound"
                             src={answer.isSelected ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"} 
                         />
                         <AnswerSelectText>{answer.value}</AnswerSelectText>

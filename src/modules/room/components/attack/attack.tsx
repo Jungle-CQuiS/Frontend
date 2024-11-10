@@ -9,7 +9,6 @@ import QuizProblemsComponent from "../../../../components/quiz";
 import { Timer } from "../../../../components/timer/timer";
 import { TeamHeaderComponent } from "../../../quiz/components/multi/TeamHeader/TeamHeader";
 import { UserTagsComponent } from "../../../quiz/components/multi/UserTags/UserTags";
-import { MultiGameBackground, MultiGameAttackContainer, MutliGameAttackTimerWrap, MultiGameAttackTimer, MultiGameAttackTimerText, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameAttackQuiz, MultiGameAttackQuizCheckbox, MultiGameAttackButtonWrap } from "./styled";
 import { Quiz } from "../../../../types/quiz";
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { useStompContext } from "../../../../contexts/StompContext";
@@ -18,6 +17,7 @@ import { useGameUser } from "../../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState";
 import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
 import { usePageLeave } from "../../../../hook/pageLeaveHandler";
+import { MultiAnimationBackgroundOverlay, MultiAnimationModalContainer, MultiAnimationTextLarge, MultiAnimationTextSmall, MultiAnimationTextWrap, MultiGameAttackButtonWrap, MultiGameAttackContainer, MultiGameAttackQuiz, MultiGameAttackQuizCheckbox, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameAttackTimer, MultiGameAttackTimerText, MultiGameBackground, MutliGameAttackTimerWrap } from "./styled";
 
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
@@ -123,14 +123,46 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
         gameRoomSocketEvents.selectQuiz(stompClient, _roomId,leaderSelect);
     }
 
-   
+    // 컴포넌트 내부에 상태 추가
+    const [modalVisible, setModalVisible] = useState(true);
+    
+    useEffect(() => {
+        const audio = new Audio('/sounds/transition-base.mp3');
+        audio.volume = 0.1;
+        
+        // 모달이 표시될 때마다 소리 재생
+        if (modalVisible) {
+            audio.play().catch((error) => {
+                console.error("Audio playback failed:", error);
+            });
+        }
+        
+        // 모달 자동 숨김 타이머
+        const timer = setTimeout(() => {
+            setModalVisible(false);
+        }, 3000);
 
-    
-    
+        return () => {
+            clearTimeout(timer); // 타이머 정리
+            // audio.pause()는 불필요하게 호출되지 않도록 설정
+            audio.currentTime = 0; // 음악을 처음으로 리셋
+        };
+    }, [modalVisible]); // 모달 상태가 변경될 때마다 실행
 
     return (
         <Background>
             <MultiGameBackground>
+                {modalVisible && (
+                        <>
+                            <MultiAnimationBackgroundOverlay />
+                            <MultiAnimationModalContainer>
+                                <MultiAnimationTextWrap>
+                                    <MultiAnimationTextSmall>TEAM {teamId}</MultiAnimationTextSmall>
+                                    <MultiAnimationTextLarge>ATTACK</MultiAnimationTextLarge>
+                                </MultiAnimationTextWrap>
+                            </MultiAnimationModalContainer>
+                        </>
+                    )}
                 <TeamHeaderComponent teamId={teamId} isAttackTeam={user?.team == attackTeam ? true : false} />
                 <MultiGameAttackContainer>
                     <MutliGameAttackTimerWrap>
@@ -159,7 +191,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                     </MultiGameAttackQuizContainer>
                     <MultiGameAttackButtonWrap>
                         <SecondaryButtonSmall onClick={handleLeaveRoom}>나가기</SecondaryButtonSmall>
-                        <PrimaryButtonMedium onClick={handleSelectionComplete}>선택완료</PrimaryButtonMedium>
+                        <PrimaryButtonMedium className="click-sound" onClick={handleSelectionComplete}>선택완료</PrimaryButtonMedium>
                     </MultiGameAttackButtonWrap>
                 </MultiGameAttackContainer>
                 <UserTagsComponent teamId={teamId} />
