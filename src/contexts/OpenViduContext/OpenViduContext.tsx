@@ -53,6 +53,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
             // 이벤트 핸들러 설정
             session.on("streamCreated", (event) => {
                 const subscriber = session.subscribe(event.stream, undefined);
+                subscriber.subscribeToAudio(true);
                 setSubscribers((prev) => [...prev, subscriber]);
                 console.log("스트림 생성됨");
             });
@@ -113,7 +114,9 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                     videoSource: false,      // 비디오 사용 안 함
                     audioSource: undefined,   // 기본 마이크 사용
                     publishAudio: true,      // 오디오 활성화
-                    publishVideo: false     // 비디오 비활성화
+                    publishVideo: false,     // 비디오 비활성화
+
+                    
                 });
 
                 // 스트림 발행 시작

@@ -111,19 +111,22 @@ export const useRoom = (roomId: string) => {
 
     const exitRoom = async () => {
         try {
-            if (roomUserId)
+            if (roomUserId){
                 await readyRoomSocketEvents.userExitRoom(stompClient, roomId, roomUserId); // 수정 요!
+                disconnectSession(); // session 해제
+                navigate(SERVICES.MULTI);
+            }
             else {
                 console.error('Room exit failed: no roomUserId');
             }
 
-            disconnectSession(); // session 해제
+            
         } catch (error) {
             console.error('Room exit failed:', error);
             throw error;
         }
 
-        navigate(SERVICES.MULTI);
+     
     };
 
     const userReady = async () => {
