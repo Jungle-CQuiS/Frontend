@@ -16,8 +16,7 @@ export const useRoom = (roomId: string) => {
     const { joinRoom, disconnectSession } = useOpenViduContext();
     const { gameState, isAllReady, roomUserId,
         handleReadyRoomEvent, setRoomUserIdWithState, setRoomId } = useGameState();
-    // ref를 사용하여 초기화 여부 추적
-    const isInitialized = useRef(false);
+    const [hasJoinedRoom, setHasJoinedRoom] = useState(false);
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
 
@@ -165,14 +164,16 @@ export const useRoom = (roomId: string) => {
 
 
     useEffect(() => {
+        const initializeOnce = async () => {
+            // 게임 준비 상태일 때만 해당 훅을 실행한다.
+            if (gameState !== GameStatus.ENTER) return;
+            if (Connected.current) return;
+            if (hasJoinedRoom) return;
 
+            Connected.current = true; // 초기화 시작 전에 플래그 설정
 
-        if (gameState !== GameStatus.ENTER || isInitialized.current) return;
-
-        const initializeRoom = async () => {
             try {
-                isInitialized.current = true;
-  
+                setHasJoinedRoom(true);
                 handleReadyRoomEvent(GameReadyEvents.ENTER);
 
                 await enterRoom();
@@ -181,14 +182,15 @@ export const useRoom = (roomId: string) => {
             } catch (error) {
                 console.error('Room initialization failed:', error);
                 handleReadyRoomEvent(GameReadyEvents.ENTER);
-                isInitialized.current = false;
+                Connected.current = false; // 에러 시 플래그 리셋
             }
         };
 
-        initializeRoom();
+        initializeOnce();
 
+        // cleanup
         return () => {
-            isInitialized.current = false;
+            // necessary cleanup code
         };
     }, [roomId]);
 
