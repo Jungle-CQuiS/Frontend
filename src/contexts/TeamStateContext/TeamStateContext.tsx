@@ -47,57 +47,66 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
         setIsTeamsLoaded(true);
     }, []);
 
-   
+
     useEffect(() => {
-        // 다른 참가자들의 음성 감지
-        
         if (subscribers.length > 0) {
+            console.log("팀원음성감지 UseEffect");
             subscribers.forEach(subscriber => {
-                const userData = subscriber.stream.connection.data;
-                console.log("clientDATA :", userData);
+                try {
+                    const rawData = subscriber.stream.connection.data;
+                    // %/% 이후 부분 제거
+                    const cleanData = rawData.split('%/%')[0];
 
-                /*subscriber.on('streamPropertyChanged', (event: any) => {
-                    if (event.changedProperty === 'audioActive') {
-                        console.log(`${userData.roomUserId}의 오디오 상태:`, event.newValue);
-                    }
-                });
+                    // 이제 안전하게 파싱
+                    const parsedData = JSON.parse(cleanData);
+                    const clientData = JSON.parse(parsedData.clientData);
 
-                subscriber.on('publisherStartSpeaking', (event: any) => {
-                    // 팀 1과 팀 2의 유저 리스트를 모두 확인하여 해당 유저 업데이트
-                    setTeamOneUsers(prev => prev.map(user =>
-                        user && user.roomUserId === userData.roomUserId
-                            ? { ...user, isSpeaking: true }
-                            : user
-                    ));
 
-                    setTeamTwoUsers(prev => prev.map(user =>
-                        user && user.roomUserId === userData.roomUserId
-                            ? { ...user, isSpeaking: true }
-                            : user
-                    ));
+                    console.log("Parsed clientData:", clientData);
 
-                    console.log(`${userData.roomUserId} 말하기 시작`);
-                });
+                    subscriber.on('streamPropertyChanged', (event: any) => {
+                        if (event.changedProperty === 'audioActive') {
+                            console.log(`${clientData.roomUserId}의 오디오 상태:`, event.newValue);
+                        }
+                    });
 
-                subscriber.on('publisherStopSpeaking', (event: any) => {
-                    setTeamOneUsers(prev => prev.map(user =>
-                        user && user.roomUserId === userData.roomUserId
-                            ? { ...user, isSpeaking: false }
-                            : user
-                    ));
+                    subscriber.on('publisherStartSpeaking', (event: any) => {
+                        setTeamOneUsers(prev => prev.map(user =>
+                            user && user.roomUserId === clientData.roomUserId
+                                ? { ...user, isSpeaking: true }
+                                : user
+                        ));
 
-                    setTeamTwoUsers(prev => prev.map(user =>
-                        user && user.roomUserId === userData.roomUserId
-                            ? { ...user, isSpeaking: false }
-                            : user
-                    ));
+                        setTeamTwoUsers(prev => prev.map(user =>
+                            user && user.roomUserId === clientData.roomUserId
+                                ? { ...user, isSpeaking: true }
+                                : user
+                        ));
 
-                    console.log(`${userData.roomUserId} 말하기 멈춤`);
-                });*/
+                        console.log(`${clientData.roomUserId} 말하기 시작`);
+                    });
+
+                    subscriber.on('publisherStopSpeaking', (event: any) => {
+                        setTeamOneUsers(prev => prev.map(user =>
+                            user && user.roomUserId === clientData.roomUserId
+                                ? { ...user, isSpeaking: false }
+                                : user
+                        ));
+
+                        setTeamTwoUsers(prev => prev.map(user =>
+                            user && user.roomUserId === clientData.roomUserId
+                                ? { ...user, isSpeaking: false }
+                                : user
+                        ));
+
+                        console.log(`${clientData.roomUserId} 말하기 멈춤`);
+                    });
+                } catch (error) {
+                    console.error('데이터 파싱 에러:', error, '원본 데이터:', subscriber.stream.connection.data);
+                }
             });
         }
     }, [subscribers]);
-
     // Team Game
     const updateAttackTeam = useCallback((attackteam: TeamType) => {
         setAttackTeam(attackteam);
