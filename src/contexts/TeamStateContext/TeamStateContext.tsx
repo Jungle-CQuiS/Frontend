@@ -53,7 +53,7 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
         
         if (subscribers.length > 0) {
             subscribers.forEach(subscriber => {
-                const userData = JSON.parse(subscriber.stream.connection.data);
+                const userData = subscriber.stream.connection.data;
                 console.log("clientDATA :", userData);
 
                 /*subscriber.on('streamPropertyChanged', (event: any) => {
