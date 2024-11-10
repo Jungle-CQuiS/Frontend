@@ -47,6 +47,15 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
     const initOpenViduSession = async () => {
         try {
             OV.current = new OpenVidu(); // 매번 새로운 인스턴스 생성
+
+            // 음성 감지 설정을 여기서 해줍니다
+            OV.current.setAdvancedConfiguration({
+                publisherSpeakingEventsOptions: {
+                    interval: 50,
+                    threshold: -50
+                }
+            });
+
             const session = OV.current.initSession();
             console.log("session Create", session);
 
@@ -94,7 +103,9 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
             await session.connect(fullToken, {
                 clientData: JSON.stringify({
                     roomUserId: roomUserId  // subscriber에서 사용할 데이터
-                })
+                }),
+                audio: true,
+                publishAudio: true
             });
 
             await publishStream(session);
@@ -116,7 +127,7 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                     publishAudio: true,      // 오디오 활성화
                     publishVideo: false,     // 비디오 비활성화
 
-                    
+
                 });
 
                 // 스트림 발행 시작
@@ -126,8 +137,15 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
                 if (newPublisher)
                     console.log("<Client> 퍼블리셔 세팅 완료");
                 // 음소거 상태 관리 등 추가 가능
-                newPublisher.on('streamPlaying', () => {
-                    console.log('내 스트림이 재생 중입니다.');
+
+                console.log('Stream published:', {
+                    hasAudio: newPublisher.stream?.hasAudio,
+                    audioActive: newPublisher.stream?.audioActive,
+                    mediaStream: newPublisher.stream?.getMediaStream()
+                });
+
+                newPublisher.on('streamCreated', () => {
+                    console.log('내 스트림이 생성되었스니다입니다.');
                 });
             } catch (error) {
                 console.error('스트림 발행 실패:', error);

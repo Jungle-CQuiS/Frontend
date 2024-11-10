@@ -54,23 +54,44 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
             subscribers.forEach(subscriber => {
                 try {
                     const rawData = subscriber.stream.connection.data;
-                    // %/% 이후 부분 제거
                     const cleanData = rawData.split('%/%')[0];
-
-                    // 이제 안전하게 파싱
                     const parsedData = JSON.parse(cleanData);
                     const clientData = JSON.parse(parsedData.clientData);
 
+                    // 구독자의 스트림 상태 상세 로깅
+                    console.log('Subscriber details:', {
+                        id: subscriber.stream.streamId,
+                        audioActive: subscriber.stream.audioActive,
+                        hasAudio: subscriber.stream.hasAudio,
+                        connection: subscriber.stream.connection,
+                        roomUserId: clientData.roomUserId
+                    });
 
-                    console.log("Parsed clientData:", clientData);
+                    // 오디오 구독 활성화
+                   // subscriber.subscribeToAudio(true);
+
+                    // 실제 재생 시작 확인
+                    subscriber.on('streamPlaying', (event) => {
+                        console.log('Subscriber stream playing:', {
+                            roomUserId: clientData.roomUserId,
+                            audioActive: subscriber.stream.audioActive,
+                            audioTracks: subscriber.stream.getMediaStream()?.getAudioTracks()
+                        });
+                    });
+                    // 이벤트 리스너 등록 전에 기존 리스너 제거
+                    subscriber.off('streamPropertyChanged');
+                    subscriber.off('publisherStartSpeaking');
+                    subscriber.off('publisherStopSpeaking');
 
                     subscriber.on('streamPropertyChanged', (event: any) => {
+                        console.log('Stream property changed:', event);
                         if (event.changedProperty === 'audioActive') {
                             console.log(`${clientData.roomUserId}의 오디오 상태:`, event.newValue);
                         }
                     });
 
                     subscriber.on('publisherStartSpeaking', (event: any) => {
+                        console.log(`${clientData.roomUserId} speaking start event received`);
                         setTeamOneUsers(prev => prev.map(user =>
                             user && user.roomUserId === clientData.roomUserId
                                 ? { ...user, isSpeaking: true }
@@ -82,11 +103,10 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
                                 ? { ...user, isSpeaking: true }
                                 : user
                         ));
-
-                        console.log(`${clientData.roomUserId} 말하기 시작`);
                     });
 
                     subscriber.on('publisherStopSpeaking', (event: any) => {
+                        console.log(`${clientData.roomUserId} speaking stop event received`);
                         setTeamOneUsers(prev => prev.map(user =>
                             user && user.roomUserId === clientData.roomUserId
                                 ? { ...user, isSpeaking: false }
@@ -98,13 +118,21 @@ export const TeamStateProvider = ({ children }: { children: ReactNode }) => {
                                 ? { ...user, isSpeaking: false }
                                 : user
                         ));
-
-                        console.log(`${clientData.roomUserId} 말하기 멈춤`);
                     });
+
                 } catch (error) {
                     console.error('데이터 파싱 에러:', error, '원본 데이터:', subscriber.stream.connection.data);
                 }
             });
+
+            // cleanup 함수
+            return () => {
+                subscribers.forEach(subscriber => {
+                    subscriber.off('streamPropertyChanged');
+                    subscriber.off('publisherStartSpeaking');
+                    subscriber.off('publisherStopSpeaking');
+                });
+            };
         }
     }, [subscribers]);
     // Team Game
