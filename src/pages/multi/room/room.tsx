@@ -34,6 +34,7 @@ export default function Room() {
   const [isCountDownModalOpen, setIsCountDownModalOpen] = useState(false);
 
   usePageLeave();
+  const coinSound = new Audio('/sounds/coin_flip.mp3');
 
   // Ready CountDown Modal Logic
   useEffect(() => {
@@ -64,12 +65,21 @@ export default function Room() {
   // Set starter team Logic
   useEffect(() => {
     if (isCoinAnimation) {
+      // 효과음 재생
+      coinSound.play();
+
       const animationTimer = setTimeout(() => {
         setIsCoinAnimation(false);
-
         setIsFirstAttackModalOpen(true);
+        coinSound.pause(); // 애니메이션 후 효과음 멈추기
+        coinSound.currentTime = 0; // 효과음 처음부터 다시 시작
       }, 3000);
-      return () => clearTimeout(animationTimer);
+
+      return () => {
+        clearTimeout(animationTimer);
+        coinSound.pause(); // 컴포넌트가 언마운트되거나 애니메이션이 끝나면 효과음 멈추기
+        coinSound.currentTime = 0;
+      };
     }
   }, [isCoinAnimation]);
 

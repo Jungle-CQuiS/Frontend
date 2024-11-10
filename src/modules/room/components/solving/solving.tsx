@@ -63,7 +63,10 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
         <Background>
             {isSubmit === false ? (
                 <>
+                <TeamHeaderContainer>
                     <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
+                    <TeamHeaderTitle>문제를 풀어주세요!</TeamHeaderTitle>
+                </TeamHeaderContainer>
                     <SolvingContainer>
                         <SolvingHeaderComponent />
                         <div>
@@ -75,7 +78,7 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
                                     value={answer}
                                     onChange={(e) => setAnswer(e.target.value)}
                                     placeholder="정답을 입력해주세요." />
-                                <BlackButtonSmall onClick={handleSubmitAnswer}>제출하기</BlackButtonSmall>
+                                <BlackButtonSmall className="click-sound" onClick={handleSubmitAnswer}>제출하기</BlackButtonSmall>
                             </SovlingInputWrap>
                             <SecondaryButtonSmall onClick={handleLeaveRoom}>나가기</SecondaryButtonSmall>
                         </SolvingBottom>

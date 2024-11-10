@@ -4,10 +4,10 @@ import { SERVICES } from "../../../../config/api/constants";
 import { Background } from "../../../../components/background/styled"
 import { BlackButtonSmall, SecondaryButtonSmall } from "../../../../components/buttons/styled"
 import { SolvingHeaderComponent } from "../../../../modules/quiz/components/multi/SolvingHeader/SolvingHeader"
-import { TeamHeaderTag } from "../../../../modules/quiz/components/multi/TeamHeader/styled"
+import { TeamHeaderContainer, TeamHeaderTag, TeamHeaderTitle } from "../../../../modules/quiz/components/multi/TeamHeader/styled"
 import { UserTagsComponent } from "../../../../modules/quiz/components/multi/UserTags/UserTags"
 import AnswerSelectComponent from "../../../../modules/quiz/components/multi/Answer/AnswerSelect"
-import { SelectAnswerButtonWrap, SelectAnswerContainer, SelectAnswerModalContainer, SelectAnswerModalImg, SelectAnswerModalText, SelectAnswerModalTitle, SelectAnswerModalWrap } from "./styled"
+import { MultiAnimationModalContainerPop, SelectAnswerButtonWrap, SelectAnswerContainer, SelectAnswerModalContainer, SelectAnswerModalImg, SelectAnswerModalText, SelectAnswerModalTitle, SelectAnswerModalWrap, ShakeContainer } from "./styled"
 import { readyRoomSocketEvents } from "../../../../hook/readyRoomSocketEvent";
 import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
 import { useStompContext } from "../../../../contexts/StompContext";
@@ -21,6 +21,7 @@ import { Modal } from "../../../../components/modal";
 import { GamePlayEvents, GameStatus } from "../../../../types/game";
 import { TeamType } from "../../../../types/teamuser";
 import useButtonSoundEffect from "../../../../hook/useHoverSoundEffect";
+import { MultiAnimationBackgroundOverlay, MultiAnimationTextLarge } from "../../../../modules/room/components/attack/styled";
 
 // 수비팀 최종 정답 선택 페이지
 // 이 부분은 화면이 모두 공유된다!
@@ -38,6 +39,7 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [countdown, setCountdown] = useState(3);
+    const [showSwitchModal, setShowSwitchModal] = useState(false);
     useButtonSoundEffect();
 
     usePageLeave();
@@ -71,6 +73,13 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
                 setIsModalOpen(false);
                 clearInterval(intervalId);
             }, 3000);
+            if (quizResult === true) {
+                const correctAudio = new Audio("/sounds/correct.mp3"); // 정답 음원 경로
+                correctAudio.play();
+            } else if (quizResult === false) {
+                const wrongAudio = new Audio("/sounds/wrong.mp3"); // 오답 음원 경로
+                wrongAudio.play();
+            }
 
             return () => {
                 clearTimeout(timeoutId);
@@ -79,53 +88,112 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
         }
     }, [quizResult]);
 
+    useEffect(() => {
+        // 모달이 열릴 때 효과음 재생
+        if (modalVisible) {
+            const soundEffect = new Audio("/sounds/bell.mp3"); // 효과음 경로
+            soundEffect.volume = 0.05;
+            soundEffect.play().catch((error) => console.error("효과음 재생 실패:", error));
+        }
+    }, [isModalOpen]); 
+
 
     useEffect(() => {
-
         // 종료 시그널이 없다면 재시작.
         if (countdown === 0 && gradeResponse) {
-            // 게임 종료가 나오면 화면이동
+            // 게임 종료가 나오면 화면 이동
             if (gameState === GameStatus.ENDED) {
-
+    
                 // 2. Subscribe unconnected
                 if (winnerTeam == null) {
                     console.log("이긴 팀 정보가 없습니다.");
                     return;
                 }
-
+    
                 // 3. navigate
                 navigate(`/multi/result`, {
                     state: {
                         winner: winnerTeam
                     }
                 });
-
+    
                 return;
-
             }
-            // 카운트다운이 끝나고 응답 데이터가 있을 때 prepareNextRound 실행
-            prepareNextRound(
-                gradeResponse.responseStatus,
-                gradeResponse.nextOffenseTeam,
-                gradeResponse.teamHp
-            );
+    
+            // 카운트다운이 끝난 후 공수 변경 모달 띄우기
+            setShowSwitchModal(true);
+    
+            // 공수 변경 모달이 열릴 때 음원 재생
+            const soundEffect = new Audio("/sounds/short_base.mp3"); // 공수 변경 음원 경로
+            soundEffect.volume = 0.1; // 음량 0.5로 설정
+            soundEffect.play().catch((error) => console.error("효과음 재생 실패:", error));
+    
+            // 3초 후에 공수 변경
+            setTimeout(() => {
+                prepareNextRound(
+                    gradeResponse.responseStatus,
+                    gradeResponse.nextOffenseTeam,
+                    gradeResponse.teamHp
+                );
+                setShowSwitchModal(false); // 모달을 닫음
+            }, 3000);
         }
     }, [countdown, gradeResponse]);
+    
+
+    const [modalVisible, setModalVisible] = useState(true);
+    
+    useEffect(() => {
+        // 3초 후 모달을 자동으로 숨기도록 설정
+        const timer = setTimeout(() => {
+            setModalVisible(false);
+        }, 3000);
+
+        return () => clearTimeout(timer); // 타이머 정리
+    }, []);
 
     return (
         <Background>
-            {isModalOpen && (
-                <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                    <SelectAnswerModalContainer>
-                        <SelectAnswerModalWrap>
-                            <SelectAnswerModalImg src={quizResult === true ? "/icons/correct.svg" : "/icons/wrong.svg"} />
-                            <SelectAnswerModalTitle>{quizResult === true ? "정답입니다!" : "오답입니다!"}</SelectAnswerModalTitle>
-                        </SelectAnswerModalWrap>
-                        <SelectAnswerModalText>{countdown}초 후에 공격팀이 변경됩니다.</SelectAnswerModalText>
-                    </SelectAnswerModalContainer>
-                </Modal>
+            {modalVisible && (
+                <>
+                    <MultiAnimationBackgroundOverlay />
+                    <MultiAnimationModalContainerPop>
+                         <MultiAnimationTextLarge>최종답안 선택</MultiAnimationTextLarge>
+                        </MultiAnimationModalContainerPop>
+                </>
+                )}
+                {showSwitchModal && (
+                <>
+                    <MultiAnimationBackgroundOverlay />
+                    <MultiAnimationModalContainerPop>
+                         <MultiAnimationTextLarge>공수 변경</MultiAnimationTextLarge>
+                    </MultiAnimationModalContainerPop>
+                </>
             )}
-            <TeamHeaderTag teamId={defenceTeam}>{defenceTeam}팀</TeamHeaderTag>
+            {isModalOpen && (
+            <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <SelectAnswerModalContainer>
+                <SelectAnswerModalWrap>
+                    {quizResult === false ? (
+                    <ShakeContainer>
+                        <SelectAnswerModalImg src="/icons/wrong.svg" />
+                        <SelectAnswerModalTitle>오답입니다!</SelectAnswerModalTitle>
+                    </ShakeContainer>
+                    ) : (
+                    <>
+                        <SelectAnswerModalImg src="/icons/correct.svg" />
+                        <SelectAnswerModalTitle>정답입니다!</SelectAnswerModalTitle>
+                    </>
+                    )}
+                </SelectAnswerModalWrap>
+                <SelectAnswerModalText>{countdown}초 후에 공격팀이 변경됩니다.</SelectAnswerModalText>
+                </SelectAnswerModalContainer>
+            </Modal>
+            )}
+            <TeamHeaderContainer>
+                <TeamHeaderTag teamId={defenceTeam}>{defenceTeam}팀</TeamHeaderTag>
+                <TeamHeaderTitle>최종 제출할 답안을 선택해주세요.</TeamHeaderTitle>
+            </TeamHeaderContainer>
             <SelectAnswerContainer>
                 <SolvingHeaderComponent />
                 <AnswerSelectComponent selectedQuiz={selectedQuiz} userAnswers={userAnswers} />
@@ -135,7 +203,7 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
                         readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
                         navigate(SERVICES.MULTI);}
                     }}>나가기</SecondaryButtonSmall>
-                    <BlackButtonSmall onClick={submitFinalAnswerSelect}>선택완료</BlackButtonSmall>
+                    <BlackButtonSmall className="click-sound" onClick={submitFinalAnswerSelect}>선택완료</BlackButtonSmall>
                 </SelectAnswerButtonWrap>
                 <UserTagsComponent teamId={defenceTeam} />
                 {attackTeam === user?.team ? (<UserTagsComponent teamId={attackTeam == 'BLUE' ? 1 : 2} />) : (<></>)}{/*공격팀일 경우 공격팀의 팀뱃지도 보여준다!*/}
