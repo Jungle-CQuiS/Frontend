@@ -188,7 +188,7 @@ export const useRoom = (roomId: string) => {
 
         return () => {
         };
-    }, [gameState, roomUserId]);
+    }, []);
 
     return {
         teamOneUsers,
