@@ -12,6 +12,7 @@ export const SingleResultWrap = styled.div`
   flex-direction: column;
   gap: 40px;
   align-items: center;
+  padding-bottom: 50px;
 `;
 
 export const SingleResultTitle = styled.div`
