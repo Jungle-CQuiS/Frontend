@@ -45,54 +45,50 @@ export const OpenViduProvider = ({ children }: OpenViduProviderProps) => {
 
     // session을 초기화한다.
     const initOpenViduSession = async () => {
-        if (OV.current === null) {
-            try {
-                OV.current = new OpenVidu(); // OpenVidu 인스턴스 생성
-                const session = OV.current.initSession(); // 세션 생성
-                console.log("session Create", session);
+        try {
+            OV.current = new OpenVidu(); // 매번 새로운 인스턴스 생성
+            const session = OV.current.initSession();
+            console.log("session Create", session);
 
-                // 다른 사용자의 스트림이 생성될 때 발생하는 이벤트 핸들러
-                session.on("streamCreated", (event) => {
-                    const subscriber = session.subscribe(event.stream, undefined); // 스트림 구독
-                    setSubscribers((prev) => [...prev, subscriber]); // 구독자를 state에 추가
-                    console.log("세션생성완료");
-                });
+            // 이벤트 핸들러 설정
+            session.on("streamCreated", (event) => {
+                const subscriber = session.subscribe(event.stream, undefined);
+                setSubscribers((prev) => [...prev, subscriber]);
+                console.log("스트림 생성됨");
+            });
 
-                session.on('streamDestroyed', (event) => {
-                    // 참가자가 나갔을 때 처리
-                });
+            session.on('streamDestroyed', (event) => {
+                console.log("스트림 제거됨");
+            });
 
-                return session; // session 객체를 반환
-            } catch (error) {
-                console.error("Failed to initialize session", error);
-                return null;
-            }
+            return session;
+        } catch (error) {
+            console.error("Failed to initialize session", error);
+            throw error;  // 에러를 던져서 상위에서 처리하도록
         }
-        return null;
     };
 
     const joinRoom = async (sessionid: string, token: string, roomUserId: string) => {
-        if (sessionid && token) {
-            try {
-                // 1. 세션 세팅
-                setSessionId(sessionid);
+        if (!sessionid || !token) {
+            console.error('세션ID 또는 토큰이 없습니다', { sessionid, token });
+            return;
+        }
 
-                // 2. 세션 초기화
-                const session = await initOpenViduSession();
-                if (session) {
-                    console.log("session Create 완료", session);
+        try {
+            setSessionId(sessionid);
 
-                    // 3. 세션에 연결
-                    console.log("세션 연결시작:", session);
-                    await session.connect(token, { userId: roomUserId });
-                    console.log("세션 연결 완료", session);
+            console.log('초기화 시작', { sessionid, roomUserId });
+            const session = await initOpenViduSession();
+            console.log('세션 생성됨', session);
 
-                    // 4. 연결 후 스트림 발행 시작
-                    await publishStream(session);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+            console.log('연결 시도', { token, roomUserId });
+            await session.connect(token, { clientData: JSON.stringify({ userId: roomUserId }) });
+            console.log('연결 성공');
+
+            await publishStream(session);
+        } catch (error) {
+            console.error('joinRoom 에러:', error);
+            // 에러 처리 로직 추가
         }
     };
 
