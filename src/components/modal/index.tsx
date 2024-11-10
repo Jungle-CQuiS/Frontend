@@ -17,6 +17,7 @@ export interface IModalProps {
   $transform?: string;
   $padding ?:string;
   selectedQuiz ?: any;
+  closeOnBackdropClick?: boolean; // closeOnBackdropClick이 true일 때만 onClose 호출
 }
 
 export const Modal = ({
@@ -35,11 +36,14 @@ export const Modal = ({
   $border,
   $transform,
   $padding,
+  closeOnBackdropClick = false, // 기본값은 false
 }: IModalProps & { children: ReactNode }) => {
   return (
     <Fragment>
       {backdrop && (
-        <ModalBackdrop $open={open} $backdropcolor = {backdropcolor} />
+        <ModalBackdrop $open={open} $backdropcolor = {backdropcolor}
+        onClick={closeOnBackdropClick ? onClose : undefined} // closeOnBackdropClick이 true일 때만 onClose 호출
+        />
       )}
        <ModalBase
         $open={open}
