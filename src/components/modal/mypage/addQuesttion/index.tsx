@@ -47,6 +47,15 @@ export const AddProblemModal = ({
         console.log("Updated selectedProblems:", selectedProblems);
     };
 
+    const handleSelectAll = () => {
+        const filteredQuizData = quizData.filter(quiz => Array.isArray(quiz.categoryType) && quiz.categoryType.includes(selectedCategory));
+        if (selectedProblems.length === filteredQuizData.length) {
+            setSelectedProblems([]); // 전체 선택 해제
+        } else {
+            setSelectedProblems(filteredQuizData); // 전체 선택
+        }
+    };
+
     const handleCategoryClick = (category: string) => {
         setSelectedCategory(category);
     };
@@ -134,6 +143,7 @@ export const AddProblemModal = ({
                     <>
                         <div>선택된 문제 유형: {selectedType}</div>
                         <div>출제하고 싶은 문제를 선택해주세요! (중복가능)</div>
+                        <BlackButtonSmall onClick={handleSelectAll}>전체 선택</BlackButtonSmall>
                         <CreateQuizContainer>
                             <CreateQuizWrap>
                                 {filteredQuizData.length > 0 ? (filteredQuizData.map((quiz) => (

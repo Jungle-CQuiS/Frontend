@@ -140,7 +140,6 @@ export default function AddProblemPage() {
                             id="participants"
                             name="participants"
                             min="1"
-                            max="15"
                             value={value}
                             onChange={handleChange}
                         />
