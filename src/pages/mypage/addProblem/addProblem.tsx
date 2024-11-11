@@ -105,15 +105,16 @@ export default function AddProblemPage() {
             {loadingQuestion ? (<LoadingQuestion />) :
                 (<AddProblemContainer>
                     <AddProblemHeader>
-                    <AddProblemHeaderTitle>문제 등록하기</AddProblemHeaderTitle>
+                        <AddProblemHeaderTitle>문제 등록하기</AddProblemHeaderTitle>
                         <TooltipContainer>
                             <AddProblemHeaderImg
                                 src="/icons/question.svg"
                                 data-tooltip-id="tooltip"
                             />
                             <Tooltip id="tooltip" place="bottom" className="tooltip-custom">
-                                공부할 때 사용했던 블로그나 글을 복사해서 입력하면 그에 대한 문제가 출제가 됩니다.
-                                종류와 문제 수에 맞게 문제가 생성되니 선택해주세요.
+                                공부할 때 참고했던 블로그나 글을 복사해서<br />
+                                입력하면 그에 맞는 문제가 출제가 됩니다.<br />
+                                선택한 종류와 문제수에 맞게 생성이 됩니다.
                             </Tooltip>
                         </TooltipContainer>
                     </AddProblemHeader>
