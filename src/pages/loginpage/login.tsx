@@ -5,21 +5,30 @@ import { LoginBackground, LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle
 import { SERVICES } from "../../config/api/constants";
 import { LoginPageProps } from "../../types/user";
 import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
+import { useAlert } from "../../components/confirmPopup";
 
 export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps) {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const customAlert = useAlert();
   useHoverSoundEffect();
   const handleLogin = async () => {
-    if (username && password) {
+    const emailForm = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailForm.test(email)){
+      customAlert("올바르지 않은 이메일 형식입니다.");
+      return;
+    }
+
+    if (email && password) {
       try {
         const response = await fetch(`/api/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email: username, password: password }),
+          body: JSON.stringify({ email: email, password: password }),
         });
 
         if (!response.ok) {
@@ -27,11 +36,11 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
         }
 
         const data = await response.json();
-        const userNickname = data.username;
+        const username = data.username;
 
-        if (userNickname) {
-          setNickname(userNickname);
-          localStorage.setItem("nickname", userNickname);
+        if (username) {
+          setNickname(username);
+          localStorage.setItem("username", username);
         }
 
         localStorage.setItem("AccessToken", data.accessToken);
@@ -42,10 +51,10 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
         navigate("/main");
       } catch (error) {
         console.error("로그인 에러:", error);
-        alert("로그인에 실패했습니다.");
+        customAlert("로그인에 실패했습니다.");
       }
     } else {
-      alert("이메일과 비밀번호를 입력해주세요.");
+      customAlert("이메일과 비밀번호를 입력해주세요.");
     }
   };
 
@@ -70,14 +79,14 @@ export default function LoginPage({ setNickname, setIsLoggedIn }: LoginPageProps
             <LoginInputWrap>
               <LoginInput
                 type="text"
-                placeholder="이메일"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="이메일을 입력하세요."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={handleEnterkey}
               />
               <LoginInput
                 type="password"
-                placeholder="비밀번호"
+                placeholder="비밀번호를 입력하세요."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleEnterkey}
