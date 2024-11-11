@@ -34,6 +34,7 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
     const { roomUserId, _roomId } = useGameState();
 
     const [answer, setAnswer] = useState<string>("");
+    const [reason, setReason] = useState<string>("");
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
 
@@ -43,7 +44,7 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
         const confirmed = await customConfirm("제출 하시겠습니까?");
         if (confirmed && roomUserId) {
             console.log("제출");
-            gameRoomSocketEvents.submitQuizAnswer(stompClient, _roomId, roomUserId, answer);
+            gameRoomSocketEvents.submitQuizAnswer(stompClient, _roomId, roomUserId, answer, reason);
             setIsSubmit(true); // 제출했다. true
         }
     }
@@ -63,10 +64,10 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
         <Background>
             {isSubmit === false ? (
                 <>
-                <TeamHeaderContainer>
-                    <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
-                    <TeamHeaderTitle>문제를 풀어주세요!</TeamHeaderTitle>
-                </TeamHeaderContainer>
+                    <TeamHeaderContainer>
+                        <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
+                        <TeamHeaderTitle>문제를 풀어주세요!</TeamHeaderTitle>
+                    </TeamHeaderContainer>
                     <SolvingContainer>
                         <SolvingHeaderComponent />
                         <div>
@@ -77,7 +78,11 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
                                 <SovlingInput
                                     value={answer}
                                     onChange={(e) => setAnswer(e.target.value)}
-                                    placeholder="정답을 입력해주세요." />
+                                    placeholder="정답" />
+                                <SovlingInput
+                                    value={answer}
+                                    onChange={(e) => setReason(e.target.value)}
+                                    placeholder="정답에 대한 이유를 입력해주세요" />
                                 <BlackButtonSmall className="click-sound" onClick={handleSubmitAnswer}>제출하기</BlackButtonSmall>
                             </SovlingInputWrap>
                             <SecondaryButtonSmall onClick={handleLeaveRoom}>나가기</SecondaryButtonSmall>
