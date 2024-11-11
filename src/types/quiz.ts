@@ -16,10 +16,29 @@ export interface QuizTypeProps {
     type: "객관식" | "주관식";
   }
 
-export interface UserAnswer {
-    "roomUserId": number,
-    "answer": string
-}
+  export interface SubjectiveAnswer {
+    roomUserId: number;
+    answer: string;
+    reason: string;
+ }
+ 
+ export interface ObjectiveChoice {
+    choice: number;
+    reasonList: string[];
+    indexList: string[];
+ }
+ 
+ interface SubjectiveResponse extends QuizTypeProps {
+    quizType: "주관식";
+    answerList: SubjectiveAnswer[];
+ }
+ 
+ interface ObjectiveResponse extends QuizTypeProps {
+    quizType: "객관식";
+    answerList: ObjectiveChoice[];
+ }
+export type QuizResponse = SubjectiveResponse | ObjectiveResponse;
+
 
 export interface SingleModeQuizProps {
     quizData: any[];

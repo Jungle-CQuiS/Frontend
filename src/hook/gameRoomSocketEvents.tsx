@@ -318,7 +318,8 @@ export const gameRoomSocketEvents = {
         stompClient: React.RefObject<Client>,
         roomId: string,
         roomUserId: string,
-        answer: string
+        answer: string,
+        reason: string
     ) => {
         if (!stompClient.current?.active) {
             throw new Error('No active connection');
@@ -328,6 +329,7 @@ export const gameRoomSocketEvents = {
         const message = {
             roomUserId: roomUserId,
             answer: answer,
+            reason : reason,
             roomId: roomId
         };
 
