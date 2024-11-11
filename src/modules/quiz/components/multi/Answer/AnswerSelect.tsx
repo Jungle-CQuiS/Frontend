@@ -56,13 +56,14 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
         }
     });
     const isSubjectiveAnswers = (answers: AnswerState): answers is SubjectiveAnswerState[] => {
-        return Array.isArray(answers) &&
-            (answers.length === 0 || answers.every(answer =>
-                'value' in answer &&
-                'reason' in answer &&
-                'roomUserId' in answer &&
-                'isSelected' in answer
-            ));
+        if (!Array.isArray(answers) || answers.length === 0) return false;
+        
+        // 첫 번째 요소로 타입 체크
+        const firstAnswer = answers[0];
+        return 'value' in firstAnswer && 
+               'reason' in firstAnswer && 
+               'roomUserId' in firstAnswer && 
+               'isSelected' in firstAnswer;
     };
     const handleSelect = (index: number) => {
         if (!user?.isLeader || user?.team === attackTeam) return;
