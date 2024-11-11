@@ -80,7 +80,7 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
                                     onChange={(e) => setAnswer(e.target.value)}
                                     placeholder="정답" />
                                 <SovlingInput
-                                    value={answer}
+                                    value={reason}
                                     onChange={(e) => setReason(e.target.value)}
                                     placeholder="정답에 대한 이유를 입력해주세요" />
                                 <BlackButtonSmall className="click-sound" onClick={handleSubmitAnswer}>제출하기</BlackButtonSmall>

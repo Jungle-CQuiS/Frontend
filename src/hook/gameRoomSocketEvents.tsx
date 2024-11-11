@@ -113,7 +113,7 @@ export const gameRoomSocketEvents = {
                                 console.log(response.number);
                                 initLeaderSelectQuizeId(response.number);
                                 break;
-                            case GamePlayEvents.DEF_QUIZ_SELECT: // 문제 선택(공격팀 리더)
+                            case GamePlayEvents.DEF_QUIZ_SELECT: 
                                 console.log(response.number);
                                 initLeaderSelectQuizeId(response.number);
                                 break;
