@@ -119,25 +119,34 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             const responseData = await response.json();
             const quizData = responseData.data as QuizResponse;
 
-            let parsedAnswers;
+
+            let parsedQuizResponse: QuizResponse;
 
             if (quizData.quizType === "주관식") {
-                parsedAnswers = quizData.answerList.map(item => ({
-                    roomUserId: item.roomUserId,
-                    answer: item.answer,
-                    reason: item.reason
-                }));
+                parsedQuizResponse = {
+                    type: "주관식",      
+                    quizType: "주관식",
+                    answerList: quizData.answerList.map(item => ({
+                        roomUserId: item.roomUserId,
+                        answer: item.answer,
+                        reason: item.reason
+                    }))
+                };
             } else {
-                parsedAnswers = quizData.answerList.map(item => ({
-                    choice: item.choice,
-                    reasonList: item.reasonList,
-                    indexList: item.indexList
-                }));
+                parsedQuizResponse = {
+                    type: "객관식",      
+                    quizType: "객관식",
+                    answerList: quizData.answerList.map(item => ({
+                        choice: item.choice,
+                        reasonList: item.reasonList,
+                        indexList: item.indexList
+                    }))
+                };
             }
 
-            console.log("<QuizAnswers>", parsedAnswers);
-            if(!parsedAnswers)
-                setSubmitedUserAnswer(parsedAnswers);
+            console.log("<QuizAnswers>", parsedQuizResponse);
+            if (!parsedQuizResponse)
+                setSubmitedUserAnswer(parsedQuizResponse);
 
         } catch (error) {
             console.error('정답 정보 조회 실패:', error);
