@@ -18,3 +18,9 @@ export const LoadingScreenContainer = styled.div`
     max-width: 90%; // 모바일 대응
   }
 `;
+
+export const LoadingTitle = styled.div`
+    padding-top: 150px;
+    font-size: 30px;
+    font-weight: 600;
+`;
