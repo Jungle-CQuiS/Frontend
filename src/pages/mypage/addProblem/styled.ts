@@ -10,34 +10,53 @@ export const AddProblemContainer = styled.div`
 
 export const AddProblemHeader = styled.div`
     display: flex;
-    gap: 10px;
+    gap: 20px;
     align-items: center;
     justify-content: center;
 `;
 
 export const AddProblemHeaderImg = styled.img`
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
+`;
+
+export const TooltipContainer = styled.div`
+    .tooltip-custom {
+        background-color: #333;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 6px;
+        gap: 15px;
+        padding: 15px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: justify;
+        max-width: 333px; /* 너비 제한 */
+        z-index: 1000; /* z-index로 nav 위로 올리기 */
+    }
+
+    .tooltip-custom:after {
+        border-top-color: #333;
+    }
 `;
 
 export const AddProblemHeaderTitle = styled.div`
-    font-size: 18px;
+    font-size: 32px;
     font-weight: 600;
 `;
 
 export const AddProblemWrap = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 25px;
 `;
 
 export const AddProblemCategoryWrap = styled.div`
     display: flex;
-    gap: 16px;
+    gap: 20px;
 `;
 
 export const AddProblemLabel = styled.label`
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
 `;
 
@@ -45,7 +64,7 @@ export const AddProblemTab = styled.div<{ isSelected?: boolean }>`
     padding: 8px 19px;
     border: ${({ isSelected }) => (isSelected ? "none" : "1px solid #969696")};
     color: ${({ isSelected }) => (isSelected ? "#FFF" : "#969696")};
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 500;
     border-radius: 4px;
     background-color: ${({ isSelected }) => (isSelected ? "#2F69FF" : "#FFF")};
@@ -53,15 +72,15 @@ export const AddProblemTab = styled.div<{ isSelected?: boolean }>`
 `;
 
 export const AddProblemInputLong = styled.textarea`
-    padding: 10px 14px;   
-    font-size: 14px;
+    padding: 15px 15px;   
+    font-size: 18px;
     font-weight: 500;
     border: 1px solid #D3D3D3;
-    width: 895px;
-    height: 350px;
+    width: 850px;
+    height: 200px;
     border-radius: 8px;
     &::placeholder{
-        color: #D3D3D3;
+        color: #969696;
     }
 `;
 

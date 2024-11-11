@@ -38,11 +38,11 @@ export default function Room() {
   // Ready CountDown Modal Logic
   useEffect(() => {
     if (isAllReady) {
-      // 5초 카운트다운 모달 시작
+      // 3초 카운트다운 모달 시작
       setIsCountDownModalOpen(true);
       // 무작위로 선공 팀 결정
       getFirstAttackTeam();
-      setTimeLeft(5); // 카운트다운 초기화
+      setTimeLeft(3); // 카운트다운 초기화
       const countdownTimer = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
@@ -72,7 +72,7 @@ export default function Room() {
         setIsFirstAttackModalOpen(true);
         coinSound.pause(); // 애니메이션 후 효과음 멈추기
         coinSound.currentTime = 0; // 효과음 처음부터 다시 시작
-      }, 3000);
+      }, 2000);
 
       return () => {
         clearTimeout(animationTimer);

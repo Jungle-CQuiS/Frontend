@@ -3,10 +3,11 @@ import { SetStateAction, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Background } from "../../../components/background/styled";
 import { PrimaryButtonMedium, SecondaryButtonSmall } from "../../../components/buttons/styled";
-import { AddProblemButtonWrap, AddProblemCategoryWrap, AddProblemContainer, AddProblemHeader, AddProblemHeaderImg, AddProblemHeaderTitle, AddProblemInputLong, AddProblemLabel, AddProblemTab, AddProblemWrap, CreateQuizNumber } from "./styled";
+import { AddProblemButtonWrap, AddProblemCategoryWrap, AddProblemContainer, AddProblemHeader, AddProblemHeaderImg, AddProblemHeaderTitle, AddProblemInputLong, AddProblemLabel, AddProblemTab, AddProblemWrap, CreateQuizNumber, TooltipContainer } from "./styled";
 import { AddProblemModal } from "../../../components/modal/mypage/addQuesttion";
 import { LoadingQuestion } from "./LoadingQuestion";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
+import { Tooltip } from "react-tooltip";
 
 export default function AddProblemPage() {
     const navigate = useNavigate();
@@ -104,21 +105,19 @@ export default function AddProblemPage() {
             {loadingQuestion ? (<LoadingQuestion />) :
                 (<AddProblemContainer>
                     <AddProblemHeader>
-                        <AddProblemHeaderImg src="/icons/edit.svg" />
-                        <AddProblemHeaderTitle>문제 등록하기</AddProblemHeaderTitle>
+                    <AddProblemHeaderTitle>문제 등록하기</AddProblemHeaderTitle>
+                        <TooltipContainer>
+                            <AddProblemHeaderImg
+                                src="/icons/question.svg"
+                                data-tooltip-id="tooltip"
+                            />
+                            <Tooltip id="tooltip" place="bottom" className="tooltip-custom">
+                                공부할 때 사용했던 블로그나 글을 복사해서 입력하면 그에 대한 문제가 출제가 됩니다.
+                                종류와 문제 수에 맞게 문제가 생성되니 선택해주세요.
+                            </Tooltip>
+                        </TooltipContainer>
                     </AddProblemHeader>
                     <AddProblemCategoryWrap>
-                        {/* <AddProblemLabel>주제</AddProblemLabel>
-                        {["OS", "자료구조", "알고리즘", "네트워크", "데이터베이스"].map((topic) => (
-                            <AddProblemTab
-                                className="click-sound"
-                                key={topic}
-                                isSelected={selectedTopic === topic}
-                                onClick={() => setSelectedTopic(topic)}
-                            >
-                                {topic}
-                            </AddProblemTab>
-                        ))} */}
                     </AddProblemCategoryWrap>
                     <AddProblemCategoryWrap>
                         <AddProblemLabel>종류</AddProblemLabel>
