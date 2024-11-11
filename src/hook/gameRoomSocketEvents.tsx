@@ -12,7 +12,7 @@ export const gameRoomSocketEvents = {
         client: Client,
         roomId: string,
         onDefenseTeamAllSubmitted: () => void,
-        handleGameEndEvent : (winner : TeamType) => void
+        handleGameEndEvent: (winner: TeamType) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -52,7 +52,7 @@ export const gameRoomSocketEvents = {
         client: Client,
         roomId: string,
         onDefenseTeamAllSubmitted: () => void,
-        handleGameEndEvent : (winner : TeamType) => void
+        handleGameEndEvent: (winner: TeamType) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -113,7 +113,10 @@ export const gameRoomSocketEvents = {
                                 console.log(response.number);
                                 initLeaderSelectQuizeId(response.number);
                                 break;
-                            // FIXME: 다른 case가 없다면 조건문 없애도 됩니다.
+                            case GamePlayEvents.DEF_QUIZ_SELECT: // 문제 선택(공격팀 리더)
+                                console.log(response.number);
+                                initLeaderSelectQuizeId(response.number);
+                                break;
                             default:
                                 break;
                         }
@@ -178,7 +181,7 @@ export const gameRoomSocketEvents = {
         client: Client,
         roomId: string,
         handleDefenseAnswerResults: (isCorrect: boolean) => void,
-        saveGradingResponse : (event: GamePlayEvents, team: TeamType, health: number) => void
+        saveGradingResponse: (event: GamePlayEvents, team: TeamType, health: number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -226,6 +229,39 @@ export const gameRoomSocketEvents = {
             const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.QUIZE_SELECT;// FIXME: API 수정해야함.
             const message = {
                 responseStatus: "QUIZ_SELECT",
+                number: selected,
+                roomId: roomId
+            }
+
+            // 2. PUBLISH
+            stompClient.current.publish({
+                destination: destination,
+                body: JSON.stringify(message)
+
+            });
+
+        } catch (error) {
+            console.error('Send Leader Select error:', error);
+            throw error;
+        }
+    },
+
+    // 정답 선택 ( 수비팀 리더 - 실시간 공유)
+    defSelectQuiz: async (
+        stompClient: React.RefObject<Client>,
+        roomId: string,
+        selected: number
+    ) => {
+        try {
+            if (!stompClient.current?.active) {
+                console.error('STOMP connection is not active');
+                return;
+            }
+
+            // 1. PACKING MESSAGE
+            const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.SELECT_FINAL_ANSWER;
+            const message = {
+                responseStatus: "DEF_QUIZ_SELECT",
                 number: selected,
                 roomId: roomId
             }
