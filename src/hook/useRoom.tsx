@@ -13,12 +13,15 @@ export const useRoom = (roomId: string) => {
     const { teamOneUsers, teamTwoUsers, isTeamsLoaded, updateTeams } = useTeamState();
     const { stompClient, isConnected, connect } = useStompContext();
     const Connected = useRef(false);  // 연결 상태 체크용
-   // const { joinRoom, disconnectSession } = useOpenViduContext();
     const { gameState, isAllReady, roomUserId,
         handleReadyRoomEvent, setRoomUserIdWithState, setRoomId } = useGameState();
     const [hasJoinedRoom, setHasJoinedRoom] = useState(false);
     const navigate = useNavigate();
     const userUuid = localStorage.getItem("uuid");
+
+    // Loading State 관련 useState
+    const [isSocketConnected, setISSocketConnected] = useState(false);
+    const [isRoomInfoSetting, setIsRoomInfoSetting] = useState(false);
 
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
@@ -54,9 +57,11 @@ export const useRoom = (roomId: string) => {
                 }
 
                 const data = await response.json();
+                
                 setRoomUserIdWithState(data.data.roomUserId);
                 setRoomId(roomId);
-                //joinRoom(data.data.sessionId, data.data.token, data.data.roomUserId);
+                setIsRoomInfoSetting(true);
+
                 console.log("<Response> roomUSerID :", data.data.roomUserId);
 
             } catch (e) {
@@ -90,7 +95,10 @@ export const useRoom = (roomId: string) => {
             if (!stompClient.current?.active || !isConnected) {
                 await connect();
                 Connected.current = true; // 연결 성공 후 구독 설정
+
             }
+
+            setISSocketConnected(true);
 
             if (stompClient.current) {
                 await new Promise<void>((resolve) => {
@@ -99,6 +107,7 @@ export const useRoom = (roomId: string) => {
                 });
             }
 
+           
             // 입장 메시지 전송
             await readyRoomSocketEvents.enterRoom(stompClient, roomId);
 
@@ -227,6 +236,8 @@ export const useRoom = (roomId: string) => {
         navigateToGamePage,
         isAllReady,
         stompClient,
-        isTeamsLoaded
+        isTeamsLoaded,
+        isSocketConnected,
+        isRoomInfoSetting
     };
 };
