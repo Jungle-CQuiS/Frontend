@@ -10,7 +10,6 @@ import { GameStartCountDownModal } from '../../../components/modal/room/countdow
 import { FirstAttackModal } from '../../../components/modal/room/flipcoin/result';
 import FlipCoin from '../../../components/modal/room/flipcoin';
 import { FlipCoinBackdrop, FlipCoinScreen } from '../../../components/modal/room/flipcoin/styled';
-import { SOCKET_DESTINATIONS } from '../../../config/websocket/constants';
 import { useTeamState } from '../../../contexts/TeamStateContext/useTeamState';
 import { usePageLeave } from '../../../hook/pageLeaveHandler';
 import { LoadingScreen } from '../../../modules/LoadingScreen';
@@ -22,7 +21,7 @@ export default function Room() {
   const {
     teamOneUsers, teamTwoUsers,
     userReady, exitRoom, teamSwitch, navigateToGamePage,
-    isAllReady, isTeamsLoaded
+    isAllReady, isTeamsLoaded, isSocketConnected, isRoomInfoSetting
   } = useRoom(roomId);
   const { updateAttackTeam } = useTeamState();
   useButtonSoundEffect();
@@ -114,9 +113,19 @@ export default function Room() {
     }
   }
 
-  if (!isTeamsLoaded) {
-    return <LoadingScreen />;
+
+  if(!isSocketConnected){
+    return <LoadingScreen loadingText = "서버 연결 중"/>;
   }
+
+  if(!isRoomInfoSetting){
+    return <LoadingScreen loadingText = "방 정보 불러오는 중"/>;
+  }
+
+  if (!isTeamsLoaded) {
+    return <LoadingScreen loadingText = "방 유저 정보 불러오는 중"/>;
+  }
+  
   return (
     <Background>
       <RoomTitleComponent roomName={state?.roomName} />
