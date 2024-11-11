@@ -113,7 +113,8 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                                 className="click-sound"
                                 src={index === selectedQuizId ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
                                 onClick={() => {
-                                    if (user?.isLeader) {
+                                    if(user?.team === attackTeam) return;
+                                    if (user?.isLeader ) {
                                         initLeaderSelectQuizeId(index);
                                         updateLeaderSelect(index);
                                     }
@@ -133,6 +134,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                                 className="click-sound"
                                 src={index === selectedQuizId ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
                                 onClick={() => {
+                                    if(user?.team === attackTeam) return;
                                     if (user?.isLeader) {
                                         const selectedIndex = answers[index].indexList[0];
                                         initLeaderSelectQuizeId(parseInt(selectedIndex));
