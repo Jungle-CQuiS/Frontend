@@ -56,9 +56,14 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
         }
     });
     const isSubjectiveAnswers = (answers: AnswerState): answers is SubjectiveAnswerState[] => {
-        return answers.length === 0 || 'value' in answers[0];
+        return Array.isArray(answers) &&
+            (answers.length === 0 || answers.every(answer =>
+                'value' in answer &&
+                'reason' in answer &&
+                'roomUserId' in answer &&
+                'isSelected' in answer
+            ));
     };
-
     const handleSelect = (index: number) => {
         if (!user?.isLeader || user?.team === attackTeam) return;
 

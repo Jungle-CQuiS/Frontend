@@ -123,8 +123,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             let parsedQuizResponse: QuizResponse;
 
             if (quizData.quizType === "주관식") {
-                parsedQuizResponse = {
-                    type: "주관식",      
+                parsedQuizResponse = {    
                     quizType: "주관식",
                     answerList: quizData.answerList.map(item => ({
                         roomUserId: item.roomUserId,
@@ -133,8 +132,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                     }))
                 };
             } else {
-                parsedQuizResponse = {
-                    type: "객관식",      
+                parsedQuizResponse = {   
                     quizType: "객관식",
                     answerList: quizData.answerList.map(item => ({
                         choice: item.choice,
@@ -145,8 +143,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             }
 
             console.log("<QuizAnswers>", parsedQuizResponse);
-            if (!parsedQuizResponse)
-                setSubmitedUserAnswer(parsedQuizResponse);
+            setSubmitedUserAnswer(parsedQuizResponse);
 
         } catch (error) {
             console.error('정답 정보 조회 실패:', error);

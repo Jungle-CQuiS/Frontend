@@ -28,12 +28,12 @@ export interface QuizTypeProps {
     indexList: string[];
  }
  
- interface SubjectiveResponse extends QuizTypeProps {
+ interface SubjectiveResponse {
     quizType: "주관식";
     answerList: SubjectiveAnswer[];
  }
  
- interface ObjectiveResponse extends QuizTypeProps {
+ interface ObjectiveResponse{
     quizType: "객관식";
     answerList: ObjectiveChoice[];
  }
