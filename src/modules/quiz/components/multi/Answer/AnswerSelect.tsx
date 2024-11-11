@@ -2,54 +2,89 @@ import { useState } from "react";
 import { BlackButtonSmall } from "../../../../../components/buttons/styled";
 import { AnswerSelectContainer, AnswerSelectWrap, AnswerSelectCheckbox, AnswerSelectText, AnswerSelectRow } from "./styled";
 import { LookQuestionModal } from "../../../../../components/modal/lookQuestion";
-import { UserAnswer } from "../../../../../types/quiz";
+import { QuizResponse } from "../../../../../types/quiz";
 import { Quiz } from "../../../../../types/quiz";
 import { useGameState } from "../../../../../contexts/GameStateContext/useGameState";
 import { useGameUser } from "../../../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../../../contexts/TeamStateContext/useTeamState";
 import { useStompContext } from "../../../../../contexts/StompContext";
 import { gameRoomSocketEvents } from "../../../../../hook/gameRoomSocketEvents";
-interface Answer {
-  value: string;
-  isSelected: boolean;
+interface SubjectiveAnswerState {
+    value: string;
+    reason: string;
+    roomUserId: number;
+    isSelected: boolean;
 }
 
+interface ObjectiveAnswerState {
+    choice: number;
+    reasonList: string[];
+    indexList: string[];
+    isSelected: boolean;
+}
+type AnswerState = SubjectiveAnswerState[] | ObjectiveAnswerState[];
 interface SelectAnswerPageProps {
     selectedQuiz: Quiz | null;
-    userAnswers: UserAnswer[] | null;
+    userAnswers: QuizResponse | null; // 앞서 정의한 QuizResponse 타입 사용
 }
 
-export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: SelectAnswerPageProps) {
+export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: SelectAnswerPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { _roomId,getDefenceFinalAnswer ,selectedQuizId ,initLeaderSelectQuizeId } = useGameState();
-    const {user} = useGameUser();
-    const {stompClient} = useStompContext();
-    const {attackTeam} = useTeamState();
-    const [answers, setAnswers] = useState<Answer[]>(() => 
-        userAnswers?.map((item , index) => ({
-            value: item.answer,
-            isSelected: false
-        })) ?? []
-    );
+    const { _roomId, getDefenceFinalAnswer, selectedQuizId, initLeaderSelectQuizeId } = useGameState();
+    const { user } = useGameUser();
+    const { stompClient } = useStompContext();
+    const { attackTeam } = useTeamState();
+    // answers 상태를 QuizType에 따라 다르게 초기화
+    const [answers, setAnswers] = useState(() => {
 
-    const handleSelect = (index: number) => {
-        if(!user?.isLeader || user?.team === attackTeam) return;
+        if (!userAnswers || !userAnswers.answerList) return [];
 
-        setAnswers(answers.map((answer, i) => ({
-            ...answer,
-            isSelected: i === index
-        })));
-
-        console.log("final select", index);
-        getDefenceFinalAnswer(index); // 정답 설정
+        if (userAnswers.quizType === "주관식") {
+            return userAnswers.answerList.map(item => ({
+                value: item.answer,
+                reason: item.reason,
+                roomUserId: item.roomUserId,
+                isSelected: false
+            }));
+        } else {
+            return userAnswers.answerList.map(item => ({
+                choice: item.choice,
+                reasonList: item.reasonList,
+                indexList: item.indexList,
+                isSelected: false
+            }));
+        }
+    });
+    const isSubjectiveAnswers = (answers: AnswerState): answers is SubjectiveAnswerState[] => {
+        return answers.length === 0 || 'value' in answers[0];
     };
 
+    const handleSelect = (index: number) => {
+        if (!user?.isLeader || user?.team === attackTeam) return;
+
+        setAnswers(prev => {
+            if (isSubjectiveAnswers(prev)) {
+                return prev.map((answer, i) => ({
+                    ...answer,
+                    isSelected: i === index
+                }));
+            } else {
+                return prev.map((answer, i) => ({
+                    ...answer,
+                    isSelected: i === index
+                }));
+            }
+        });
+
+        console.log("final select", index);
+        getDefenceFinalAnswer(index);
+    };
     const handleOpenModal = () => {
         setIsModalOpen(true);
-      };
+    };
     const handleCloseModal = () => {
         setIsModalOpen(false);
-      };
+    };
     const handleDone = () => {
         setIsModalOpen(false);
     };
@@ -57,30 +92,59 @@ export default function AnswerSelectComponent( { selectedQuiz ,userAnswers }: Se
     // Leader가 선택한 것을 APP으로 보낸다. 소켓 함수에 넣을 함수.
     const updateLeaderSelect = (leaderSelect: number) => {
         // 리더가 선택 한 답을 서버로 보낸다.
-        gameRoomSocketEvents.defSelectQuiz(stompClient, _roomId,leaderSelect);
+        gameRoomSocketEvents.defSelectQuiz(stompClient, _roomId, leaderSelect);
     }
 
     return (
         <AnswerSelectContainer>
             <BlackButtonSmall onClick={handleOpenModal}>문제보기</BlackButtonSmall>
             <AnswerSelectWrap>
-                {answers.map((answer, index) => (
-                    <AnswerSelectRow key={index} onClick={() => handleSelect(index)}>
-                        <AnswerSelectCheckbox 
-                            className="click-sound"
-                            src={index === selectedQuizId? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"} 
-                            onClick={() => {
-                                if (user?.isLeader){ //Leader만 선택 가능하다.
-                                    initLeaderSelectQuizeId(index);
-                                    // 소켓 통신으로 다른 팀원들과 선택한 것 공유
-                                    updateLeaderSelect(index);}
-                            }}
-                        />
-                        <AnswerSelectText>{answer.value}</AnswerSelectText>
-                    </AnswerSelectRow>
-                ))}
+                {isSubjectiveAnswers(answers) ? (
+                    // 주관식 답변 렌더링
+                    answers.map((answer, index) => (
+                        <AnswerSelectRow key={index} onClick={() => handleSelect(index)}>
+                            <AnswerSelectCheckbox
+                                className="click-sound"
+                                src={index === selectedQuizId ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
+                                onClick={() => {
+                                    if (user?.isLeader) {
+                                        initLeaderSelectQuizeId(index);
+                                        updateLeaderSelect(index);
+                                    }
+                                }}
+                            />
+                            <AnswerSelectText>
+                                답변: {answer.value}<br />
+                                이유: {answer.reason}
+                            </AnswerSelectText>
+                        </AnswerSelectRow>
+                    ))
+                ) : (
+                    // 객관식 답변 렌더링
+                    answers.map((answer, index) => (
+                        <AnswerSelectRow key={index} onClick={() => handleSelect(index)}>
+                            <AnswerSelectCheckbox
+                                className="click-sound"
+                                src={index === selectedQuizId ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
+                                onClick={() => {
+                                    if (user?.isLeader) {
+                                        const selectedIndex = answers[index].indexList[0];
+                                        initLeaderSelectQuizeId(parseInt(selectedIndex));
+                                        updateLeaderSelect(parseInt(selectedIndex));
+                                    }
+                                }}
+                            />
+                            <AnswerSelectText>
+                                선택지 {answer.choice}번<br />
+                                {answer.reasonList.map((reason, i) => (
+                                    <div key={i}>- {reason}</div>
+                                ))}
+                            </AnswerSelectText>
+                        </AnswerSelectRow>
+                    ))
+                )}
             </AnswerSelectWrap>
-            <LookQuestionModal 
+            <LookQuestionModal
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 onDone={handleDone}

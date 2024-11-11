@@ -26,7 +26,7 @@ export default function QuizGamePage() {
     const { stompClient } = useStompContext();
     const { gameState, gamePhase, isLoading,
         roomUserId, _roomId,
-        submitedUserAnswer, 
+        submitedUserAnswer,
         setIsLoaded, changeGamePhase,
         handleReadyRoomEvent, setDefenceQuizResult,
         initLeaderSelectQuizeId, getUserAnswer, resetGameRoomInfo, handleGameEndEvent,
@@ -126,7 +126,7 @@ export default function QuizGamePage() {
         const loadGameUserInfo = async () => {
             try {
                 console.log("Loading user info...");
-                if(roomUserId === null){
+                if (roomUserId === null) {
                     console.error('Room fetched failed: no roomUserId');
                     return;
                 }
@@ -276,14 +276,14 @@ export default function QuizGamePage() {
             console.log("게임 페이즈 변경됨");
         };
 
-        if(gameState === GameStatus.START)
+        if (gameState === GameStatus.START)
             initializeRound();
 
     }, [gameState]);
 
     // 로딩 중이거나 유저 정보가 없으면 로딩 화면 표시
     if (isLoading || !userLoaded || !user) {
-        return <LoadingScreen/>;
+        return <LoadingScreen />;
     }
 
 
@@ -315,7 +315,9 @@ export default function QuizGamePage() {
                         </Background>
                     ) : (
                         <SelectAnswerPage
-                            selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer}
+                            selectedQuiz={selectedQuiz}
+                            userAnswers={submitedUserAnswer}
+
                             prepareNextRound={prepareNextRound}
                         />
                     )

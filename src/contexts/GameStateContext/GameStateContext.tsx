@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useState, useCallback } from 'react';
 import { GameStatus, GameReadyEvents, GamePlayEvents, GamePhase } from '../../types/game';
-import { UserAnswer } from '../../types/quiz';
+import { QuizResponse } from '../../types/quiz';
 import { TeamType } from '../../types/teamuser';
 
 interface GameStateContextType {
@@ -18,13 +18,13 @@ interface GameStateContextType {
     roomUserIdError: string | null;
 
     // 수비팀 유저들이 제출한 답 리스트.
-    submitedUserAnswer: UserAnswer[] | null;
+    submitedUserAnswer: QuizResponse | null;
     defenceFinalAnswer: number | null;
     quizResult: boolean | null;
 
     // 이긴 팀
     winnerTeam: TeamType | null;
-    gradeResponse : GradeResponse | null;
+    gradeResponse: GradeResponse | null;
     // 전역 메소드
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
     setRoomUserIdWithState: (id: string) => void;
@@ -37,8 +37,8 @@ interface GameStateContextType {
     setDefenceQuizResult: (isCorrect: boolean) => void;
     resetGameRoomInfo: (event: GamePlayEvents) => void;
     handleGameEndEvent: (winner: TeamType) => void;
-    saveGradingResponse : (event: GamePlayEvents, team: TeamType, health: number) => void;
-    resetGradingResponse : () => void;
+    saveGradingResponse: (event: GamePlayEvents, team: TeamType, health: number) => void;
+    resetGradingResponse: () => void;
 }
 
 interface GradeResponse {
@@ -64,7 +64,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
 
     // 수비팀 유저의 제출한 답들 불러오기.
-    const [submitedUserAnswer, setSubmitedUserAnswer] = useState<UserAnswer[] | null>(null);
+    const [submitedUserAnswer, setSubmitedUserAnswer] = useState<QuizResponse | null>(null);
     const [defenceFinalAnswer, setDefenceFinalAnswer] = useState<number | null>(null);
 
     // 수비팀 최종 답 채점 결과.
@@ -117,14 +117,27 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             if (!response.ok) throw new Error('Failed to fetch game info');
 
             const responseData = await response.json();
+            const quizData = responseData.data as QuizResponse;
 
-            const quizAnswers: UserAnswer[] = responseData.data.answerList.map((item: any) => ({
-                roomUserId: item.roomUserId,
-                answer: item.answer
-            }));
+            let parsedAnswers;
 
-            console.log("<QuizAnswers>", quizAnswers);
-            setSubmitedUserAnswer(quizAnswers);
+            if (quizData.quizType === "주관식") {
+                parsedAnswers = quizData.answerList.map(item => ({
+                    roomUserId: item.roomUserId,
+                    answer: item.answer,
+                    reason: item.reason
+                }));
+            } else {
+                parsedAnswers = quizData.answerList.map(item => ({
+                    choice: item.choice,
+                    reasonList: item.reasonList,
+                    indexList: item.indexList
+                }));
+            }
+
+            console.log("<QuizAnswers>", parsedAnswers);
+            if(!parsedAnswers)
+                setSubmitedUserAnswer(parsedAnswers);
 
         } catch (error) {
             console.error('정답 정보 조회 실패:', error);
