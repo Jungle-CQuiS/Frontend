@@ -52,7 +52,8 @@ export default function SingleModeQuiz() {
             }
     
             const answerContent = currentQuiz[`choice${result.data.answer}`];
-            setCorrectAnswer(`${result.data.answer} - ${answerContent}`);
+            const answerDisplay = selectedMode === "주관식" ? `${result.data.answer}` : `${result.data.answer} - ${answerContent}`;
+            setCorrectAnswer(answerDisplay);
             
             const category = currentQuiz.categoryId;
             setResults(prevResults => {
