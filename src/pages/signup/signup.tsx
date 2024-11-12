@@ -6,6 +6,7 @@ import { LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWra
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
+import { useAlert, useConfirm } from "../../components/confirmPopup";
 
 
 
@@ -15,22 +16,36 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   useHoverSoundEffect();
+  const customAlert = useAlert();
 
   const handleSignup = async () => {
+    // 이메일 폼 체크
+    const emailForm = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailForm.test(email)) {
+      customAlert("올바르지 않은 이메일 형식입니다.");
+      return;
+    }
+    // 비밀번호 4자리 이상 15자리 이하
+    const passwordForm = /^.{4,15}$/;
+    if (!passwordForm.test(password)){
+      customAlert("비밀번호는 4자리 이상 15자리 이하로 설정해주세요.")
+      return;
+    }
+
     if (email && username && password) {
       try {
         // 이메일 중복 체크      
         const emailResponse = await fetch(`/api/auth/email/${email}/duplicate-check`);
         const emailData = await emailResponse.json();
         if (emailData.data.emailIsDuplicate === true) {
-          alert("이미 사용 중인 이메일입니다.");
+          customAlert("이미 사용 중인 이메일입니다.");
           return;
         }
         // 닉네임 중복 체크    
         const usernameResponse = await fetch(`/api/auth/username/${username}/duplicate-check`);
         const usernameData = await usernameResponse.json();
         if (usernameData.data.usernameIsDuplicate === true) {
-          alert("중복된 닉네임입니다.");
+          customAlert("중복된 닉네임입니다. 다른 닉네임을 사용해주세요.");
           return;
         }
         const response = await fetch(`/api/auth/signup`, {

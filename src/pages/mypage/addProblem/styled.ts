@@ -24,14 +24,16 @@ export const TooltipContainer = styled.div`
     .tooltip-custom {
         background-color: #333;
         color: #fff;
-        font-size: 16px;
+        font-size: 17px;
         border-radius: 6px;
         gap: 15px;
-        padding: 15px;
+        padding: 25px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        text-align: justify;
+        text-align: center;
         max-width: 333px; /* 너비 제한 */
         z-index: 1000; /* z-index로 nav 위로 올리기 */
+        white-space: pre-line;
+        line-height: 2.5;
     }
 
     .tooltip-custom:after {
