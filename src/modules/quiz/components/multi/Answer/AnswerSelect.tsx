@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BlackButtonSmall } from "../../../../../components/buttons/styled";
-import { AnswerSelectContainer, AnswerSelectWrap, AnswerSelectCheckbox, AnswerSelectText, AnswerSelectRow } from "./styled";
+import { AnswerSelectContainer, AnswerSelectWrap, AnswerSelectCheckbox, AnswerSelectText, AnswerSelectRow 
+    , ScreenSharedBorder , ScreenSharedText} from "./styled";
 import { LookQuestionModal } from "../../../../../components/modal/lookQuestion";
 import { QuizResponse } from "../../../../../types/quiz";
 import { Quiz } from "../../../../../types/quiz";
@@ -103,6 +104,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
 
     return (
         <AnswerSelectContainer>
+            {user?.team === attackTeam && <ScreenSharedBorder><ScreenSharedText>🔴 수비팀 화면입니다 </ScreenSharedText></ScreenSharedBorder>}
             <BlackButtonSmall onClick={handleOpenModal}>문제보기</BlackButtonSmall>
             <AnswerSelectWrap>
                 {isSubjectiveAnswers(answers) ? (
