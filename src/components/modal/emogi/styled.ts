@@ -55,10 +55,67 @@ export const EmojiContentWrap = styled.div`
 `;
 
 export const EmojiContentBox = styled.div`
-    padding: 15px 15px;   
+    padding: 0px 0px;   
     font-size: 18px;
     font-weight: 500;
     border: 1px solid #D3D3D3;
-    border-radius: 0 0 8px 8px; 
-    margin-top: -1px; 
-`
+    border-radius: 0 0 8px 8px;
+    height: 106px;        // 정확히 한 줄 높이로 설정 (이미지 100px + 패딩 3px * 2)
+    overflow-y: auto;
+     overflow-x: hidden;
+    /* 스크롤 스냅 설정 */
+    scroll-snap-type: y mandatory;  
+    scroll-behavior: smooth;
+
+    /* 스크롤바 스타일링 */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+`;
+
+export const EmojiGrid = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`;
+
+export const EmojiRow = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    height: 106px;
+`;
+
+export const EmojiButton = styled.button`
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px;
+    transition: transform 0.2s;
+    
+    &:hover {
+        transform: scale(1.1);
+    }
+    
+    img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+    }
+`;
