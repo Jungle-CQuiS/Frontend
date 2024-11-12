@@ -103,8 +103,9 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
     }
 
     return (
+        <>
+         {user?.team === attackTeam && <ScreenSharedBorder><ScreenSharedText>🔴 수비팀 화면입니다 </ScreenSharedText></ScreenSharedBorder>}
         <AnswerSelectContainer>
-            {user?.team === attackTeam && <ScreenSharedBorder><ScreenSharedText>🔴 수비팀 화면입니다 </ScreenSharedText></ScreenSharedBorder>}
             <BlackButtonSmall onClick={handleOpenModal}>문제보기</BlackButtonSmall>
             <AnswerSelectWrap>
                 {isSubjectiveAnswers(answers) ? (
@@ -161,5 +162,6 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                 selectedQuiz={selectedQuiz}
             />
         </AnswerSelectContainer>
+        </>
     );
 }
