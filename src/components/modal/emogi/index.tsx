@@ -2,8 +2,9 @@ import { useState } from "react";
 import { IModalProps, Modal } from "..";
 import {
     EmojiModalContainer, EmojiCategoryContainer, EmojiCategoryTab, EmojiContentWrap,
-    EmojiContentBox, EmojiButton, EmojiGrid,EmojiRow
+    EmojiContentBox, EmojiButton, EmojiGrid, EmojiRow
 } from "./styled";
+import { AnimatedEmoji } from "./animatedEmoji";
 import { EMOJI_IMAGE } from "../../../config/emoji/constants";
 
 interface EmojiModalProps {
@@ -15,11 +16,13 @@ type EmojiPaths = {
     [key: string]: string;
 };
 
-export const EmojiModal = ({
-    onClose,
-    onDone,
-    ...props
-}: IModalProps & EmojiModalProps) => {
+export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps & EmojiModalProps) => {
+    const [animatedEmojis, setAnimatedEmojis] = useState<Array<{
+        id: number;
+        src: string;
+        x: number;
+        y: number;
+    }>>([]);
 
     const [selectedCategory, setSelectedCategory] = useState("전체");
 
@@ -29,10 +32,24 @@ export const EmojiModal = ({
     };
 
     // 이미지 클릭 핸들러
-    const handleEmojiClick = (imagePath: string) => {
-        // 이미지 클릭 시 처리 로직
+    const handleEmojiClick = (imagePath: string, event: React.MouseEvent) => {
+        // 클릭한 위치를 기준으로 애니메이션 시작 위치 설정
+        const rect = event.currentTarget.getBoundingClientRect();
+        const startX = rect.left;
+        const startY = rect.top;
+
+        setAnimatedEmojis(prev => [
+            ...prev,
+            {
+                id: Date.now(),
+                src: imagePath,
+                x: startX,
+                y: startY
+            }
+        ]);
+
+        // 기존 클릭 핸들링
         console.log('Selected emoji:', imagePath);
-        // onDone(imagePath); // 필요한 경우
     };
 
 
@@ -57,66 +74,75 @@ export const EmojiModal = ({
 
 
     return (
-        <Modal {...props}
-            open={props.open} onClose={onClose} onDone={onDone}
-            closeOnBackdropClick={true}
-            backdropcolor={false}
-            width="300px"
-            $padding="10px"
-            $round="8px"
-            $border="3px solid"
-        >
-            <EmojiModalContainer>
-                <EmojiCategoryContainer>
-                    {["전체", "주제선택", "감정표현"].map((category) => (
-                        <EmojiCategoryTab
-                            className="click-sound"
-                            key={category}
-                            isSelected={selectedCategory === category}
-                            onClick={() => handleCategoryClick(category)}
-                        >
-                            {category}
-                        </EmojiCategoryTab>
-                    ))}
+        <>
+            <Modal {...props}
+                open={props.open} onClose={onClose} onDone={onDone}
+                closeOnBackdropClick={true}
+                backdropcolor={false}
+                width="300px"
+                $padding="10px"
+                $round="8px"
+                $border="3px solid"
+            >
+                <EmojiModalContainer>
+                    <EmojiCategoryContainer>
+                        {["전체", "주제선택", "감정표현"].map((category) => (
+                            <EmojiCategoryTab
+                                className="click-sound"
+                                key={category}
+                                isSelected={selectedCategory === category}
+                                onClick={() => handleCategoryClick(category)}
+                            >
+                                {category}
+                            </EmojiCategoryTab>
+                        ))}
 
-                </EmojiCategoryContainer>
-                <EmojiContentWrap>
-                    <EmojiContentBox>
-                        <EmojiGrid>
-                            {Object.entries(getFilteredEmojis()).reduce((rows: any[], [emojiKey, emojiPath], index) => {
-                                const rowIndex = Math.floor(index / 2);
+                    </EmojiCategoryContainer>
+                    <EmojiContentWrap>
+                        <EmojiContentBox>
+                            <EmojiGrid>
+                                {Object.entries(getFilteredEmojis()).reduce((rows: any[], [emojiKey, emojiPath], index) => {
+                                    const rowIndex = Math.floor(index / 2);
 
-                                if (!rows[rowIndex]) {
-                                    rows[rowIndex] = [];
-                                }
+                                    if (!rows[rowIndex]) {
+                                        rows[rowIndex] = [];
+                                    }
 
-                                rows[rowIndex].push(
-                                    <EmojiButton
-                                        key={emojiKey}
-                                        onClick={() => handleEmojiClick(emojiPath)}
-                                        className="click-sound"
-                                    >
-                                        <img
-                                            src={emojiPath}
-                                            alt={emojiKey}
-                                            draggable={false}
-                                        />
-                                    </EmojiButton>
-                                );
+                                    rows[rowIndex].push(
+                                        <EmojiButton
+                                            key={emojiKey}
+                                            onClick={(e) => handleEmojiClick(emojiPath, e)}
+                                            className="click-sound"
+                                        >
+                                            <img
+                                                src={emojiPath}
+                                                alt={emojiKey}
+                                                draggable={false}
+                                            />
+                                        </EmojiButton>
+                                    );
 
-                                return rows;
-                            }, []).map((rowButtons, rowIndex) => (
-                                <EmojiRow key={rowIndex}>
-                                    {rowButtons}
-                                </EmojiRow>
-                            ))}
-                        </EmojiGrid>
-                    </EmojiContentBox>
-                </EmojiContentWrap>
-            </EmojiModalContainer>
-        </Modal>
-
-
+                                    return rows;
+                                }, []).map((rowButtons, rowIndex) => (
+                                    <EmojiRow key={rowIndex}>
+                                        {rowButtons}
+                                    </EmojiRow>
+                                ))}
+                            </EmojiGrid>
+                        </EmojiContentBox>
+                    </EmojiContentWrap>
+                </EmojiModalContainer>
+            </Modal>
+            {/* 애니메이션되는 이모지들 렌더링 */}
+            {animatedEmojis.map(emoji => (
+                <AnimatedEmoji
+                    key={emoji.id}
+                    src={emoji.src}
+                    startX={emoji.x}
+                    startY={emoji.y}
+                />
+            ))}
+        </>
     );
 
 
