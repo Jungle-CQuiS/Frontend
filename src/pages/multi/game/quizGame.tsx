@@ -309,8 +309,6 @@ export default function QuizGamePage() {
                             </TeamHeaderContainer>
                             <WaitingScreen teamId={teamId} />
                             <p></p>
-                            <UserTagsComponent teamId={teamId == 1 ? 2 : 1} />{/*다른 팀의 팀 뱃지*/}
-                            <p></p>
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </Background>
                     ) : (
