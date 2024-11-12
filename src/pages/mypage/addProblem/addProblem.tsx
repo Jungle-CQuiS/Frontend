@@ -8,6 +8,7 @@ import { AddProblemModal } from "../../../components/modal/mypage/addQuesttion";
 import { LoadingQuestion } from "./LoadingQuestion";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 import { Tooltip } from "react-tooltip";
+import { useConfirm } from "../../../components/confirmPopup";
 
 export default function AddProblemPage() {
     const navigate = useNavigate();
@@ -20,17 +21,32 @@ export default function AddProblemPage() {
     const [modalData, setModalData] = useState([]);
     const [loadingQuestion, setLoadingQuestion] = useState(false);
     useButtonSoundEffect()
+    const customAlert = useConfirm();
 
     const handleCancel = () => {
         navigate("/mypage");
     };
 
     const handleOpenModal = async () => {
+        // 문제 내용 입력 여부 확인
+        if (!problemContent.trim()) {
+            customAlert("작성한 내용이 없습니다.");
+            return;
+        }
+
+        // 문제 수가 0 이하인 경우 확인
+        if (value <= 0) {
+            customAlert("한 문제이상으로 설정해 주세요.");
+            return;
+        }
+
         setLoadingQuestion(true);
         const successModal = await sendTextQuiz();
         setLoadingQuestion(false);
         if (successModal) {
             setIsModalOpen(true);
+        } else {
+            customAlert("문제 생성에 실패하였습니다. 다른 내용을 입력해주세요.");
         }
     };
     const handleCloseModal = () => {
@@ -112,7 +128,7 @@ export default function AddProblemPage() {
                                 data-tooltip-id="tooltip"
                             />
                             <Tooltip id="tooltip" place="bottom" className="tooltip-custom">
-                                공부할 때 참고했던 블로그나 글을 복사해서<br />
+                                공부할 때 참고했던 링크나 글을 복사해서 <br />
                                 입력하면 그에 맞는 문제가 출제가 됩니다.<br />
                                 선택한 종류와 문제수에 맞게 생성이 됩니다.
                             </Tooltip>
