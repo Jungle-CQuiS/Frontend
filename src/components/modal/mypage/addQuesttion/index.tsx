@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Quiz } from "../../../../types/quiz";
 import { useNavigate } from "react-router-dom";
 import { MyPageCategoryContainer, MyPageCategoryTab } from "../../../../modules/mypage/components/right/styled";
-import { useAlert } from "../../../confirmPopup";
+import { useAlert, useConfirm } from "../../../confirmPopup";
 import useButtonSoundEffect from "../../../../hook/useHoverSoundEffect";
 
 interface CreateQuizProps {
@@ -28,6 +28,7 @@ export const AddProblemModal = ({
     const [isQuizDataValid, setIsQuizDataValid] = useState(true);
     const navigate = useNavigate();
     const customAlert = useAlert();
+    const customConfirm = useConfirm();
     useButtonSoundEffect()
 
     useEffect(() => {
@@ -90,6 +91,13 @@ export const AddProblemModal = ({
                 }
             });
 
+            const confirmResult = await customConfirm("제출 하시겠습니까?");
+            if (!confirmResult) {
+                return;
+            }else{
+                customAlert("제출이 완료되었습니다.");
+            }
+
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: {
@@ -102,7 +110,6 @@ export const AddProblemModal = ({
             });
 
             if (response.ok) {
-                await customAlert("문제 제출이 완료되었습니다!");
                 onDone();
                 navigate("/mypage");
             } else {
@@ -187,4 +194,4 @@ export const AddProblemModal = ({
             </CreateQuistionModalContainer>
         </Modal>
     );
-}
+};
