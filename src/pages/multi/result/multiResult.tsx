@@ -88,7 +88,8 @@ export const MultiModeResultPage = () => {
         </MultiResultHeader>
 
         <MultiResultCardContainer>
-          {mappedUsers.filter(user => user !== null)
+          {mappedUsers
+            .filter(user => user.name !== "-")
             .map((user) => (
             <MultiResultCardWrap
               key={user.id}
