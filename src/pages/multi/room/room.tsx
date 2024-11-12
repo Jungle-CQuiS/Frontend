@@ -83,49 +83,77 @@ export default function Room() {
   }, [isCoinAnimation]);
 
   const getFirstAttackTeam = async () => {
-    const userUuid = localStorage.getItem("uuid");
-    const userAccessToken = localStorage.getItem("AccessToken");
-    const API_URL = `/api/quiz/multi/game/start`;
+    const maxRetries = 3;  // 최대 재시도 횟수
+    const retryDelay = 1000;  // 재시도 간격 (1초)
+
+    const attemptFetch = async (retryCount: number): Promise<void> => {
+      const userUuid = localStorage.getItem("uuid");
+      const userAccessToken = localStorage.getItem("AccessToken");
+      const API_URL = `/api/quiz/multi/game/start`;
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${userAccessToken}`,
+            "uuid": `${userUuid}`,
+            "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            roomId: roomId,
+            gameStatus: "GAME_START"
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const selectedTeam = data.data.teamColor === "BLUE" ? '1팀' : '2팀';   // 백엔드에서 랜덤 받아와야 할 듯!
+          setFirstAttackTeam(selectedTeam);
+        }
+        else {
+          console.log('Response error:', response);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+      } catch (e) {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        console.error(`Fetch attempt ${retryCount + 1} failed:`, errorMessage);
+
+        if (retryCount < maxRetries - 1) {
+          console.log(`Retrying in ${retryDelay / 1000} seconds... (${retryCount + 1}/${maxRetries})`);
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          return attemptFetch(retryCount + 1);
+        } else {
+          console.error("Max retry attempts reached");
+          throw e;
+        }
+      }
+    }
 
     try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${userAccessToken}`,
-          "uuid": `${userUuid}`,
-          "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          roomId: roomId,
-          gameStatus: "GAME_START"
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const selectedTeam = data.data.teamColor === "BLUE" ? '1팀' : '2팀';   // 백엔드에서 랜덤 받아와야 할 듯!
-        setFirstAttackTeam(selectedTeam);
-      }
-
-    } catch (error) {
-      console.error("선공팀을 받아오는데 실패하였습니다.", error);
+      await attemptFetch(0);
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      console.error("All fetch start attempts failed:", errorMessage);
+      throw e;
     }
+
   }
 
 
-  if(!isSocketConnected){
-    return <LoadingScreen loadingText = "서버 연결 중"/>;
+  if (!isSocketConnected) {
+    return <LoadingScreen loadingText="서버 연결 중" />;
   }
 
-  if(!isRoomInfoSetting){
-    return <LoadingScreen loadingText = "방 정보 불러오는 중"/>;
+  if (!isRoomInfoSetting) {
+    return <LoadingScreen loadingText="방 정보 불러오는 중" />;
   }
 
   if (!isTeamsLoaded) {
-    return <LoadingScreen loadingText = "방 유저 정보 불러오는 중"/>;
+    return <LoadingScreen loadingText="방 유저 정보 불러오는 중" />;
   }
-  
+
   return (
     <Background>
       <RoomTitleComponent roomName={state?.roomName} />
