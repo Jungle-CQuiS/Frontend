@@ -41,12 +41,12 @@ export const LandingPageContainer = styled.div`
   align-items: flex-end;
   flex-direction: column;
   padding-top: 150px;
-  /* background-image: url('/images/mainpage-background.png'); */
+  background-image: url('/images/mainpage-background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   overflow: hidden;
-  /* animation: ${backgroundMove} 3s ease-in-out infinite; */
+  animation: ${backgroundMove} 3s ease-in-out infinite;
 `;
 
 export const LandingPageWrap = styled.div`

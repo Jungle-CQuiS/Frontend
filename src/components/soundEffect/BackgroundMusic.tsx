@@ -16,7 +16,7 @@ export const BackgroundMusicProvider: React.FC<{ children: React.ReactNode }> = 
 
   useEffect(() => {
     if (!audioRef.current) {
-      audioRef.current = new Audio('/sounds/Aquarium.mp3');
+      audioRef.current = new Audio('/sounds/where_stars_rest.mp3');
       audioRef.current.loop = true;
       audioRef.current.volume = volume;
     }
@@ -50,7 +50,7 @@ export const BackgroundMusicProvider: React.FC<{ children: React.ReactNode }> = 
       } else if (location.pathname.startsWith("/room/") || location.pathname.startsWith("/multi/")) {
         setNewAudioSource("/sounds/where_stars_rest.mp3");
       } else {
-        setNewAudioSource("/sounds/Aquarium.mp3");
+        setNewAudioSource("/sounds/where_stars_rest.mp3");
       }
     }
   }, [location]);

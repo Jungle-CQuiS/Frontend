@@ -22,7 +22,7 @@ export const SovlingInputWrap = styled.div`
 `;
 
 export const SovlingInput = styled.input`
-    width: 805px;
+    width: 400px;
     border: 1px solid #D3D3D3;
     border-radius: 8px;
     padding: 10px 14px;

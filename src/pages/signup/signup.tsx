@@ -1,12 +1,11 @@
 
-import NavBar from "../../components/navbar/navbar";
 import { PrimaryButtonLong } from "../../components/buttons/styled";
 import { SignupBackground, SignupContainer, SignUpInputContainer, SignupInputWrap, SignupLabel } from "./styled";
-import { LoginContainer, LoginTitle, LoginWrap, LoginWithGoogle, LoginDividerWrap, LoginLine, LoginText, LoginInput, LoginBottomWrap } from "../loginpage/styled";
+import { LoginTitle, LoginWrap, LoginInput, LoginBottomWrap } from "../loginpage/styled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
-import { useAlert, useConfirm } from "../../components/confirmPopup";
+import { useAlert} from "../../components/confirmPopup";
 
 
 

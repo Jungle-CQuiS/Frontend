@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { PrimaryButtonMedium } from "../buttons/styled";
 import { NavBarButtonWrap, NavBarContainer, NavBarLogo } from "./styled";
 import { NavBarProps } from "../../types/user";

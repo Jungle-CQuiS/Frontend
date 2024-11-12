@@ -39,9 +39,8 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
       <RoomTeamOneUserWrap>
         
         {teamUsers.map((user: TeamUser, index: number) => (
-          <div  onClick={(e) => handleOpenModal(user, e)}>
+          <div  key={index} onClick={(e) => handleOpenModal(user, e)}>
           <TeamUserComponent
-            key={index}
             user={user}
             onClick={() =>!user && handleTeamClick('BLUE')}
             teamType="BLUE"
@@ -67,9 +66,8 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
       <RoomTeamTwoUserWrap>
         
         {teamUsers.map((user: TeamUser, index: number) => (
-          <div onClick={(e) => handleOpenModal(user, e)}>
+          <div key={index} onClick={(e) => handleOpenModal(user, e)}>
           <TeamUserComponent
-            key={index}
             user={user}
             onClick={() =>!user && handleTeamClick('RED')}
             teamType="RED"
