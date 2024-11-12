@@ -15,7 +15,7 @@ export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
                 .map((user, index) => (
                     <UserTag key={index} teamId={teamId}>
                         {user?.isLeader === 'leader' && <UserTagImg src="/icons/medal.svg" />}
-                        {user.username}  {/* null 체크 불필요 */}
+                        {user?.username}  {/* null 체크 불필요 */}
                     </UserTag>
                 ))}
         </UserTagsContainer>
