@@ -20,9 +20,9 @@ export const Background = styled.div`
   align-items: center;
   flex-direction: column;
   padding-top: 32px;
-  background-image: url('/images/game-background.png');
+  /* background-image: url('/images/game-background.png'); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  animation: ${backgroundMove} 3s ease-in-out infinite;
+  /* animation: ${backgroundMove} 3s ease-in-out infinite; */
 `;
