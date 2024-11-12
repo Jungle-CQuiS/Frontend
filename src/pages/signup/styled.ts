@@ -8,7 +8,7 @@ export const SignupBackground = styled.div`
     align-items: center;
     flex-direction: column;
     padding-top: 40px;
-    background-image: url('/images/login_background.png');
+    /* background-image: url('/images/login_background.png'); */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
