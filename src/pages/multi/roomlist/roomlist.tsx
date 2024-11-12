@@ -1,74 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { MainPageTableTbody, MainPageTableTbodyIcon, MainPageTableTbodyTd, MainPageTableTbodyTr } from "./styled";
 import { useNavigate } from "react-router-dom";
-import { Room } from "../../../types/room"
+import { Room } from "../../../types/room";
 import { PasswordCheckModal } from '../../../components/modal/roomlist/passwordCheck';
 import { QUIZ_MULTI_ENDPOINTS } from '../../../config/api/endpoints/quiz-multi.endpoints';
 import { RoomListLoading } from '../../../modules/room/roomListLoading';
 import { useAlert } from '../../../components/confirmPopup';
+
 interface RoomListProps {
     searchTerm: string;
+    onRefresh?: () => void;
 }
 
-const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
+const RoomList = forwardRef<{}, RoomListProps>(({ searchTerm }, ref) => {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [roomID, setRoomId] = useState<string>();
     const [roomName, setRoomName] = useState<string>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const customAlert = useAlert();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleOpenModal = (roomId: string, roomName: string) => {
+    const handleOpenModal = useCallback((roomId: string, roomName: string) => {
         setRoomId(roomId);
         setRoomName(roomName);
         setIsModalOpen(true);
-    };
-    const handleCloseModal = () => {
+    }, []);
+
+    const handleCloseModal = useCallback(() => {
         setIsModalOpen(false);
-    };
-    const handleDone = () => {
+    }, []);
+
+    const handleDone = useCallback(() => {
         setIsModalOpen(false);
-    };
+    }, []);
+
+    const fetchRooms = useCallback(async (): Promise<void> => {
+        try {
+            const token = localStorage.getItem("AccessToken");
+            if (!token) {
+                throw new Error("로그인이 필요합니다.");
+            }
+
+            const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOMS.LIST, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setRooms(data.data.rooms);
+            setIsLoading(false);
+        } catch (e) {
+            const errorMessage = e instanceof Error ? e.message : String(e);
+            console.error("Fetching rooms failed:", errorMessage);
+            setError(errorMessage);
+            setIsLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        const fetchRooms = async (): Promise<void> => {
-            try {
-                // 로컬 스토리지에서 AccessToken 가져오기
-                const token = localStorage.getItem("AccessToken");
-                if (!token) {
-                    throw new Error("로그인이 필요합니다."); // 토큰이 없으면 에러 처리
-                }
-
-                // API 요청에 Authorization 헤더 포함
-                const response = await fetch(QUIZ_MULTI_ENDPOINTS.ROOMS.LIST, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`, // 토큰 추가
-                        "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    console.log(response);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                setRooms(data.data.rooms);
-                setIsLoading(false);
-            } catch (e) {
-                const errorMessage = e instanceof Error ? e.message : String(e);
-                console.error("Fetching rooms failed:", errorMessage);
-                setError(errorMessage);
-                setIsLoading(false);
-            }
-        };
-
         fetchRooms();
-    }, []);
+    }, [fetchRooms]);
+
+    useImperativeHandle(ref, () => ({
+        refreshRooms: fetchRooms
+    }));
 
     const checkRoomAvailability = (selectedRoom: Room) => {
         if (!selectedRoom) {
@@ -113,6 +117,9 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
                         roomName,
                     }
                 });
+            } else {
+                // 방이 가득 차거나 존재하지 않는 경우 목록을 다시 검색
+                fetchRooms();
             }
         } catch (error) {
             console.error("Failed to fetch room details:", error);
@@ -159,6 +166,6 @@ const RoomList: React.FC<RoomListProps> = ({ searchTerm }) => {
             />
         </>
     );
-};
+});
 
 export default RoomList;
