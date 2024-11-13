@@ -6,11 +6,11 @@ export const NavBarContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     padding: 12px 24px;
-    position: fixed;
+    /* position: fixed;
     width: 100%;
     top: 0;
     z-index: 1;
-    box-sizing: border-box;
+    box-sizing: border-box; */
 `;
 
 

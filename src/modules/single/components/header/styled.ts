@@ -8,12 +8,12 @@ export const SingleModeHeaderContainer = styled.div`
 `;
 
 export const SingleModeHeaderImg = styled.img`
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
 `;
 
 export const SingleModeHeaderTitle = styled.div`
-    font-size: 18px;
+    font-size: 38px;
     font-weight: 700;
 
 `;

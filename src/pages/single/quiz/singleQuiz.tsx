@@ -7,6 +7,7 @@ import { SingleGradingPage } from "../result/grading/singleGrading";
 import useSingleModeExit from "../../../hook/useSingleModeExit";
 import { SingleModeQuizMultiple } from "../../../modules/single/components/quiz/multipleChoice";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
+import { SingleBackground } from "./styled";
 
 export default function SingleModeQuiz() {
     const location = useLocation();
@@ -101,7 +102,7 @@ export default function SingleModeQuiz() {
     };
 
     return (
-        <Background>
+        <SingleBackground>
             {isGrading ? (
                 <SingleGradingPage
                     isCorrect={isCorrect}
@@ -112,6 +113,6 @@ export default function SingleModeQuiz() {
             ) : (
                 renderQuizComponent()
             )}
-        </Background>
+        </SingleBackground>
     );
 }

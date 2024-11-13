@@ -17,6 +17,7 @@ import {
 } from "./styled";
 import { SingleModeSelectModal } from "../../components/modal/singleModeSelect";
 import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
+import { SignupBackground } from "../signup/styled";
 
 const questionCounts: string[] = ["5 문제", "10 문제", "15 문제", "20 문제"];
 
@@ -97,7 +98,7 @@ export const SingleModePage = () => {
   
 
   return (
-    <Background>
+    <SignupBackground>
       <SingleModeContainer>
         <SingleModeHeaderComponent />
         <SingleModeTop>
@@ -140,7 +141,7 @@ export const SingleModePage = () => {
         selectedNumber={selectedNumber}
         selectedMode={selectedMode}
       />
-    </Background>
+    </SignupBackground>
   );
 };
 

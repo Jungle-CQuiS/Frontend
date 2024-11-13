@@ -32,15 +32,16 @@ export const MultiPageTitle = styled.div`
     display: flex;
     gap: 10px;
     margin-top: 100px;
+    align-items: center;
 `;
 
 export const MultiPageTitleIcon = styled.img`
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
 `;
 
 export const MainPageTitleText = styled.div`
-    font-size: 18px;
+    font-size: 38px;
     font-weight: 700;
 `;
 

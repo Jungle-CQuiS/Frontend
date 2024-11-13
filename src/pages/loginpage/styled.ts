@@ -3,12 +3,11 @@ import { defaultTransition } from "../../css";
 
 export const LoginBackground = styled.div`
     width: 100%;
-    height: calc(100vh - 120px);
+    height:100vh;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    padding-top: 120px;
     background-image: url('/images/background_base.png');
     background-size: cover;
     background-position: center;
@@ -25,7 +24,10 @@ export const LoginContainer = styled.div`
     background-color: #fff;
     padding: 57px 93px;
     border-radius: 16px;
-    margin-top: 80px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 `;
 
 export const LoginTitle = styled.div`

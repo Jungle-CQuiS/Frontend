@@ -19,7 +19,7 @@ export const SingleModeSelectModalRow = styled.div`
 `;
 
 export const SingleModeSelectModalLabel = styled.div`
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 600;
 `;
 
@@ -33,7 +33,7 @@ export const SingleModeSelectModalTag = styled.div`
     background-color: #444;
     border-radius: 4px;
     color: #fff;
-    font-size: 13px;
+    font-size: 18px;
     font-weight: 500;
     width: fit-content;
     height: fit-content;

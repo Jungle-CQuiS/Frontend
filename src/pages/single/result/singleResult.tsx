@@ -18,6 +18,7 @@ import {
     SingleResultBoxRowLabel,
 } from "./styled";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
+import { SingleBackground } from "../quiz/styled";
 
 interface Result {
     correct: number;
@@ -169,7 +170,7 @@ export const SingleResultPage = () => {
     
 
     return (
-        <Background>
+        <SingleBackground>
             <SingleResultContainer>
                 <HeaderTagComponent type="주관식" />
                 <SingleResultWrap>
@@ -196,6 +197,6 @@ export const SingleResultPage = () => {
                     </SingelResultButtonWrap>
                 </SingleResultWrap>
             </SingleResultContainer>
-        </Background>
+        </SingleBackground>
     );
 };
