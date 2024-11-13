@@ -22,11 +22,10 @@ import { MultiBackgroundRoom } from "../../../../pages/multi/room/styled";
 
 export interface SolvingPageProps {
     selectedQuiz: Quiz | null;
-    userTagRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>;
 }
 
 
-export const SolvingPage = ({ selectedQuiz , userTagRefs}: SolvingPageProps) => {
+export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
     const { user } = useGameUser();
     const teamId = user?.team == 'BLUE' ? 1 : 2;
 
@@ -102,10 +101,10 @@ export const SolvingPage = ({ selectedQuiz , userTagRefs}: SolvingPageProps) => 
                             </div>
                         </TeamHeaderTitle>
                     </TeamHeaderContainer>
-                    <WaitingScreen teamId={teamId} roomId={_roomId} userTagRefs = {userTagRefs}/>
+                    <WaitingScreen teamId={teamId} roomId={_roomId} />
                 </>
             )}
-            <UserTagsComponent teamId={teamId} roomId={_roomId} userTagRefs = {userTagRefs}/>
+            <UserTagsComponent teamId={teamId} roomId={_roomId}/>
         </MultiBackgroundRoom>
     );
 }

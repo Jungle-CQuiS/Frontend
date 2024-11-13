@@ -1,11 +1,11 @@
-import { useState } from "react";
+// hook/useEmoji.ts
+import { useState, useEffect, useCallback } from "react";
 import { useTeamState } from "../contexts/TeamStateContext/useTeamState";
+import { useGameState } from "../contexts/GameStateContext/useGameState";
 
-export const useEmoji = (userTagRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>
-) => {
+export const useEmoji = () => {
+    const {userTagRefs} = useGameState();
     const { teamOneUsers, teamTwoUsers } = useTeamState()
-   
-    // 각 유저의 이모티콘 상태 관리
     const [animatedEmojis, setAnimatedEmojis] = useState<Array<{
         id: number;
         src: string;
@@ -13,29 +13,10 @@ export const useEmoji = (userTagRefs: React.MutableRefObject<{ [key: string]: HT
         y: number;
     }>>([]);
 
-    // 로컬 유저가 이모지 선택했을 때
-    const handleEmojiSelect = (emojiPath: string, targetUsername: string) => {
-        showEmojiAnimation(emojiPath, targetUsername);
-    };
-
-    // 다른 유저의 이모지 선택을 받았을 때
-    const handleReceivedEmoji = (emojiType: string, roomUserId: number, teamId : number) => {
-        console.log("이모지 도착!", emojiType, roomUserId);
-        // roomUserId로 해당 유저 찾기
-        const teamUsers = teamId === 1 ? teamOneUsers : teamTwoUsers;
-        const targetUser = teamUsers.find(user => user?.roomUserId === roomUserId);
-        console.log("팀 유저!",teamUsers);
-        console.log("타겟 유저!",targetUser);
-        if (targetUser?.username) {
-            // 이모지 타입으로 이모지 경로 찾기
-            const emojiPath = `/images/emoji/${emojiType}.png`;  // 실제 경로 형식에 맞게 수정 필요
-            showEmojiAnimation(emojiPath, targetUser.username);
-        }
-    };
-
-    // 이모지 애니메이션 표시 로직
-    const showEmojiAnimation = (emojiPath: string, username: string) => {
+    const showEmojiAnimation = useCallback((emojiPath: string, username: string) => {
         const targetTagElement = userTagRefs.current[username];
+        console.log("targetTagElement", targetTagElement);
+
         if (targetTagElement) {
             const containerRect = targetTagElement.parentElement?.getBoundingClientRect();
             const tagRect = targetTagElement.getBoundingClientRect();
@@ -43,19 +24,38 @@ export const useEmoji = (userTagRefs: React.MutableRefObject<{ [key: string]: HT
             if (containerRect) {
                 const relativeX = tagRect.left - containerRect.left;
                 const relativeY = tagRect.top - containerRect.top;
+                const finalX = relativeX + (tagRect.width / 2);
+                const finalY = relativeY - 100;
 
-                setAnimatedEmojis(prev => [...prev, {
-                    id: Date.now(),
-                    src: emojiPath,
-                    x: relativeX + (tagRect.width / 2),
-                    y: relativeY - 100
-                }]);
+                setAnimatedEmojis(prev => [
+                    ...prev,
+                    {
+                        id: Date.now(),
+                        src: emojiPath,
+                        x: finalX,
+                        y: finalY
+                    }
+                ]);
             }
         }
-    };
+    }, []); // 의존성 제거
+
+    const handleEmojiSelect = useCallback((emojiPath: string, targetUsername: string) => {
+        showEmojiAnimation(emojiPath, targetUsername);
+    }, [showEmojiAnimation]);
+
+    const handleReceivedEmoji = useCallback((emojiType: string, roomUserId: number, teamId: number) => {
+        console.log("이모지 도착!", emojiType, roomUserId);
+        const teamUsers = teamId === 1 ? teamOneUsers : teamTwoUsers;
+        const targetUser = teamUsers.find(user => user?.roomUserId === roomUserId);
+
+        if (targetUser?.username) {
+            const emojiPath = `/images/emoji/${emojiType}.png`;
+            showEmojiAnimation(emojiPath, targetUser.username);
+        }
+    }, [teamOneUsers, teamTwoUsers, showEmojiAnimation]);
 
     return {
-        userTagRefs,
         animatedEmojis,
         handleEmojiSelect,
         handleReceivedEmoji

@@ -41,9 +41,7 @@ export default function QuizGamePage() {
     const teamId = user?.team == 'BLUE' ? 1 : 2;
     useButtonSoundEffect()
 
-    // UserTag의 ref를 저장할 객체
-    const userTagRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-    const {handleReceivedEmoji} = useEmoji(userTagRefs);
+    const {handleReceivedEmoji} = useEmoji();
     // SUBSCRIBE EVENT ----------------------------------
 
     // ▶️ 공격팀의 문제 선택 제출되면 호출된다.
@@ -299,7 +297,7 @@ export default function QuizGamePage() {
             {/*수비가 정답을 모두 제출하면 SELECT로 이동*/}
             {user.team === attackTeam ? (
                 gamePhase === GamePhase.ATTACK ? (
-                    <AttackPage onSelectionComplete={handleCompleteSelection} userTagRefs = {userTagRefs}/>
+                    <AttackPage onSelectionComplete={handleCompleteSelection} />
                 ) : (
                     waiting ? (
                         <MultiBackgroundRoom>{/*화면 공유 페이지*/}
@@ -312,8 +310,8 @@ export default function QuizGamePage() {
                                     </div>
                                 </TeamHeaderTitle>
                             </TeamHeaderContainer>
-                            <WaitingScreen teamId={teamId} roomId={_roomId} userTagRefs = {userTagRefs}/>
-                            <UserTagsComponent teamId={teamId} roomId={_roomId} userTagRefs = {userTagRefs}/> {/*본인 팀의 팀 뱃지*/}
+                            <WaitingScreen teamId={teamId} roomId={_roomId} />
+                            <UserTagsComponent teamId={teamId} roomId={_roomId} /> {/*본인 팀의 팀 뱃지*/}
                         </MultiBackgroundRoom>
                     ) : (
                         <SelectAnswerPage
@@ -321,22 +319,20 @@ export default function QuizGamePage() {
                             userAnswers={submitedUserAnswer}
                             prepareNextRound={prepareNextRound}
                             roomId={_roomId}
-                            userTagRefs={userTagRefs}
                         />
                     )
                 )
             ) : (
                 gamePhase === GamePhase.ATTACK ? (
-                    <DefendPage teamId={teamId} roomId= {_roomId} userTagRefs = {userTagRefs}/>
+                    <DefendPage teamId={teamId} roomId= {_roomId} />
                 ) : (
                     waiting ? (
-                        <SolvingPage selectedQuiz={selectedQuiz} userTagRefs = {userTagRefs} />
+                        <SolvingPage selectedQuiz={selectedQuiz} />
                     ) : (
                         <SelectAnswerPage
                             selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer}
                             prepareNextRound={prepareNextRound}
                             roomId={_roomId}
-                            userTagRefs={userTagRefs}
                         />
                     )
                 )

@@ -15,5 +15,4 @@ export interface TeamHeaderProps {
 export interface TeamUserTagProps {
     teamId: number;
     roomId: string;
-    userTagRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>;
 }

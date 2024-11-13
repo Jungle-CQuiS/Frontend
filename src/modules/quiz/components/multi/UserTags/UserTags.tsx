@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { TeamUserTagProps } from "../../../../../types/room";
 import { UserTag, UserTagImg, UserTagsContainer } from "./styled";
 import { useTeamState } from "../../../../../contexts/TeamStateContext/useTeamState";
@@ -7,14 +8,15 @@ import { AnimatedEmoji } from "../../../../../components/modal/emogi/animatedEmo
 import { useEmoji } from "../../../../../hook/useEmoji";
 import { gameRoomSocketEvents } from "../../../../../hook/gameRoomSocketEvents";
 import { useStompContext } from "../../../../../contexts/StompContext";
-
-export const UserTagsComponent = ({ teamId, roomId ,userTagRefs}: TeamUserTagProps) => {
+import { useGameState } from "../../../../../contexts/GameStateContext/useGameState";
+export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
+    const {userTagRefs} = useGameState();
     const { user } = useGameUser();
-    const {stompClient} = useStompContext();
+    const { stompClient } = useStompContext();
     const { teamOneUsers, teamTwoUsers } = useTeamState()
     const teamUsers = teamId === 1 ? teamOneUsers : teamTwoUsers;
 
-    const { animatedEmojis, handleEmojiSelect } = useEmoji(userTagRefs);
+    const { animatedEmojis, handleEmojiSelect } = useEmoji();
 
     return (
         <UserTagsContainer>
@@ -35,13 +37,13 @@ export const UserTagsComponent = ({ teamId, roomId ,userTagRefs}: TeamUserTagPro
                     );
                 })}
             <EmojiButton
-                onEmojiSelect={(emojiPath: string, emojiType : string) => {
+                onEmojiSelect={(emojiPath: string, emojiType: string) => {
                     if (user?.username) {
                         handleEmojiSelect(emojiPath, user.username);
 
                         // 서버에 요청
-                        gameRoomSocketEvents.sendUserEmoji(stompClient, teamId === 1 ? "BLUE" : "RED", 
-                          emojiType,roomId ,user.roomUserId );
+                        gameRoomSocketEvents.sendUserEmoji(stompClient, teamId === 1 ? "BLUE" : "RED",
+                            emojiType, roomId, user.roomUserId);
                     }
                 }}
             />

@@ -13,7 +13,7 @@ import { MultiBackgroundRoom } from "../room/styled";
 
 
 
-export default function DefendPage({ teamId , roomId , userTagRefs}: TeamUserTagProps) {
+export default function DefendPage({ teamId , roomId }: TeamUserTagProps) {
     //수비팀 선택
     const { user } = useGameUser();
     const { attackTeam } = useTeamState();
@@ -44,8 +44,8 @@ export default function DefendPage({ teamId , roomId , userTagRefs}: TeamUserTag
                         </>
                     )}
             <TeamHeaderComponent teamId={teamId} isAttackTeam={user?.team == attackTeam ? true : false} />
-            <WaitingScreen teamId={teamId} roomId= {roomId} userTagRefs = {userTagRefs}/>
-            <UserTagsComponent teamId={teamId} roomId= {roomId} userTagRefs = {userTagRefs}/>
+            <WaitingScreen teamId={teamId} roomId= {roomId} />
+            <UserTagsComponent teamId={teamId} roomId= {roomId} />
         </MultiBackgroundRoom>
     )
 }

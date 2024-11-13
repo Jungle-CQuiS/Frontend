@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState, useCallback } from 'react';
+import { createContext, ReactNode, useState, useCallback ,useRef} from 'react';
 import { GameStatus, GameReadyEvents, GamePlayEvents, GamePhase } from '../../types/game';
 import { QuizResponse } from '../../types/quiz';
 import { TeamType } from '../../types/teamuser';
@@ -26,6 +26,12 @@ interface GameStateContextType {
     winnerTeam: TeamType | null;
     gradeResponse: GradeResponse | null;
     // 전역 메소드
+    userTagRefs: {
+        current: {
+            [key: string]: HTMLElement | null;
+        };
+    };
+
     handleReadyRoomEvent: (event: GameReadyEvents) => void;
     setRoomUserIdWithState: (id: string) => void;
     setRoomId: (roomId: string) => void;
@@ -74,6 +80,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     const [winnerTeam, setWinnerTeam] = useState<TeamType | null>(null);
     const [gradeResponse, setGradeResponse] = useState<GradeResponse | null>(null);
 
+    // UserTag의 ref를 저장할 객체
+    const userTagRefs = useRef<{ [key: string]: HTMLDivElement | null }>({}); 
     const resetGameRoomInfo = async (event: GamePlayEvents) => {
 
         switch (event) {
@@ -123,7 +131,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             let parsedQuizResponse: QuizResponse;
 
             if (quizData.quizType === "주관식") {
-                parsedQuizResponse = {    
+                parsedQuizResponse = {
                     quizType: "주관식",
                     answerList: quizData.answerList.map(item => ({
                         roomUserId: item.roomUserId,
@@ -132,7 +140,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                     }))
                 };
             } else {
-                parsedQuizResponse = {   
+                parsedQuizResponse = {
                     quizType: "객관식",
                     answerList: quizData.answerList.map(item => ({
                         choice: item.choice,
@@ -236,6 +244,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <GameStateContext.Provider value={{
+            userTagRefs,
+            
             gameState,
             isAllReady,
             isLoading,
