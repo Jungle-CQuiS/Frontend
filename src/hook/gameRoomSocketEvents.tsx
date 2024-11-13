@@ -13,7 +13,7 @@ export const gameRoomSocketEvents = {
         roomId: string,
         onDefenseTeamAllSubmitted: () => void,
         handleGameEndEvent: (winner: TeamType) => void,
-        handleReceivedEmoji: (emojiType: string, roomUserId: number) => void
+        handleReceivedEmoji: (emojiType: string, roomUserId: number, teamId : number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -37,6 +37,7 @@ export const gameRoomSocketEvents = {
                                 handleReceivedEmoji(
                                     response.emojiType,
                                     response.roomUserId,
+                                    1
                                 );
                                 break;
                             default:
@@ -60,7 +61,7 @@ export const gameRoomSocketEvents = {
         roomId: string,
         onDefenseTeamAllSubmitted: () => void,
         handleGameEndEvent: (winner: TeamType) => void,
-        handleReceivedEmoji: (emojiType: string, roomUserId: number) => void
+        handleReceivedEmoji: (emojiType: string, roomUserId: number,teamId : number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -84,6 +85,7 @@ export const gameRoomSocketEvents = {
                                 handleReceivedEmoji(
                                     response.emojiType,
                                     response.roomUserId,
+                                    2
                                 );
                                 break;
                             default:
@@ -232,7 +234,7 @@ export const gameRoomSocketEvents = {
             }
 
             // 1. PACKING MESSAGE
-            const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.QUIZE_SELECT;// FIXME: API 수정해야함.
+            const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.QUIZE_SELECT;
             const message = {
                 responseStatus: "QUIZ_SELECT",
                 number: selected,

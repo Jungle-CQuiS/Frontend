@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useTeamState } from "../contexts/TeamStateContext/useTeamState";
-import { useGameUser } from "../contexts/GameUserContext/useGameUser";
-export const useEmoji = (userTagRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>) => {
-    const {user} = useGameUser();
-    const { teamOneUsers, teamTwoUsers } = useTeamState()
-    const teamUsers = user?.team == "BLUE" ? teamOneUsers : teamTwoUsers;
 
+export const useEmoji = (userTagRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>
+) => {
+    const { teamOneUsers, teamTwoUsers } = useTeamState()
+   
     // 각 유저의 이모티콘 상태 관리
     const [animatedEmojis, setAnimatedEmojis] = useState<Array<{
         id: number;
@@ -20,9 +19,13 @@ export const useEmoji = (userTagRefs: React.MutableRefObject<{ [key: string]: HT
     };
 
     // 다른 유저의 이모지 선택을 받았을 때
-    const handleReceivedEmoji = (emojiType: string, roomUserId: number) => {
+    const handleReceivedEmoji = (emojiType: string, roomUserId: number, teamId : number) => {
+        console.log("이모지 도착!", emojiType, roomUserId);
         // roomUserId로 해당 유저 찾기
+        const teamUsers = teamId === 1 ? teamOneUsers : teamTwoUsers;
         const targetUser = teamUsers.find(user => user?.roomUserId === roomUserId);
+        console.log("팀 유저!",teamUsers);
+        console.log("타겟 유저!",targetUser);
         if (targetUser?.username) {
             // 이모지 타입으로 이모지 경로 찾기
             const emojiPath = `/images/emoji/${emojiType}.png`;  // 실제 경로 형식에 맞게 수정 필요
