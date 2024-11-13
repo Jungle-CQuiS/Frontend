@@ -19,8 +19,8 @@ export default function Room() {
   const { roomId } = useLocation().state;
   const { state } = useLocation();
   const {
-    teamOneUsers, teamTwoUsers,
-    userReady, exitRoom, teamSwitch, navigateToGamePage,
+    teamOneUsers, teamTwoUsers,roomUserId,
+    userReady, exitRoom, teamSwitch, navigateToGamePage, 
     isAllReady, isTeamsLoaded, isSocketConnected, isRoomInfoSetting
   } = useRoom(roomId);
   const { updateAttackTeam } = useTeamState();
@@ -102,7 +102,8 @@ export default function Room() {
           },
           body: JSON.stringify({
             roomId: roomId,
-            gameStatus: "GAME_START"
+            gameStatus: "GAME_START",
+            roomUserId: roomUserId
           })
         });
 
