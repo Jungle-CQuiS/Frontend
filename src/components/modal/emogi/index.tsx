@@ -9,18 +9,20 @@ import { EMOJI_IMAGE } from "../../../config/emoji/constants";
 
 interface EmojiModalProps {
     position?: {
-        position: 'fixed' | 'absolute';
+        position: "fixed" | "absolute";
         top: number;
         left: number;
     };
+    onEmojiSelect?: (emojiPath: string) => void;  // 추가
 }
+
 
 // 반환될 수 있는 이모지 객체들의 타입 정의
 type EmojiPaths = {
     [key: string]: string;
 };
 
-export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps & EmojiModalProps) => {
+export const EmojiModal = ({ onClose, onDone, position,onEmojiSelect, ...props }: IModalProps & EmojiModalProps) => {
     const [animatedEmojis, setAnimatedEmojis] = useState<Array<{
         id: number;
         src: string;
@@ -37,27 +39,20 @@ export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps 
 
     // 이미지 클릭 핸들러
     const handleEmojiClick = (imagePath: string, event: React.MouseEvent) => {
-        // 클릭한 위치를 기준으로 애니메이션 시작 위치 설정
         const rect = event.currentTarget.getBoundingClientRect();
         const startX = rect.left;
         const startY = rect.top;
 
-        setAnimatedEmojis(prev => [
-            ...prev,
-            {
-                id: Date.now(),
-                src: imagePath,
-                x: startX,
-                y: startY
-            }
-        ]);
+        setAnimatedEmojis(prev => [...prev, {
+            id: Date.now(),
+            src: imagePath,
+            x: startX,
+            y: startY
+        }]);
 
-        // 기존 클릭 핸들링
-        console.log('Selected emoji:', imagePath);
+        // 선택된 이모티콘 전달
+        onEmojiSelect?.(imagePath);
     };
-
-
-
 
     // getFilteredEmojis 함수에 반환 타입 명시
     const getFilteredEmojis = (): EmojiPaths => {

@@ -11,7 +11,11 @@ type PositionProps = {
 };
 type ModalPosition = PositionType & PositionProps;
 
-export const EmojiButton = () => {
+interface EmojiButtonProps {
+    onEmojiSelect?: (emojiPath: string) => void;
+}
+
+export const EmojiButton = ({ onEmojiSelect }: EmojiButtonProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const buttonRef = useRef<HTMLDivElement>(null);
     const [modalPosition, setModalPosition] = useState<ModalPosition | undefined>(undefined);
@@ -40,6 +44,7 @@ export const EmojiButton = () => {
                         open={isModalOpen}
                         onClose={() => setIsModalOpen(false)}
                         position={modalPosition}
+                        onEmojiSelect={onEmojiSelect}
                     />
                 </TooltipModal>
             )}

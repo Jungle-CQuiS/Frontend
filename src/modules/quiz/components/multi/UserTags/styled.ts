@@ -17,9 +17,18 @@ export const UserTag = styled.div<{ teamId: number }>`
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;  // 이모티콘 위치 기준점
 `;
 
 export const UserTagImg = styled.img`
     width: 19px;
     height: 25px;
+`;
+
+export const UserEmoji = styled.img`
+  position: absolute;
+  top: -20px;  // 태그 위에 위치
+  right: 0;
+  width: 24px;
+  height: 24px;
 `;
