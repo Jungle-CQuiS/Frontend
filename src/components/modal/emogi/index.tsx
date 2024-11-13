@@ -4,26 +4,24 @@ import {
     EmojiModalContainer, EmojiCategoryContainer, EmojiCategoryTab, EmojiContentWrap,
     EmojiContentBox, EmojiButton, EmojiGrid, EmojiRow
 } from "./styled";
-import { AnimatedEmoji } from "./animatedEmoji";
 import { EMOJI_IMAGE } from "../../../config/emoji/constants";
 
 interface EmojiModalProps {
-
+    position?: {
+        position: "fixed" | "absolute";
+        top: number;
+        left: number;
+    };
+    onEmojiSelect?: (emojiPath: string, emojiType : string) => void;  // 추가
 }
+
 
 // 반환될 수 있는 이모지 객체들의 타입 정의
 type EmojiPaths = {
     [key: string]: string;
 };
 
-export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps & EmojiModalProps) => {
-    const [animatedEmojis, setAnimatedEmojis] = useState<Array<{
-        id: number;
-        src: string;
-        x: number;
-        y: number;
-    }>>([]);
-
+export const EmojiModal = ({ onClose, onDone, position, onEmojiSelect, ...props }: IModalProps & EmojiModalProps) => {
     const [selectedCategory, setSelectedCategory] = useState("전체");
 
 
@@ -32,27 +30,10 @@ export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps 
     };
 
     // 이미지 클릭 핸들러
-    const handleEmojiClick = (imagePath: string, event: React.MouseEvent) => {
-        // 클릭한 위치를 기준으로 애니메이션 시작 위치 설정
-        const rect = event.currentTarget.getBoundingClientRect();
-        const startX = rect.left;
-        const startY = rect.top;
+    const handleEmojiClick = (imagePath: string, emojiType : string) => {
+        onEmojiSelect?.(imagePath,emojiType);  // 경로만 전달
 
-        setAnimatedEmojis(prev => [
-            ...prev,
-            {
-                id: Date.now(),
-                src: imagePath,
-                x: startX,
-                y: startY
-            }
-        ]);
-
-        // 기존 클릭 핸들링
-        console.log('Selected emoji:', imagePath);
     };
-
-
 
 
     // getFilteredEmojis 함수에 반환 타입 명시
@@ -73,16 +54,21 @@ export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps 
     };
 
 
-    return (
-        <>
+    return (   
             <Modal {...props}
-                open={props.open} onClose={onClose} onDone={onDone}
+                open={props.open}
+                onClose={onClose}
+                onDone={onDone}
                 closeOnBackdropClick={true}
                 backdropcolor={false}
-                width="300px"
+                width="250px"
                 $padding="10px"
                 $round="8px"
-                $border="3px solid"
+                $border="2px solid #4444"
+                position={position?.position}
+                $top={position?.top}
+                $left={position?.left}
+                $transform="translateY(-100%)"
             >
                 <EmojiModalContainer>
                     <EmojiCategoryContainer>
@@ -111,7 +97,7 @@ export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps 
                                     rows[rowIndex].push(
                                         <EmojiButton
                                             key={emojiKey}
-                                            onClick={(e) => handleEmojiClick(emojiPath, e)}
+                                            onClick={() => handleEmojiClick(emojiPath, emojiKey)}
                                             className="click-sound"
                                         >
                                             <img
@@ -133,16 +119,6 @@ export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps 
                     </EmojiContentWrap>
                 </EmojiModalContainer>
             </Modal>
-            {/* 애니메이션되는 이모지들 렌더링 */}
-            {animatedEmojis.map(emoji => (
-                <AnimatedEmoji
-                    key={emoji.id}
-                    src={emoji.src}
-                    startX={emoji.x}
-                    startY={emoji.y}
-                />
-            ))}
-        </>
     );
 
 

@@ -141,14 +141,6 @@ function App() {
               }
             />
             <Route
-              path="/multi/defend"
-              element={
-                <ProtectedRoute>
-                  <DefendPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/multi/result"
               element={
                 <ProtectedRoute>

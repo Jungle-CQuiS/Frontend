@@ -22,9 +22,10 @@ import { MultiBackgroundRoom } from "../../../../pages/multi/room/styled";
 
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
+    userTagRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>;
 }
 
-export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
+export default function AttackPage({ onSelectionComplete , userTagRefs}: AttackPageProps) {
     const customConfirm = useConfirm();
     const [timeLeft, setTimeLeft] = useState(60);
     const [quizData, setQuizData] = useState<Quiz[]>([]);
@@ -195,7 +196,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                         <PrimaryButtonMedium className="click-sound" onClick={handleSelectionComplete}>선택완료</PrimaryButtonMedium>
                     </MultiGameAttackButtonWrap>
                 </MultiGameAttackContainer>
-                <UserTagsComponent teamId={teamId} />
+                <UserTagsComponent teamId={teamId} roomId={_roomId} userTagRefs = {userTagRefs}/>
             </MultiGameBackground>
         </MultiBackgroundRoom>
     );

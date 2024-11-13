@@ -230,6 +230,7 @@ export const useRoom = (roomId: string) => {
     return {
         teamOneUsers,
         teamTwoUsers,
+        roomUserId,
         exitRoom,
         userReady,
         teamSwitch,

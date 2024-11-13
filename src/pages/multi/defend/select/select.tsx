@@ -30,8 +30,12 @@ interface SelectAnswerPageProps {
     selectedQuiz: Quiz | null;
     userAnswers: QuizResponse | null;
     prepareNextRound: (event: GamePlayEvents, team: TeamType, health: number) => Promise<void>;
+
+    roomId: string;
+    userTagRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>;
 }
-export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }: SelectAnswerPageProps) => {
+
+export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound , roomId, userTagRefs}: SelectAnswerPageProps) => {
     const { stompClient } = useStompContext();
     const { roomUserId, _roomId, gameState, defenceFinalAnswer, quizResult, gradeResponse, winnerTeam } = useGameState();
     const { user } = useGameUser();
@@ -208,8 +212,7 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
                     }}>나가기</SecondaryButtonSmall>
                     <BlackButtonSmall className="click-sound" onClick={submitFinalAnswerSelect}>선택완료</BlackButtonSmall>
                 </SelectAnswerButtonWrap>
-                <UserTagsComponent teamId={defenceTeam} />
-                {attackTeam === user?.team ? (<UserTagsComponent teamId={attackTeam == 'BLUE' ? 1 : 2} />) : (<></>)}{/*공격팀일 경우 공격팀의 팀뱃지도 보여준다!*/}
+                <UserTagsComponent teamId={defenceTeam} roomId= {roomId} userTagRefs = {userTagRefs}/>
             </SelectAnswerContainer>
         </MultiBackgroundRoom>
     )

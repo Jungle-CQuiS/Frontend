@@ -16,7 +16,7 @@ export const EmojiCategoryContainer = styled.div`
 `;
 
 export const EmojiCategoryTab = styled.div<{ isSelected: boolean }>`
-    padding: 9px 24px;
+    padding: 9px 15px;
     border: 1px solid #D3D3D3;
     border-bottom: none;
     font-size: 14px;

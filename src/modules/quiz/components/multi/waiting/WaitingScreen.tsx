@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { WaitingScreenContainer } from "./styled";
 import { TeamUserTagProps } from "../../../../../types/room";
 
-export const WaitingScreen = ({ teamId}: TeamUserTagProps) => {
+export const WaitingScreen = ({ teamId }: TeamUserTagProps) => {
     // likecontainer의 타입을 명시적으로 지정 (HTMLDivElement | null)
     const likecontainer = useRef<HTMLDivElement | null>(null);
     const animationInstance = useRef<any>(null); // 애니메이션 인스턴스 저장
