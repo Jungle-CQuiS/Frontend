@@ -26,8 +26,8 @@ export const StyledAnimatedEmoji = styled.img<{ $startX: number; $startY: number
     position: absolute;
     left: ${props => props.$startX}px;
     top: ${props => props.$startY}px;
-    width: 180px;
-    height: 180px;
+    width: 100px;
+    height: 100px;
     transform: translate(-50%, -50%);
     pointer-events: none;
     z-index: 9999;

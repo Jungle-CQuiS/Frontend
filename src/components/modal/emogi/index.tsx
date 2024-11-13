@@ -33,7 +33,7 @@ export const EmojiModal = ({ onClose, onDone, position, onEmojiSelect, ...props 
     // 이미지 클릭 핸들러
     const handleEmojiClick = (imagePath: string) => {
         onEmojiSelect?.(imagePath);  // 경로만 전달
-        onClose?.();  // 모달 닫기
+
     };
 
 

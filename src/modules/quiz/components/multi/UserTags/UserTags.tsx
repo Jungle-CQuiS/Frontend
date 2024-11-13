@@ -38,7 +38,7 @@ export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
                     id: Date.now(),
                     src: emojiPath,
                     x: relativeX + (tagRect.width / 2), // 태그의 중앙
-                    y: relativeY - 20 // 태그 위
+                    y: relativeY - 100 // 태그 위
                 }]);
             }
         }

@@ -309,7 +309,6 @@ export default function QuizGamePage() {
                                 </TeamHeaderTitle>
                             </TeamHeaderContainer>
                             <WaitingScreen teamId={teamId} />
-                            <p></p>
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
                         </MultiBackgroundRoom>
                     ) : (
