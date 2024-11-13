@@ -22,6 +22,7 @@ import { GamePlayEvents, GameStatus } from "../../../../types/game";
 import { TeamType } from "../../../../types/teamuser";
 import useButtonSoundEffect from "../../../../hook/useHoverSoundEffect";
 import { MultiAnimationBackgroundOverlay, MultiAnimationTextLarge } from "../../../../modules/room/components/attack/styled";
+import { MultiBackgroundRoom } from "../../room/styled";
 
 // 수비팀 최종 정답 선택 페이지
 // 이 부분은 화면이 모두 공유된다!
@@ -153,7 +154,7 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
     }, []);
 
     return (
-        <Background>
+        <MultiBackgroundRoom>
             {modalVisible && (
                 <>
                     <MultiAnimationBackgroundOverlay />
@@ -210,6 +211,6 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
                 <UserTagsComponent teamId={defenceTeam} />
                 {attackTeam === user?.team ? (<UserTagsComponent teamId={attackTeam == 'BLUE' ? 1 : 2} />) : (<></>)}{/*공격팀일 경우 공격팀의 팀뱃지도 보여준다!*/}
             </SelectAnswerContainer>
-        </Background>
+        </MultiBackgroundRoom>
     )
 }

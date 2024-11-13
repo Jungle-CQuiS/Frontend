@@ -19,6 +19,7 @@ import { GameStatus } from "../../../types/game";
 import { LoadingScreen } from "../../../modules/LoadingScreen";
 import DefendPage from "../defend/defend";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
+import { MultiBackgroundRoom } from "../room/styled";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
@@ -297,7 +298,7 @@ export default function QuizGamePage() {
                     <AttackPage onSelectionComplete={handleCompleteSelection} />
                 ) : (
                     waiting ? (
-                        <Background>{/*화면 공유 페이지*/}
+                        <MultiBackgroundRoom>{/*화면 공유 페이지*/}
                             <TeamHeaderContainer>
                                 <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
                                 <TeamHeaderTitle>
@@ -310,7 +311,7 @@ export default function QuizGamePage() {
                             <WaitingScreen teamId={teamId} />
                             <p></p>
                             <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
-                        </Background>
+                        </MultiBackgroundRoom>
                     ) : (
                         <SelectAnswerPage
                             selectedQuiz={selectedQuiz}

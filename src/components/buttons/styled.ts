@@ -9,7 +9,7 @@ export const ButtonBase = styled.button`
   cursor: pointer;
   &.active {
     color: #fff;
-    background-color: #ff7344;
+    background-color: #395B9A;
   }
 
   border: 0px;
@@ -34,7 +34,7 @@ export const LandingPageTooltipContainer = styled.div`
   .tooltip-custom {
     background-color: #333;
     color: #fff;
-    font-size: 17px;
+    font-size: 24px;
     border-radius: 6px;
     gap: 15px;
     padding: 25px;
@@ -58,7 +58,7 @@ export const LandingPageAddProblemHeaderImg = styled.img`
 
 export const PrimaryButtonLarge = styled(ButtonBase)`
   color: #fff;
-  background-color: #2F69FF;
+  background-color: #395B9A;
   padding: 12px 24px;
   &:hover {
     background-color: #5384FF;
@@ -67,7 +67,7 @@ export const PrimaryButtonLarge = styled(ButtonBase)`
 
 export const PrimaryButtonMedium = styled(ButtonBase)`
   color: #fff;
-  background-color: #2F69FF;
+  background-color: #395B9A;
   padding: 8px 24px;
   &:hover {
     background-color: #5384FF;
@@ -77,7 +77,7 @@ export const PrimaryButtonMedium = styled(ButtonBase)`
 export const PrimaryButtonSmall = styled(ButtonBase)`
   color: #fff;
   font-size: 14px;
-  background-color: #2F69FF;
+  background-color: #395B9A;
   padding: 6px 24px;
   &:hover {
     background-color: #5384FF;
@@ -86,7 +86,7 @@ export const PrimaryButtonSmall = styled(ButtonBase)`
 
 export const PrimaryButtonLong = styled(ButtonBase)`
   color: #fff;
-  background-color: #2F69FF;
+  background-color: #395B9A;
   padding: 8px 24px;
   width: 320px;
   &:hover {
@@ -97,7 +97,7 @@ export const PrimaryButtonLong = styled(ButtonBase)`
 export const PrimaryButtonMiddle = styled(ButtonBase)`
   color: #fff;
   font-size: 20px;
-  background-color: #2F69FF;
+  background-color: #395B9A;
   padding: 12px 24px;
   width: 232px;
   &:hover {
@@ -108,7 +108,7 @@ export const PrimaryButtonMiddle = styled(ButtonBase)`
 export const PrimaryButtonShort = styled(ButtonBase)`
   color: #fff;
   font-size: 14px;
-  background-color: #2F69FF;
+  background-color: #395B9A;
   padding: 12px 20px;
   width: 87px;
   &:hover {

@@ -1,10 +1,24 @@
 import styled from "styled-components";
 
+export const MultiBackgroundRoom = styled.div`
+  width: 100%;
+  height: calc(100vh - 32px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 32px;
+  background-image: url('/images/background_multi_2.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
+
 export const RoomTitle = styled.div`
     padding: 8px 72px;
-    background-color: rgba(150, 150, 150, 0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
-    font-size: 18px;
+    font-size: 28px;
     font-weight: 600;
 `;
 
@@ -30,7 +44,7 @@ export const RoomTeamOneTitleWrap = styled.div`
 export const RoomTeamOneTitleBackground = styled.div`
     width: 525px;
     height: 101px;
-    background-color: #D3D3D3;
+    background-color: #969696;
     opacity: 50%;
 `;
 
@@ -129,7 +143,7 @@ export const RoomTeamTwoTitleWrap = styled.div`
 export const RoomTeamTwoTitleBackground = styled.div`
     width: 525px;
     height: 101px;
-    background-color: #D3D3D3;
+    background-color: #969696;
     opacity: 50%;
 `;
 
@@ -232,7 +246,7 @@ export const RoomTeamEmpty = styled.div`
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(211, 211, 211, 0.75);
+        background-color: rgba(150, 150, 150, 0.75);
         opacity: 0.75;
         z-index: -1;
     }

@@ -8,6 +8,7 @@ import { useTeamState } from "../../../contexts/TeamStateContext/useTeamState";
 import { usePageLeave } from "../../../hook/pageLeaveHandler";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 import { MultiAnimationBackgroundOverlay, MultiAnimationModalContainer, MultiAnimationTextLarge, MultiAnimationTextSmall, MultiAnimationTextWrap } from "../../../modules/room/components/attack/styled";
+import { MultiBackgroundRoom } from "../room/styled";
 export default function DefendPage() {
     //수비팀 선택
     const { user } = useGameUser();
@@ -27,7 +28,7 @@ export default function DefendPage() {
     }, []);
 
     return (
-        <Background>
+        <MultiBackgroundRoom>
                 {modalVisible && (
                         <>
                             <MultiAnimationBackgroundOverlay />
@@ -42,6 +43,6 @@ export default function DefendPage() {
             <TeamHeaderComponent teamId={teamId} isAttackTeam={user?.team == attackTeam ? true : false} />
             <WaitingScreen teamId={teamId} />
             <UserTagsComponent teamId={teamId} />
-        </Background>
+        </MultiBackgroundRoom>
     )
 }

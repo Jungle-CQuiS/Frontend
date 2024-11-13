@@ -32,5 +32,5 @@ export const MyPageWrap = styled.div`
 export const MyPageLabel = styled.div`
     font-size: 20px;
     font-weight: 700;
-    color: #969696;
+    color: #444;
 `;

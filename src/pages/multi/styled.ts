@@ -1,5 +1,32 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { defaultTransition } from "../../css";
+
+const backgroundMove = keyframes`
+  0% {
+    background-position: center top;
+  }
+  50% {
+    background-position: center 20px; /* 원하는 만큼 이동 */
+  }
+  100% {
+    background-position: center top;
+  }
+`;
+
+export const MultiBackground = styled.div`
+  width: 100%;
+  height: calc(100vh - 32px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 32px;
+  background-image: url('/images/background_multi_1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: ${backgroundMove} 3s ease-in-out infinite;
+`;
 
 export const MultiPageTitle = styled.div`
     display: flex;
@@ -26,9 +53,9 @@ export const MainPageSearchBarWrap = styled.div`
 
 export const MainPageSearchBar = styled.input`
     padding: 10px 14px;
-    width: 1100px;
+    width: 784px;
     border: 1px solid #D3D3D3;
-    font-size: 12px;
+    font-size: 20px;
     border-radius: 8px;
     ${defaultTransition}
     &:hover {
@@ -82,7 +109,7 @@ export const MainPageRefreshWrap = styled.div`
     height: 22px;
     padding: 8px 12px;
     cursor: pointer;
-    background-color: #2F69FF;
+    background-color: #395B9A;
     ${defaultTransition}
     &:hover {
         color: #fff;
