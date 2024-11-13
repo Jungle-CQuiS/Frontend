@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { TeamUserTagProps } from "../../../../../types/room";
 import { UserTag, UserTagImg, UserTagsContainer } from "./styled";
 import { useTeamState } from "../../../../../contexts/TeamStateContext/useTeamState";
@@ -6,14 +5,14 @@ import { useGameUser } from "../../../../../contexts/GameUserContext/useGameUser
 import { EmojiButton } from "../../../../../components/buttons/emoji";
 import { AnimatedEmoji } from "../../../../../components/modal/emogi/animatedEmoji";
 import { useEmoji } from "../../../../../hook/useEmoji";
+import { gameRoomSocketEvents } from "../../../../../hook/gameRoomSocketEvents";
+import { useStompContext } from "../../../../../contexts/StompContext";
 
-export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
+export const UserTagsComponent = ({ teamId, roomId ,userTagRefs}: TeamUserTagProps) => {
     const { user } = useGameUser();
+    const {stompClient} = useStompContext();
     const { teamOneUsers, teamTwoUsers } = useTeamState()
-    const teamUsers = teamId == 1 ? teamOneUsers : teamTwoUsers;
-
-    // UserTag의 ref를 저장할 객체
-    const userTagRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+    const teamUsers = teamId === 1 ? teamOneUsers : teamTwoUsers;
 
     const { animatedEmojis, handleEmojiSelect } = useEmoji(userTagRefs);
 
@@ -36,9 +35,13 @@ export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
                     );
                 })}
             <EmojiButton
-                onEmojiSelect={(emojiPath: string) => {
+                onEmojiSelect={(emojiPath: string, emojiType : string) => {
                     if (user?.username) {
                         handleEmojiSelect(emojiPath, user.username);
+
+                        // 서버에 요청
+                        gameRoomSocketEvents.sendUserEmoji(stompClient, teamId === 1 ? "BLUE" : "RED", 
+                          emojiType,roomId ,user.roomUserId );
                     }
                 }}
             />

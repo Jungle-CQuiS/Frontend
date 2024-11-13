@@ -18,7 +18,8 @@ export enum GamePlayEvents{
     ALL_SUBMIT = 'ALL_SUBMIT', // 수비팀이 문제를 다 제출하였다.
     ANS_SELECT_END = 'ANS_SELECT_END', // 수비팀이 정답을 고르는 것을 완료.
     ROUND_END = 'ROUND_END', // 한 라운드가 종료되고 다음 라운드를 진행한다.
-    GAME_END = 'GAME_END'
+    GAME_END = 'GAME_END',
+    EMOJI_SELECT = 'EMOJI_SELECT'
 };
 
 // 게임 상태도 상수로 관리

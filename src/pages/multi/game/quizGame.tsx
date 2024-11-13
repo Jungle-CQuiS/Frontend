@@ -1,5 +1,5 @@
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import AttackPage from "../../../modules/room/components/attack/attack";
 import { SolvingPage } from "../../../modules/room/components/solving/solving";
 import { SelectAnswerPage } from "../defend/select/select";
@@ -20,6 +20,7 @@ import { LoadingScreen } from "../../../modules/LoadingScreen";
 import DefendPage from "../defend/defend";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 import { MultiBackgroundRoom } from "../room/styled";
+import { useEmoji } from "../../../hook/useEmoji";
 
 export default function QuizGamePage() {
     const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
@@ -37,10 +38,13 @@ export default function QuizGamePage() {
     const { attackTeam, updateAttackTeam, changeTeamHP } = useTeamState();
     const [userLoaded, setUserLoaded] = useState(false);  // 유저 정보 로딩 상태 추가
     const [waiting, setWaiting] = useState<boolean>(true); // 모든 수비 팀원이 답을 제출할 때까지 대기
+
     const teamId = user?.team == 'BLUE' ? 1 : 2;
     useButtonSoundEffect()
 
-
+    // UserTag의 ref를 저장할 객체
+    const userTagRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+    const {handleReceivedEmoji} = useEmoji(userTagRefs);
     // SUBSCRIBE EVENT ----------------------------------
 
     // ▶️ 공격팀의 문제 선택 제출되면 호출된다.
@@ -202,7 +206,8 @@ export default function QuizGamePage() {
                         client,  // null이 아님이 확인된 client 사용
                         _roomId,
                         onDefenseTeamAllSubmitted,
-                        handleGameEndEvent
+                        handleGameEndEvent,
+                        handleReceivedEmoji
                     );
                     resolve();
                 });
@@ -295,7 +300,7 @@ export default function QuizGamePage() {
             {/*수비가 정답을 모두 제출하면 SELECT로 이동*/}
             {user.team === attackTeam ? (
                 gamePhase === GamePhase.ATTACK ? (
-                    <AttackPage onSelectionComplete={handleCompleteSelection} />
+                    <AttackPage onSelectionComplete={handleCompleteSelection} userTagRefs = {userTagRefs}/>
                 ) : (
                     waiting ? (
                         <MultiBackgroundRoom>{/*화면 공유 페이지*/}
@@ -308,28 +313,31 @@ export default function QuizGamePage() {
                                     </div>
                                 </TeamHeaderTitle>
                             </TeamHeaderContainer>
-                            <WaitingScreen teamId={teamId} />
-                            <UserTagsComponent teamId={teamId} /> {/*본인 팀의 팀 뱃지*/}
+                            <WaitingScreen teamId={teamId} roomId={_roomId} userTagRefs = {userTagRefs}/>
+                            <UserTagsComponent teamId={teamId} roomId={_roomId} userTagRefs = {userTagRefs}/> {/*본인 팀의 팀 뱃지*/}
                         </MultiBackgroundRoom>
                     ) : (
                         <SelectAnswerPage
                             selectedQuiz={selectedQuiz}
                             userAnswers={submitedUserAnswer}
-
                             prepareNextRound={prepareNextRound}
+                            roomId={_roomId}
+                            userTagRefs={userTagRefs}
                         />
                     )
                 )
             ) : (
                 gamePhase === GamePhase.ATTACK ? (
-                    <DefendPage />
+                    <DefendPage teamId={teamId} roomId= {_roomId} userTagRefs = {userTagRefs}/>
                 ) : (
                     waiting ? (
-                        <SolvingPage selectedQuiz={selectedQuiz} />
+                        <SolvingPage selectedQuiz={selectedQuiz} userTagRefs = {userTagRefs} />
                     ) : (
                         <SelectAnswerPage
                             selectedQuiz={selectedQuiz} userAnswers={submitedUserAnswer}
                             prepareNextRound={prepareNextRound}
+                            roomId={_roomId}
+                            userTagRefs={userTagRefs}
                         />
                     )
                 )

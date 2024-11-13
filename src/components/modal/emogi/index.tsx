@@ -4,7 +4,6 @@ import {
     EmojiModalContainer, EmojiCategoryContainer, EmojiCategoryTab, EmojiContentWrap,
     EmojiContentBox, EmojiButton, EmojiGrid, EmojiRow
 } from "./styled";
-import { AnimatedEmoji } from "./animatedEmoji";
 import { EMOJI_IMAGE } from "../../../config/emoji/constants";
 
 interface EmojiModalProps {
@@ -13,7 +12,7 @@ interface EmojiModalProps {
         top: number;
         left: number;
     };
-    onEmojiSelect?: (emojiPath: string) => void;  // 추가
+    onEmojiSelect?: (emojiPath: string, emojiType : string) => void;  // 추가
 }
 
 
@@ -31,8 +30,8 @@ export const EmojiModal = ({ onClose, onDone, position, onEmojiSelect, ...props 
     };
 
     // 이미지 클릭 핸들러
-    const handleEmojiClick = (imagePath: string) => {
-        onEmojiSelect?.(imagePath);  // 경로만 전달
+    const handleEmojiClick = (imagePath: string, emojiType : string) => {
+        onEmojiSelect?.(imagePath,emojiType);  // 경로만 전달
 
     };
 
@@ -98,7 +97,7 @@ export const EmojiModal = ({ onClose, onDone, position, onEmojiSelect, ...props 
                                     rows[rowIndex].push(
                                         <EmojiButton
                                             key={emojiKey}
-                                            onClick={() => handleEmojiClick(emojiPath)}
+                                            onClick={() => handleEmojiClick(emojiPath, emojiKey)}
                                             className="click-sound"
                                         >
                                             <img

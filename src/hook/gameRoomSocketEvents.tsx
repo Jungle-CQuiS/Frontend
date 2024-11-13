@@ -12,7 +12,8 @@ export const gameRoomSocketEvents = {
         client: Client,
         roomId: string,
         onDefenseTeamAllSubmitted: () => void,
-        handleGameEndEvent: (winner: TeamType) => void
+        handleGameEndEvent: (winner: TeamType) => void,
+        handleReceivedEmoji: (emojiType: string, roomUserId: number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -31,6 +32,12 @@ export const gameRoomSocketEvents = {
                             case GamePlayEvents.GAME_END:
                                 console.log('서버에서 게임 종료 메세지 수신');
                                 handleGameEndEvent(response.teamColor);
+                                break;
+                            case GamePlayEvents.EMOJI_SELECT:
+                                handleReceivedEmoji(
+                                    response.emojiType,
+                                    response.roomUserId,
+                                );
                                 break;
                             default:
                                 break;
@@ -52,7 +59,8 @@ export const gameRoomSocketEvents = {
         client: Client,
         roomId: string,
         onDefenseTeamAllSubmitted: () => void,
-        handleGameEndEvent: (winner: TeamType) => void
+        handleGameEndEvent: (winner: TeamType) => void,
+        handleReceivedEmoji: (emojiType: string, roomUserId: number) => void
     ) => {
         try {
             const subscription = client.subscribe(
@@ -71,13 +79,12 @@ export const gameRoomSocketEvents = {
                             case GamePlayEvents.GAME_END:
                                 console.log('서버에서 게임 종료 메세지 수신');
                                 handleGameEndEvent(response.teamColor);
-                                /*
-                                {
-                                    "responseStatus": "GAME_END"
-                                    "teamColor": 승리 팀의 색(BLUE or RED),
-                                    "gameStatus": "GAME_END"
-                                }  
-                                */
+                                break;
+                            case GamePlayEvents.EMOJI_SELECT:
+                                handleReceivedEmoji(
+                                    response.emojiType,
+                                    response.roomUserId,
+                                );
                                 break;
                             default:
                                 break;
@@ -94,7 +101,6 @@ export const gameRoomSocketEvents = {
         }
 
     },
-
 
     // 리더의 선택 구독 ✅
     subscribeLeaderSelect: (client: Client, roomId: string, initLeaderSelectQuizeId: (leaderSelect: number) => void) => {
@@ -113,7 +119,7 @@ export const gameRoomSocketEvents = {
                                 console.log(response.number);
                                 initLeaderSelectQuizeId(response.number);
                                 break;
-                            case GamePlayEvents.DEF_QUIZ_SELECT: 
+                            case GamePlayEvents.DEF_QUIZ_SELECT:
                                 console.log(response.number);
                                 initLeaderSelectQuizeId(response.number);
                                 break;
@@ -329,7 +335,7 @@ export const gameRoomSocketEvents = {
         const message = {
             roomUserId: roomUserId,
             answer: answer,
-            reason : reason,
+            reason: reason,
             roomId: roomId
         };
 
@@ -370,5 +376,34 @@ export const gameRoomSocketEvents = {
             body: JSON.stringify(message)
         });
 
-    }
+    },
+
+
+    // 유저 이모지 입력
+    sendUserEmoji: (
+        stompClient: React.RefObject<Client>,
+        teamColor: string,
+        emojiType: string,
+        roomId: string,
+        roomUserId: string,
+    ) => {
+        if (!stompClient.current?.active) {
+            throw new Error('No active connection');
+        }
+        const destination = SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.SEND_USER_EMOJI;
+
+        const message = {
+            teamColor: teamColor,
+            emojiType: emojiType,
+            roomUserId: roomUserId,
+            roomId: roomId
+        };
+
+        stompClient.current.publish({
+            destination,
+            body: JSON.stringify(message)
+        });
+
+    },
+
 }

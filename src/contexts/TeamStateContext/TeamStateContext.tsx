@@ -1,6 +1,6 @@
 import { createContext, useEffect, ReactNode, useState, useCallback } from 'react';
 import { TeamType, TeamUser } from '../../types/teamuser';
-import { useOpenViduContext } from '../OpenViduContext/useOpenViduContext';
+
 interface TeamStateContextType {
     teamOneUsers: (TeamUser | null)[];
     teamTwoUsers: (TeamUser | null)[];

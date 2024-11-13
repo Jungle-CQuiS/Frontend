@@ -12,7 +12,7 @@ type PositionProps = {
 type ModalPosition = PositionType & PositionProps;
 
 interface EmojiButtonProps {
-    onEmojiSelect?: (emojiPath: string) => void;
+    onEmojiSelect?: (emojiPath: string, emojiType: string) => void;
 }
 
 export const EmojiButton = ({ onEmojiSelect }: EmojiButtonProps) => {
@@ -43,8 +43,8 @@ export const EmojiButton = ({ onEmojiSelect }: EmojiButtonProps) => {
                     open={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     position={modalPosition}
-                    onEmojiSelect={(path) => {
-                        onEmojiSelect?.(path);
+                    onEmojiSelect={(path, type) => {
+                        onEmojiSelect?.(path,type);
                     }}
                 />
             )}

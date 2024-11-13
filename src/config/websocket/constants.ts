@@ -40,7 +40,8 @@ export const SOCKET_DESTINATIONS = {
 
                 QUIZE_SELECT: `/app/game/quiz-select`, //공격팀 리더가 문제를 선택할 때 사용
                 SUBMIT_ANSWER: `/app/game/personal-submit`, // 수비팀 사람들이 각자 답안을 제출할 떄 사용
-                SELECT_FINAL_ANSWER: `/app/game/team-submit` // 수비팀에서 최종 제출할 답안을 리더가 선택할 때 사용.
+                SELECT_FINAL_ANSWER: `/app/game/team-submit`, // 수비팀에서 최종 제출할 답안을 리더가 선택할 때 사용.
+                SEND_USER_EMOJI: `/app/game/emoji`
             }
         }
     }
