@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { ButtonContainer, TooltipModal } from "./styled"
+import { ButtonContainer } from "./styled"
 import { EmojiModal } from '../../modal/emogi';
 import { EmojiButtonWrap } from './styled';
 
@@ -38,15 +38,15 @@ export const EmojiButton = ({ onEmojiSelect }: EmojiButtonProps) => {
             <EmojiButtonWrap onClick={handleClick}>
                 😊
             </EmojiButtonWrap>
-            {isModalOpen && (
-                <TooltipModal>
-                    <EmojiModal
-                        open={isModalOpen}
-                        onClose={() => setIsModalOpen(false)}
-                        position={modalPosition}
-                        onEmojiSelect={onEmojiSelect}
-                    />
-                </TooltipModal>
+            {isModalOpen && modalPosition && (
+                <EmojiModal
+                    open={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    position={modalPosition}
+                    onEmojiSelect={(path) => {
+                        onEmojiSelect?.(path);
+                    }}
+                />
             )}
         </ButtonContainer>
     );

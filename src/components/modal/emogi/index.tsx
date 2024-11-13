@@ -22,14 +22,7 @@ type EmojiPaths = {
     [key: string]: string;
 };
 
-export const EmojiModal = ({ onClose, onDone, position,onEmojiSelect, ...props }: IModalProps & EmojiModalProps) => {
-    const [animatedEmojis, setAnimatedEmojis] = useState<Array<{
-        id: number;
-        src: string;
-        x: number;
-        y: number;
-    }>>([]);
-
+export const EmojiModal = ({ onClose, onDone, position, onEmojiSelect, ...props }: IModalProps & EmojiModalProps) => {
     const [selectedCategory, setSelectedCategory] = useState("전체");
 
 
@@ -38,21 +31,11 @@ export const EmojiModal = ({ onClose, onDone, position,onEmojiSelect, ...props }
     };
 
     // 이미지 클릭 핸들러
-    const handleEmojiClick = (imagePath: string, event: React.MouseEvent) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const startX = rect.left;
-        const startY = rect.top;
-
-        setAnimatedEmojis(prev => [...prev, {
-            id: Date.now(),
-            src: imagePath,
-            x: startX,
-            y: startY
-        }]);
-
-        // 선택된 이모티콘 전달
-        onEmojiSelect?.(imagePath);
+    const handleEmojiClick = (imagePath: string) => {
+        onEmojiSelect?.(imagePath);  // 경로만 전달
+        onClose?.();  // 모달 닫기
     };
+
 
     // getFilteredEmojis 함수에 반환 타입 명시
     const getFilteredEmojis = (): EmojiPaths => {
@@ -72,11 +55,10 @@ export const EmojiModal = ({ onClose, onDone, position,onEmojiSelect, ...props }
     };
 
 
-    return (
-        <>
+    return (   
             <Modal {...props}
-                open={props.open} 
-                onClose={onClose} 
+                open={props.open}
+                onClose={onClose}
                 onDone={onDone}
                 closeOnBackdropClick={true}
                 backdropcolor={false}
@@ -116,7 +98,7 @@ export const EmojiModal = ({ onClose, onDone, position,onEmojiSelect, ...props }
                                     rows[rowIndex].push(
                                         <EmojiButton
                                             key={emojiKey}
-                                            onClick={(e) => handleEmojiClick(emojiPath, e)}
+                                            onClick={() => handleEmojiClick(emojiPath)}
                                             className="click-sound"
                                         >
                                             <img
@@ -138,7 +120,6 @@ export const EmojiModal = ({ onClose, onDone, position,onEmojiSelect, ...props }
                     </EmojiContentWrap>
                 </EmojiModalContainer>
             </Modal>
-        </>
     );
 
 

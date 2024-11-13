@@ -6,6 +6,7 @@ export const UserTagsContainer = styled.div`
     align-items: center;
     gap: 24px;
     justify-content: center;
+    overflow: visible;  // overflow 제한 제거
 `;
 
 export const UserTag = styled.div<{ teamId: number }>`

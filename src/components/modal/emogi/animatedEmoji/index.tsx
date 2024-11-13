@@ -24,10 +24,8 @@ export const AnimatedEmoji = ({ src, startX, startY }: AnimatedEmojiProps) => {
     return (
         <StyledAnimatedEmoji
             src={src}
-            style={{
-                left: `${startX}px`,
-                top: `${startY}px`
-            }}
+            $startX={startX}  // styled-components prop으로 변경
+            $startY={startY}  // styled-components prop으로 변경
         />
     );
 };
