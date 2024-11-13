@@ -8,7 +8,11 @@ import { AnimatedEmoji } from "./animatedEmoji";
 import { EMOJI_IMAGE } from "../../../config/emoji/constants";
 
 interface EmojiModalProps {
-
+    position?: {
+        position: 'fixed' | 'absolute';
+        top: number;
+        left: number;
+    };
 }
 
 // 반환될 수 있는 이모지 객체들의 타입 정의
@@ -76,13 +80,19 @@ export const EmojiModal = ({ onClose, onDone, position, ...props }: IModalProps 
     return (
         <>
             <Modal {...props}
-                open={props.open} onClose={onClose} onDone={onDone}
+                open={props.open} 
+                onClose={onClose} 
+                onDone={onDone}
                 closeOnBackdropClick={true}
                 backdropcolor={false}
-                width="300px"
+                width="250px"
                 $padding="10px"
                 $round="8px"
-                $border="3px solid"
+                $border="2px solid #4444"
+                position={position?.position}
+                $top={position?.top}
+                $left={position?.left}
+                $transform="translateY(-100%)"
             >
                 <EmojiModalContainer>
                     <EmojiCategoryContainer>

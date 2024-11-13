@@ -208,7 +208,6 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound }
                     <BlackButtonSmall className="click-sound" onClick={submitFinalAnswerSelect}>선택완료</BlackButtonSmall>
                 </SelectAnswerButtonWrap>
                 <UserTagsComponent teamId={defenceTeam} />
-                {attackTeam === user?.team ? (<UserTagsComponent teamId={attackTeam == 'BLUE' ? 1 : 2} />) : (<></>)}{/*공격팀일 경우 공격팀의 팀뱃지도 보여준다!*/}
             </SelectAnswerContainer>
         </Background>
     )

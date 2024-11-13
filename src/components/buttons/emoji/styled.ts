@@ -4,6 +4,22 @@ export const ButtonContainer = styled.div`
   position: relative;
 `;
 
+export const EmojiButtonWrap = styled.button`
+  font-size: 40px;    
+  background: none; 
+  border: none;    
+  cursor: pointer;  
+  transition: transform 0.2s ease; 
+  
+  &:hover {
+    transform: scale(1.1);  
+  }
+
+  &:active {
+    transform: scale(0.95); 
+  }
+`;
+
 export const TooltipModal = styled.div<{ top?: number; left?: number }>`
   position: absolute;
   top: ${props => props.top}px;
