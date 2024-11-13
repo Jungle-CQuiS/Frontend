@@ -9,6 +9,7 @@ import { LoadingQuestion } from "./LoadingQuestion";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
 import { Tooltip } from "react-tooltip";
 import { useConfirm } from "../../../components/confirmPopup";
+import { SignupBackground } from "../../signup/styled";
 
 export default function AddProblemPage() {
     const navigate = useNavigate();
@@ -117,7 +118,7 @@ export default function AddProblemPage() {
     };
 
     return (
-        <Background>
+        <SignupBackground>
             {loadingQuestion ? (<LoadingQuestion />) :
                 (<AddProblemContainer>
                     <AddProblemHeader>
@@ -181,6 +182,6 @@ export default function AddProblemPage() {
                     />
                 </AddProblemContainer>
                 )}
-        </Background>
+        </SignupBackground>
     );
 }
