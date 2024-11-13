@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import { useState, useRef } from "react";
 import { TeamUserTagProps } from "../../../../../types/room";
-import { UserTag, UserTagImg, UserTagsContainer, UserEmoji } from "./styled";
+import { UserTag, UserTagImg, UserTagsContainer } from "./styled";
 import { useTeamState } from "../../../../../contexts/TeamStateContext/useTeamState";
 import { useGameUser } from "../../../../../contexts/GameUserContext/useGameUser";
 import { EmojiButton } from "../../../../../components/buttons/emoji";
-
-interface UserEmojisType {
-    [username: string]: string;
-}
+import { AnimatedEmoji } from "../../../../../components/modal/emogi/animatedEmoji";
 
 export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
     const { user } = useGameUser();
@@ -15,14 +12,38 @@ export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
     const teamUsers = teamId == 1 ? teamOneUsers : teamTwoUsers;
 
     // 각 유저의 이모티콘 상태 관리
-    const [userEmojis, setUserEmojis] = useState<UserEmojisType>({});
+    const [animatedEmojis, setAnimatedEmojis] = useState<Array<{
+        id: number;
+        src: string;
+        x: number;
+        y: number;
+    }>>([]);
+
+    // UserTag의 ref를 저장할 객체
+    const userTagRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
     const handleEmojiSelect = (emojiPath: string, targetUsername: string) => {
-        setUserEmojis(prev => ({
-            ...prev,
-            [targetUsername]: emojiPath
-        }));
+        const targetTagElement = userTagRefs.current[targetUsername];
+        if (targetTagElement) {
+            // 부모 컨테이너(UserTagsContainer)의 위치 가져오기
+            const containerRect = targetTagElement.parentElement?.getBoundingClientRect();
+            const tagRect = targetTagElement.getBoundingClientRect();
+
+            if (containerRect) {
+                // 상대적 위치 계산
+                const relativeX = tagRect.left - containerRect.left;
+                const relativeY = tagRect.top - containerRect.top;
+
+                setAnimatedEmojis(prev => [...prev, {
+                    id: Date.now(),
+                    src: emojiPath,
+                    x: relativeX + (tagRect.width / 2), // 태그의 중앙
+                    y: relativeY - 20 // 태그 위
+                }]);
+            }
+        }
     };
+
     return (
         <UserTagsContainer>
             {teamUsers
@@ -31,15 +52,13 @@ export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
                     const username = teamUser.username;
 
                     return (
-                        <UserTag key={index} teamId={teamId}>
+                        <UserTag
+                            key={index}
+                            teamId={teamId}
+                            ref={el => username && (userTagRefs.current[username] = el)}
+                        >
                             {teamUser.isLeader === 'leader' && <UserTagImg src="/icons/medal.svg" />}
                             {username}
-                            {username && userEmojis[username] && (
-                                <UserEmoji
-                                    src={userEmojis[username]}
-                                    alt="emoji"
-                                />
-                            )}
                         </UserTag>
                     );
                 })}
@@ -50,6 +69,14 @@ export const UserTagsComponent = ({ teamId }: TeamUserTagProps) => {
                     }
                 }}
             />
+            {animatedEmojis.map(emoji => (
+                <AnimatedEmoji
+                    key={emoji.id}
+                    src={emoji.src}
+                    startX={emoji.x}
+                    startY={emoji.y}
+                />
+            ))}
         </UserTagsContainer>
     );
 };

@@ -26,7 +26,7 @@ export const EmojiButton = ({ onEmojiSelect }: EmojiButtonProps) => {
             const newPosition = {
                 position: "fixed" as const,
                 top: rect.bottom - 50,
-                left: rect.left - 200
+                left: rect.left + 15
             };
             setModalPosition(newPosition as ModalPosition);
         }

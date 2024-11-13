@@ -138,15 +138,6 @@ export const EmojiModal = ({ onClose, onDone, position,onEmojiSelect, ...props }
                     </EmojiContentWrap>
                 </EmojiModalContainer>
             </Modal>
-            {/* 애니메이션되는 이모지들 렌더링 */}
-            {animatedEmojis.map(emoji => (
-                <AnimatedEmoji
-                    key={emoji.id}
-                    src={emoji.src}
-                    startX={emoji.x}
-                    startY={emoji.y}
-                />
-            ))}
         </>
     );
 
