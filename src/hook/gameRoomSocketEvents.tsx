@@ -395,8 +395,8 @@ export const gameRoomSocketEvents = {
         const message = {
             teamColor: teamColor,
             emojiType: emojiType,
-            RoomUserId: roomUserId,
-            RoomId: roomId
+            roomUserId: roomUserId,
+            roomId: roomId
         };
 
         stompClient.current.publish({
