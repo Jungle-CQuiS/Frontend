@@ -2,12 +2,11 @@ import styled from "styled-components";
 
 export const SignupBackground = styled.div`
     width: 100%;
-    height: calc(100vh - 40px);
+    height: 100vh;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    padding-top: 40px;
     background-image: url('/images/background_base.png');
     background-size: cover;
     background-position: center;
@@ -24,7 +23,10 @@ export const SignupContainer = styled.div`
     background-color: #fff;
     padding: 57px 93px;
     border-radius: 16px;
-    margin-top: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 `;
 
 export const SignUpInputContainer = styled.div`

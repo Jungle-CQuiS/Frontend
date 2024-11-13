@@ -34,7 +34,7 @@ export const MyPageProfileNameWrap = styled.div`
 `;
 
 export const MyPageProfileName = styled.div`
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 700;
 `;
 
@@ -49,12 +49,12 @@ export const MyPageProfileHonorImg = styled.img`
 `;
 
 export const MyPageProfileHonor = styled.div`
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
 `;
 
 export const MyPageProfileEmail = styled.div`
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 500;
     color: #969696;
 `;
@@ -83,7 +83,7 @@ export const MyPagePlayStatisticsBarTextWrap = styled.div`
 `;
 
 export const MyPagePlayStatisticsBarText = styled.div`
-    font-size: 13px;
+    font-size: 20px;
     color: #969696;
     font-weight: 500;
 `;

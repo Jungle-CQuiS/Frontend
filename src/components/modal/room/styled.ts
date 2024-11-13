@@ -22,14 +22,14 @@ export const CreateRoomModalRow = styled.div`
 
 
 export const CreateRoomModalLabel = styled.label`
-    font-size: 14px;
+    font-size: 24px;
     font-weight: 700;
 `;
 
 export const CreateRoomModalInput = styled.input`
     padding: 10px 14px;
     border: 1px solid #D3D3D3;
-    font-size: 12px;
+    font-size: 20px;
     border-radius: 8px;
     ${defaultTransition}
     &:hover {
@@ -64,7 +64,7 @@ export const CreateRoomModalPasswordCheckbox = styled.img`
 export const CreateRoomModalPasswordInput = styled.input`
     padding: 10px 14px;
     border: 1px solid #D3D3D3;
-    min-width: 232px;
+    min-width: 180px;
     font-size: 12px;
     border-radius: 8px;
     ${defaultTransition}
@@ -90,7 +90,7 @@ export const CreateRoomModalPasswordInput = styled.input`
 `;
 
 export const CreateRoomModalText = styled.div`
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 500;
     cursor: pointer;
 `;
@@ -104,7 +104,7 @@ export const CreateRoomModalNumberWrap = styled.div`
 export const CreateRoomModalNumber = styled.input`
     padding: 10px 4px 10px 14px;
     border: 1px solid #D3D3D3;
-    font-size: 12px;
+    font-size: 20px;
     border-radius: 8px;
     ${defaultTransition}
     &:hover {
@@ -130,7 +130,7 @@ export const CreateRoomModalNumberInfoImg = styled.img`
 `;
 
 export const CreateRoomModalNumberInfoText = styled.div`
-    font-size: 10px;
+    font-size: 14px;
     color: #969696;
 `;
 

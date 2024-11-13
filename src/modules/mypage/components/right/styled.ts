@@ -15,7 +15,7 @@ export const MyPageCategoryTab = styled.div<{ isSelected: boolean }>`
     padding: 9px 24px;
     border: 1px solid #D3D3D3;
     border-bottom: none;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 600;
     border-radius: 8px 8px 0px 0px;
     cursor: pointer;
@@ -56,7 +56,7 @@ export const MyPageProblemWrap = styled.div`
 `;
 
 export const MyPageProblemTitle = styled.div`
-    font-size: 16px;
+    font-size: 24px;
     font-weight: bold;
     color: #333;
     line-height: 1.4;
@@ -81,7 +81,7 @@ export const MyPageProblemSelectImg = styled.img`
 `;
 
 export const MyPageProblemSelectText = styled.div`
-    font-size: 14px;
+    font-size: 18px;
     color: #666;
     max-width: 600px;
     overflow-wrap: break-word;

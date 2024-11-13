@@ -52,7 +52,7 @@ export const RoomTeamOneTitle = styled.div`
     color: #fff;
     background-color: rgba(47, 105, 255,0.5);
     width: 105px;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 700;
     display: flex;
     justify-content: center;
@@ -75,7 +75,7 @@ export const RoomTeamOneUserName = styled.div`
     height: 60px;
     padding: 0px 37px;
     color: #fff;
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 700;
     display: flex;
     justify-content: flex-end;
@@ -151,7 +151,7 @@ export const RoomTeamTwoTitle = styled.div`
     color: #fff;
     background-color: rgba(238, 85, 103,0.5);
     width: 105px;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 700;
     display: flex;
     justify-content: center;
@@ -174,7 +174,7 @@ export const RoomTeamTwoUserName = styled.div`
     height: 60px;
     padding: 0px 37px;
     color: #fff;
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 700;
     display: flex;
     justify-content: flex-start;
@@ -232,7 +232,7 @@ export const RoomTeamEmpty = styled.div`
     height: 60px;
     padding: 0px 37px;
     color: #fff;
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 700;
     display: flex;
     justify-content: center;

@@ -62,6 +62,7 @@ export const MultiRoomContainer = styled.div`
   margin-top: 40px;
   gap: 32px 56px;
   padding: 16px; 
+  overflow-y: scroll;
 `;
 
 

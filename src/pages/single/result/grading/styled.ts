@@ -5,11 +5,18 @@ export const SingleGradingContainer = styled.div`
     flex-direction: column;
     gap: 100px;
     align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 `;
 
 export const SingleGradingWrap = styled.div`
     display: flex;
     flex-direction: column;
+    background-color: #fff;
+    padding: 24px 140px 40px 140px;
+    border-radius: 16px;
     gap: 36px;
     align-items: center;
 `;

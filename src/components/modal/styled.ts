@@ -59,11 +59,11 @@ export const ModalTitleWrap = styled.div`
 `;
 
 export const ModalTitleIcon = styled.img`
-
+  width: 40px;
 `;
 
 export const ModalTitle = styled.div`
-  font-size: 18px;
+  font-size: 38px;
   font-weight: 500;
 `
 

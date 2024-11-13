@@ -5,6 +5,10 @@ export const SingleResultContainer = styled.div`
   flex-direction: column;
   gap: 60px;
   align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export const SingleResultWrap = styled.div`
@@ -23,11 +27,13 @@ export const SingleResultTitle = styled.div`
 export const SingleResultBox = styled.div`
   padding: 40px 72px;
   background-color: #fff;
-  box-shadow: 0 0px 10px #e6e8f6, 0 5px 5px #e6e8f6;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 두 열로 설정 */
+  gap: 24px 40px; /* 카드 사이 간격 */
 `;
 
 export const SingleResultBoxRow = styled.div`

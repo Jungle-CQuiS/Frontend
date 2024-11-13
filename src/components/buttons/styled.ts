@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { defaultTransition } from "../../css";
 
 export const ButtonBase = styled.button`
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 500;
   width: fit-content;
   border-radius: 4px;
@@ -21,7 +21,7 @@ export const ButtonBase = styled.button`
 `;
 
 export const SecondaryButton = styled(ButtonBase)`
-  color: #2F69FF;
+  color: #395B9A;
   background-color: #fff;
   padding: 8px 24px;
   border: 1px solid #E7E7E7;
@@ -130,7 +130,7 @@ export const SecondaryButtonShort = styled(ButtonBase)`
 
 export const SecondaryButtonSmall = styled(ButtonBase)`
   color: #fff;
-  font-size: 16px;
+  font-size: 24px;
   background-color: #DB4453;
   padding: 8px 20px;
   &:hover {
@@ -140,7 +140,7 @@ export const SecondaryButtonSmall = styled(ButtonBase)`
 
 export const BlackButtonSmall = styled(ButtonBase)`
   color: #fff;
-  font-size: 16px;
+  font-size: 24px;
   background-color: #444;
   padding: 8px 24px;
   &:hover {

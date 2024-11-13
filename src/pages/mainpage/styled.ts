@@ -33,7 +33,10 @@ export const MainPageContainer = styled.div`
 export const GameModeWrapper = styled.div`
   display: flex;
   gap: 145px;
-  margin-top: 60px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -30%);
 `;
 
 export const GameModeButton = styled.div<{ disabled?: boolean }>`

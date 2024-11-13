@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const SingleModeBottomContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 62px;
+    gap: 24px;
     width: 100%;
     align-items: center;
 `;

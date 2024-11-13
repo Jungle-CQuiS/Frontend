@@ -5,6 +5,10 @@ export const SingleModeContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 80px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-40%);
 `;
 
 export const SingleModeTop = styled.div`
@@ -19,20 +23,20 @@ export const SingleModeWrap = styled.div`
 `;
 
 export const SingleModeLabel = styled.div`
-    font-size: 16px;
+    font-size: 26px;
     font-weight: 600;
 `;
 
 export const SingleModeTabWrap = styled.div`
     display: flex;
-    gap: 16px;
+    gap: 8px;
 `;
 
 export const SingleModeTab = styled.div<{ $isSelected?: boolean }>`
     padding: 8px 19px;
     border: ${({ $isSelected }) => ($isSelected ? "none" : "1px solid #969696")};
     color: ${({ $isSelected }) => ($isSelected ? "#FFF" : "#969696")};
-    font-size: 13px;
+    font-size: 20px;
     font-weight: 500;
     border-radius: 4px;
     background-color: ${({ $isSelected }) => ($isSelected ? "#444" : "#FFF")};
@@ -58,12 +62,13 @@ export const SingleModeSelectModeWrap = styled.div`
 `;
 
 export const SingleModeSelectMode = styled.div`
-    background: linear-gradient(rgba(47, 105, 255, 0.8) 49%, rgba(28, 63, 153, 0.8) 100%);
+    background-color: #395B9A;
     padding: 60px 81px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 32px;
+    border-radius: 16px;
 `;
 
 export const SingleModeSelectModeImg = styled.img`
@@ -72,12 +77,13 @@ export const SingleModeSelectModeImg = styled.img`
 
 export const SingleModeSelectModeText = styled.div`
     color: #fff;
-    font-size: 32px;
+    font-size: 42px;
     font-weight: 700;
 `;
 
 export const SingleModeSelectModeBox = styled.div`
     height: 17px;
     width: 320px;
-    background-color: #4A66AF;
+    background-color: #25467C;
+    border-radius: 8px;
 `;
