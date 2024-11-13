@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
-import { PrimaryButtonLarge } from "../../components/buttons/styled";
+import { LandingPageAddProblemHeaderImg, LandingPageTooltipContainer, PrimaryButtonLarge } from "../../components/buttons/styled";
 import { LandingPageContainer, LandingPageText, LandingPageTextContainer, LandingPageTextPrimary, LandingPageTextSecondary, LandingPageTextWrap, LandingPageWrap, WaveLetter } from "./styled";
 import { SERVICES } from "../../config/api/constants";
 import useHoverSoundEffect from "../../hook/useHoverSoundEffect";
+import { Tooltip } from "react-tooltip";
 
 export default function LandingPage() {
 
@@ -43,7 +44,19 @@ export default function LandingPage() {
                             <LandingPageText>을 확인하세요!</LandingPageText>
                         </LandingPageTextWrap>
                     </LandingPageTextContainer>
-                    <PrimaryButtonLarge onClick={handleLoginStatus}>시작하기</PrimaryButtonLarge>
+                    <>
+                        <PrimaryButtonLarge onClick={handleLoginStatus}>시작하기</PrimaryButtonLarge>
+                        <LandingPageTooltipContainer>
+                            <LandingPageAddProblemHeaderImg
+                                src="/icons/question.svg"
+                                data-tooltip-id="tooltip"
+                            />
+                            <Tooltip id="tooltip" place="bottom" className="tooltip-custom">
+                                Cquis란? CS와 Quiz를 결합한<br />
+                                Squid(오징어)를 연상시키는 단어입니다.
+                            </Tooltip>
+                        </LandingPageTooltipContainer>
+                    </>
                 </LandingPageWrap>
             </LandingPageContainer>
         </>
