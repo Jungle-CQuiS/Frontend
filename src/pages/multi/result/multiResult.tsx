@@ -26,6 +26,7 @@ import { SERVICES } from "../../../config/api/constants";
 import { useNavigate } from "react-router-dom";
 import { useStompContext } from "../../../contexts/StompContext";
 import { useGameState } from "../../../contexts/GameStateContext/useGameState";
+import { MultiBackgroundRoom } from "../room/styled";
 
 export const MultiModeResultPage = () => {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ export const MultiModeResultPage = () => {
   
 
   return (
-    <Background>
+    <MultiBackgroundRoom>
       <MultiResultContainer>
         <MultiResultHeader>
           <MultiResultHeaderTag teamId={teamId}>{teamId}팀 승리</MultiResultHeaderTag>
@@ -141,6 +142,6 @@ export const MultiModeResultPage = () => {
           <BlackButtonSmall>한번 더 하기</BlackButtonSmall>
         </MultiResultButtonWrap>
       </MultiResultContainer>
-    </Background>
+    </MultiBackgroundRoom>
   );
 };

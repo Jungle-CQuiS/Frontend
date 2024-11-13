@@ -18,6 +18,7 @@ import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState
 import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
 import { usePageLeave } from "../../../../hook/pageLeaveHandler";
 import { MultiAnimationBackgroundOverlay, MultiAnimationModalContainer, MultiAnimationTextLarge, MultiAnimationTextSmall, MultiAnimationTextWrap, MultiGameAttackButtonWrap, MultiGameAttackContainer, MultiGameAttackQuiz, MultiGameAttackQuizCheckbox, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameAttackTimer, MultiGameAttackTimerText, MultiGameBackground, MutliGameAttackTimerWrap } from "./styled";
+import { MultiBackgroundRoom } from "../../../../pages/multi/room/styled";
 
 interface AttackPageProps {
     onSelectionComplete: (quiz: Quiz) => void;
@@ -150,7 +151,7 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
     }, [modalVisible]); // 모달 상태가 변경될 때마다 실행
 
     return (
-        <Background>
+        <MultiBackgroundRoom>
             <MultiGameBackground>
                 {modalVisible && (
                         <>
@@ -196,6 +197,6 @@ export default function AttackPage({ onSelectionComplete }: AttackPageProps) {
                 </MultiGameAttackContainer>
                 <UserTagsComponent teamId={teamId} />
             </MultiGameBackground>
-        </Background>
+        </MultiBackgroundRoom>
     );
 }

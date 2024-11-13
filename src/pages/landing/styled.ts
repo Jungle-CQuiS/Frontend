@@ -38,10 +38,9 @@ export const LandingPageContainer = styled.div`
   height: calc(100vh - 150px);
   display: flex;
   justify-content: flex-start;
-  align-items: flex-end;
   flex-direction: column;
   padding-top: 150px;
-  background-image: url('/images/mainpage-background.png');
+  background-image: url('/images/landing.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -66,11 +65,11 @@ export const LandingPageTextContainer = styled.div`
 
 export const LandingPageTextWrap = styled.div`
   display: flex;
-`;
+  flex-direction: column;
+  `;
 
-export const LandingPageText = styled.div`
-  font-size: 60px;
-  font-weight: 800;
+export const LandingPageText = styled.img`
+  width: 653px;
 `;
 
 export const LandingPageTextPrimary = styled.div`

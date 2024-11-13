@@ -4,6 +4,9 @@ export const MyPageLeftWrap = styled.div`
     display: flex;
     flex-direction: column;
     gap: 40px;
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 24px;
 `;
 
 

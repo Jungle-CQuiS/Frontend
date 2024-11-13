@@ -4,7 +4,7 @@ import { Background } from '../../../components/background/styled';
 import { RoomButtons } from '../../../modules/room/components/RoomButtons';
 import { RoomTitleComponent } from '../../../modules/room/components/RoomTItle';
 import { TeamComponent } from '../../../modules/room/components/Team';
-import { RoomTeamContainer } from './styled';
+import { MultiBackgroundRoom, RoomTeamContainer } from './styled';
 import { useRoom } from '../../../hook/useRoom';
 import { GameStartCountDownModal } from '../../../components/modal/room/countdown';
 import { FirstAttackModal } from '../../../components/modal/room/flipcoin/result';
@@ -155,7 +155,7 @@ export default function Room() {
   }
 
   return (
-    <Background>
+    <MultiBackgroundRoom>
       <RoomTitleComponent roomName={state?.roomName} />
       <RoomTeamContainer>
         <TeamComponent
@@ -200,6 +200,6 @@ export default function Room() {
           }}
         />
       )}
-    </Background>
+    </MultiBackgroundRoom>
   );
 }

@@ -26,25 +26,11 @@ export default function LandingPage() {
             <LandingPageContainer>
                 <LandingPageWrap>
                     <LandingPageTextContainer>
-                        <LandingPageTextWrap>
-                            <LandingPageText>공부를 더 &nbsp;</LandingPageText>
-                            <LandingPageTextPrimary>
-                                <WaveLetter delay="0s">즐</WaveLetter>
-                                <WaveLetter delay="0.1s">겁</WaveLetter>
-                                <WaveLetter delay="0.2s">게</WaveLetter>
-                            </LandingPageTextPrimary>
-                            <LandingPageText>!</LandingPageText>
-                        </LandingPageTextWrap>
-                        <LandingPageTextWrap>
-                            <LandingPageTextSecondary>맞춤형 퀴즈</LandingPageTextSecondary>
-                            <LandingPageText>들을 통해</LandingPageText>
-                        </LandingPageTextWrap>
-                        <LandingPageTextWrap>
-                            <LandingPageTextPrimary>성장하는 내 모습</LandingPageTextPrimary>
-                            <LandingPageText>을 확인하세요!</LandingPageText>
-                        </LandingPageTextWrap>
+                        <LandingPageText src="/images/landing_text.png" />
                     </LandingPageTextContainer>
-                    <>
+                    <div style={{
+                        display: "flex", alignItems: "center", gap: "16px"
+                    }}>
                         <PrimaryButtonLarge onClick={handleLoginStatus}>시작하기</PrimaryButtonLarge>
                         <LandingPageTooltipContainer>
                             <LandingPageAddProblemHeaderImg
@@ -56,7 +42,7 @@ export default function LandingPage() {
                                 Squid(오징어)를 연상시키는 단어입니다.
                             </Tooltip>
                         </LandingPageTooltipContainer>
-                    </>
+                    </div>
                 </LandingPageWrap>
             </LandingPageContainer>
         </>

@@ -18,6 +18,7 @@ import { useGameState } from "../../../../contexts/GameStateContext/useGameState
 import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
 import { Quiz } from "../../../../types/quiz";
 import { usePageLeave } from "../../../../hook/pageLeaveHandler";
+import { MultiBackgroundRoom } from "../../../../pages/multi/room/styled";
 
 export interface SolvingPageProps {
     selectedQuiz: Quiz | null;
@@ -61,7 +62,7 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
 
 
     return (
-        <Background>
+        <MultiBackgroundRoom>
             {isSubmit === false ? (
                 <>
                     <TeamHeaderContainer>
@@ -104,6 +105,6 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
                 </>
             )}
             <UserTagsComponent teamId={teamId} />
-        </Background>
+        </MultiBackgroundRoom>
     );
 }

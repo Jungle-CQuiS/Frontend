@@ -69,7 +69,7 @@ export const AddProblemTab = styled.div<{ isSelected?: boolean }>`
     font-size: 16px;
     font-weight: 500;
     border-radius: 4px;
-    background-color: ${({ isSelected }) => (isSelected ? "#2F69FF" : "#FFF")};
+    background-color: ${({ isSelected }) => (isSelected ? "#395B9A" : "#FFF")};
     cursor: pointer;
 `;
 
@@ -135,7 +135,8 @@ export const CreateQuizNumber = styled.input`
 export const CreateQuestion = styled.div`
     padding-top: 150px;
     font-size: 30px;
-    font-weight: 600;
+    font-weight: 800;
+    color: #fff;
 `;
 
 export const LoadingQuestionContainer = styled.div`

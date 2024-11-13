@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CreateRoomModal } from "../../components/modal/room";
-import { MainPageRefreshButton, MainPageRefreshWrap, MainPageSearchBar, MainPageSearchBarWrap, MainPageTable, MainPageTableThead, MainPageTableTheadTh, MainPageTableTheadTr, MainPageTitleText, MultiPageTitle, MultiPageTitleIcon } from "./styled";
+import { MainPageRefreshButton, MainPageRefreshWrap, MainPageSearchBar, MainPageSearchBarWrap, MainPageTable, MainPageTableThead, MainPageTableTheadTh, MainPageTableTheadTr, MainPageTitleText, MultiBackground, MultiPageTitle, MultiPageTitleIcon } from "./styled";
 import { PrimaryButtonMedium } from "../../components/buttons/styled";
 import { Background } from "../../components/background/styled";
 import RoomList from './roomlist/roomlist';
@@ -29,7 +29,7 @@ export default function MultiPage() {
 
     return (
         <>
-            <Background>
+            <MultiBackground>
                 <MultiPageTitle>
                     <MultiPageTitleIcon src="/icons/mdi_users_black.svg" alt="Multi Icon Black" />
                     <MainPageTitleText>MULTI MODE</MainPageTitleText>
@@ -45,20 +45,10 @@ export default function MultiPage() {
                 </MainPageRefreshWrap>
                     <PrimaryButtonMedium onClick={handleOpenModal}>방 만들기</PrimaryButtonMedium>
                 </MainPageSearchBarWrap>
-                
-                <MainPageTable>
-                    <MainPageTableThead>
-                        <MainPageTableTheadTr>
-                            <MainPageTableTheadTh>이름</MainPageTableTheadTh>
-                            <MainPageTableTheadTh>잠금</MainPageTableTheadTh>
-                            <MainPageTableTheadTh>인원</MainPageTableTheadTh>
-                        </MainPageTableTheadTr>
-                    </MainPageTableThead>
+            
 
                     <RoomList searchTerm={searchTerm} />
-
-                </MainPageTable>
-            </Background>
+            </MultiBackground>
             <CreateRoomModal
                 open={isModalOpen}
                 onClose={handleCloseModal}
