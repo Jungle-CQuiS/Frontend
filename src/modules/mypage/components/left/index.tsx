@@ -129,9 +129,10 @@ export default function MyPageLeftSection() {
 
 
     return (
+        <div style={{display: "flex", flexDirection: "column", gap: "24px"}}>
+        <MyPageLabel>프로필</MyPageLabel>
         <MyPageLeftWrap>
             <MyPageWrap>
-                <MyPageLabel>프로필</MyPageLabel>
                 <MyPageProfileWrap>
                     <MyPageProfileImg src="/images/profile_image.png" />
                     <MyPageProfileTextWrap>
@@ -183,5 +184,6 @@ export default function MyPageLeftSection() {
                 <PrimaryButtonMedium onClick={handleAddProblem}>문제 등록 하기</PrimaryButtonMedium>
             </MyPageLeftButtonWrap>
         </MyPageLeftWrap>
+    </div>
     );
 }

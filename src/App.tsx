@@ -27,13 +27,13 @@ import { BackgroundMusicProvider } from './components/soundEffect/BackgroundMusi
 import VolumeSlider from './components/soundEffect/VolumeSlider';
 
 function App() {
-  const [nickname, setNickname] = useState<string | null>(localStorage.getItem("nickname"));
+  const [nickname, setNickname] = useState<string | null>(localStorage.getItem("username"));
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("uuid"));
   const location = useLocation();
 
   const navBarPaths = ["/login", "/main", "/multi", "/signup", "/", "/mypage", "/mypage/addProblem", "/single"];
   const showNavBar = navBarPaths.includes(location.pathname);
-
+  console.log(nickname);
   return (
     <>
       <BackgroundMusicProvider>

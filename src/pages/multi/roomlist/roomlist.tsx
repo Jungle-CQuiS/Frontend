@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
-import { MainPageTableTbody, MainPageTableTbodyIcon, MainPageTableTbodyTd, MainPageTableTbodyTr } from "./styled";
+import { MainPageTableTbody, MainPageTableTbodyIcon, MainPageTableTbodyTd, MainPageTableTbodyTr, MultiRoomBottom, MultiRoomContainer, MultiRoomLock, MultiRoomName, MultiRoomUsersIcon, MultiRoomUsersText, MultiRoomUsersWrap, MultiRoomWrap } from "./styled";
 import { useNavigate } from "react-router-dom";
 import { Room } from "../../../types/room";
 import { PasswordCheckModal } from '../../../components/modal/roomlist/passwordCheck';
@@ -136,27 +136,32 @@ const RoomList = forwardRef<{}, RoomListProps>(({ searchTerm }, ref) => {
 
     return (
         <>
-            <MainPageTableTbody>
+            <MultiRoomContainer>
                 {filteredRooms.length === 0 ? (
                     <RoomListLoading />
                 ) : (
                     filteredRooms.map((room) => (
-                        <MainPageTableTbodyTr
+                        <MultiRoomWrap
                             key={room.gameRoomId}
                             onClick={() => room.isLocked
                                 ? handleOpenModal(room.gameRoomId, room.name)
                                 : handleRowClick(room.gameRoomId, room.name)
                             }
                         >
-                            <MainPageTableTbodyTd>{room.name}</MainPageTableTbodyTd>
-                            <MainPageTableTbodyTd>
-                                {room.isLocked && <MainPageTableTbodyIcon src="/icons/lock.svg" alt="Lock" />}
-                            </MainPageTableTbodyTd>
-                            <MainPageTableTbodyTd>{room.currentUsers}/{room.maxUsers}</MainPageTableTbodyTd>
-                        </MainPageTableTbodyTr>
+                            <MultiRoomName>{room.name}</MultiRoomName>
+                            <MultiRoomBottom>
+                                <MultiRoomUsersWrap>
+                                    <MultiRoomUsersIcon src='/icons/mdi_user_black.svg'/>
+                                    <MultiRoomUsersText>{room.currentUsers}/{room.maxUsers}</MultiRoomUsersText>
+                                </MultiRoomUsersWrap>
+                                <MultiRoomLock>
+                                    {room.isLocked && <MainPageTableTbodyIcon src="/icons/lock.svg" alt="Lock" />}
+                                </MultiRoomLock>
+                            </MultiRoomBottom>
+                        </MultiRoomWrap>
                     ))
                 )}
-            </MainPageTableTbody>
+            </MultiRoomContainer>
             <PasswordCheckModal
                 roomId={roomID}
                 roomName={roomName}

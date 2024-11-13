@@ -21,7 +21,7 @@ export default function FlipCoin() {
     }, []);
 
     return (
-        <FlipCoinScreen>
+        <FlipCoinScreen className="notransparent">
             <div ref={coincontainer}></div>
         </FlipCoinScreen>
     );

@@ -9,7 +9,7 @@ export const LoginBackground = styled.div`
     align-items: center;
     flex-direction: column;
     padding-top: 120px;
-    /* background-image: url('/images/login_background.png'); */
+    background-image: url('/images/background_base.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

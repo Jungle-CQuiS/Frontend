@@ -9,6 +9,11 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     color: #444;
   }
+
+  /* 'notransparent' 클래스가 없는 svg path에만 투명한 fill 적용 */
+  svg path:not(.notransparent) {
+    fill: none !important;
+  }
 `;
 
 export default GlobalStyle;
