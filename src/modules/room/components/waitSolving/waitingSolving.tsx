@@ -1,6 +1,6 @@
 import { MultiBackgroundRoom } from "../../../../pages/multi/room/styled";
 import { TeamHeaderContainer, TeamHeaderTag, TeamHeaderTitle } from "../../../quiz/components/multi/TeamHeader/styled";
-import { WaitingScreenContainer, WaitingScreenButtonWrap } from "./styled";
+import { WaitingScreenContainer, WaitingScreenButtonWrap, WaitingScreenWrap } from "./styled";
 import { SecondaryButtonSmall } from "../../../../components/buttons/styled";
 import QuizProblemsComponent from "../../../../components/quiz";
 import { UserTagsComponent } from "../../../quiz/components/multi/UserTags/UserTags";
@@ -38,19 +38,21 @@ export const WaitingSolvingPage = ({ selectedQuiz }: WaitingSolvingPageProps) =>
             <TeamHeaderContainer>
                 <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
                 <TeamHeaderTitle>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
                         <div>수비팀이 문제를 푸는 중입니다.</div>
                         <div>잠시만 기다려주세요</div>
                     </div>
                 </TeamHeaderTitle>
             </TeamHeaderContainer>
-            <WaitingScreenContainer>
-            <QuizProblemsComponent quiz={selectedQuiz} showAnswer={false} />
-            </WaitingScreenContainer>
-            <UserTagsComponent teamId={teamId} roomId={_roomId} /> {/*본인 팀의 팀 뱃지*/}
-            <WaitingScreenButtonWrap>
-                <SecondaryButtonSmall onClick={handleLeaveRoom}>나가기</SecondaryButtonSmall>
-            </WaitingScreenButtonWrap>
+            <WaitingScreenWrap>
+                <WaitingScreenContainer>
+                <QuizProblemsComponent quiz={selectedQuiz} showAnswer={false} />
+                </WaitingScreenContainer>
+                <UserTagsComponent teamId={teamId} roomId={_roomId} /> {/*본인 팀의 팀 뱃지*/}
+                <WaitingScreenButtonWrap>
+                    <SecondaryButtonSmall onClick={handleLeaveRoom}>나가기</SecondaryButtonSmall>
+                </WaitingScreenButtonWrap>
+            </WaitingScreenWrap>
         </MultiBackgroundRoom>
     );
 

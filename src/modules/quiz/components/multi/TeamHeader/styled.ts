@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const TeamHeaderContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     justify-content: center;
     align-items: center;
 `;
