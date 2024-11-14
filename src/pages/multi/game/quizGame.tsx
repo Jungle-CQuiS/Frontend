@@ -4,6 +4,8 @@ import { SolvingPage } from "../../../modules/room/components/solving/solving";
 import { SelectAnswerPage } from "../defend/select/select";
 import { Quiz } from "../../../types/quiz";
 import { TeamHeaderContainer, TeamHeaderTag, TeamHeaderTitle } from "../../../modules/quiz/components/multi/TeamHeader/styled";
+import QuizProblemsComponent from "../../../components/quiz";
+import { SolvingBottom } from "../../../modules/room/components/solving/styled";
 import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/WaitingScreen";
 import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
 import { useGameState } from "../../../contexts/GameStateContext/useGameState";
@@ -309,7 +311,8 @@ export default function QuizGamePage() {
                                     </div>
                                 </TeamHeaderTitle>
                             </TeamHeaderContainer>
-                            <WaitingScreen teamId={teamId} roomId={_roomId} />
+                            <div style={{gap : "100px"}}></div>
+                            <QuizProblemsComponent quiz={selectedQuiz} showAnswer={false} />                
                             <UserTagsComponent teamId={teamId} roomId={_roomId} /> {/*본인 팀의 팀 뱃지*/}
                         </MultiBackgroundRoom>
                     ) : (
