@@ -48,13 +48,12 @@ export const useEmoji = () => {
         }
     }, [teamOneUsers, teamTwoUsers, showEmojiAnimation]);
 
-    const handleEmojiSelect = useCallback((emojiPath: string, targetUsername: string) => {
+    /*const handleEmojiSelect = useCallback((emojiPath: string, targetUsername: string) => {
         showEmojiAnimation(emojiPath, targetUsername);
-    }, [showEmojiAnimation]);
+    }, [showEmojiAnimation]);*/
 
     return {
         animatedEmojis,
-        handleEmojiSelect,
         handleReceivedEmoji
     };
 };

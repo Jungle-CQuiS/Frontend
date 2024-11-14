@@ -17,7 +17,7 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
     const { teamOneUsers, teamTwoUsers } = useTeamState()
     const teamUsers = teamId === 1 ? teamOneUsers : teamTwoUsers;
 
-    const { animatedEmojis, handleEmojiSelect } = useEmoji();
+    const { animatedEmojis } = useEmoji();
 
     // refs 설정을 useEffect로 관리
     useEffect(() => {
@@ -60,9 +60,8 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
                     );
                 })}
             <EmojiButton
-                onEmojiSelect={(emojiPath: string, emojiType: string) => {
+                onEmojiSelect={(emojiType: string) => {
                     if (user?.username) {
-                        handleEmojiSelect(emojiPath, user.username);
                         gameRoomSocketEvents.sendUserEmoji(
                             stompClient, 
                             teamId === 1 ? "BLUE" : "RED",
