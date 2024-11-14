@@ -16,6 +16,7 @@ import { StompProvider } from './contexts/StompContext';
 import { GameStateProvider } from './contexts/GameStateContext/GameStateContext';
 import { TeamStateProvider } from './contexts/TeamStateContext/TeamStateContext';
 import { GameUserProvider } from './contexts/GameUserContext/GameUserContext';
+import { EmojiProvider } from './contexts/EmojiContext/EmojiContext';
 import QuizGamePage from './pages/multi/game/quizGame';
 import NavBar from './components/navbar/navbar';
 import MyPage from './pages/mypage/mypage';
@@ -117,7 +118,9 @@ function App() {
               <StompProvider>
                   <TeamStateProvider>
                     <GameUserProvider>
+                      <EmojiProvider>
                       <Outlet />
+                      </EmojiProvider>
                     </GameUserProvider>
                   </TeamStateProvider>
               </StompProvider>

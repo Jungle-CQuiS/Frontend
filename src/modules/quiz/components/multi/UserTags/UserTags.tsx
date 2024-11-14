@@ -9,6 +9,7 @@ import { useEmoji } from "../../../../../hook/useEmoji";
 import { gameRoomSocketEvents } from "../../../../../hook/gameRoomSocketEvents";
 import { useStompContext } from "../../../../../contexts/StompContext";
 import { useGameState } from "../../../../../contexts/GameStateContext/useGameState";
+
 export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
     const {userTagRefs} = useGameState();
     const { user } = useGameUser();
@@ -18,18 +19,40 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
 
     const { animatedEmojis, handleEmojiSelect } = useEmoji();
 
+    // refs 설정을 useEffect로 관리
+    useEffect(() => {
+        // 현재 teamUsers의 refs 설정
+        teamUsers.forEach(user => {
+            if (user && user.username) {
+                const element = document.getElementById(`user-tag-${user.username}`);
+                if (element instanceof HTMLDivElement) {
+                    userTagRefs.current[user.username] = element;
+                }
+            }
+        });
+
+        // 컴포넌트 언마운트 시 해당 팀의 ref들 정리
+        return () => {
+            teamUsers.forEach(user => {
+                if (user?.username) {
+                    delete userTagRefs.current[user.username];
+                }
+            });
+        };
+    }, [teamUsers, userTagRefs]);
+
     return (
         <UserTagsContainer>
             {teamUsers
                 .filter((user): user is NonNullable<typeof user> => user !== null)
-                .map((teamUser, index) => {
+                .map((teamUser) => {
                     const username = teamUser.username;
 
                     return (
                         <UserTag
-                            key={index}
+                            key={teamUser.roomUserId} // index 대신 고유한 ID 사용
+                            id={`user-tag-${username}`} // id 추가
                             teamId={teamId}
-                            ref={el => username && (userTagRefs.current[username] = el)}
                         >
                             {teamUser.isLeader === 'leader' && <UserTagImg src="/icons/medal.svg" />}
                             {username}
@@ -40,21 +63,26 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
                 onEmojiSelect={(emojiPath: string, emojiType: string) => {
                     if (user?.username) {
                         handleEmojiSelect(emojiPath, user.username);
-
-                        // 서버에 요청
-                        gameRoomSocketEvents.sendUserEmoji(stompClient, teamId === 1 ? "BLUE" : "RED",
-                            emojiType, roomId, user.roomUserId);
+                        gameRoomSocketEvents.sendUserEmoji(
+                            stompClient, 
+                            teamId === 1 ? "BLUE" : "RED",
+                            emojiType, 
+                            roomId, 
+                            user.roomUserId
+                        );
                     }
                 }}
             />
-            {animatedEmojis.map(emoji => (
-                <AnimatedEmoji
+            
+            {animatedEmojis.map(emoji => {
+                console.log("각 이모지 렌더링:", emoji);
+                return <AnimatedEmoji
                     key={emoji.id}
                     src={emoji.src}
                     startX={emoji.x}
                     startY={emoji.y}
                 />
-            ))}
+            })}
         </UserTagsContainer>
     );
 };
