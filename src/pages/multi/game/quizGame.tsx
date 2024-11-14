@@ -6,7 +6,6 @@ import { Quiz } from "../../../types/quiz";
 import { TeamHeaderContainer, TeamHeaderTag, TeamHeaderTitle } from "../../../modules/quiz/components/multi/TeamHeader/styled";
 import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/WaitingScreen";
 import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
-import { Background } from "../../../components/background/styled";
 import { useGameState } from "../../../contexts/GameStateContext/useGameState";
 import { GamePhase, GamePlayEvents, GameReadyEvents } from "../../../types/game";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";

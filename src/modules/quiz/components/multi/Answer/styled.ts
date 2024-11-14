@@ -2,13 +2,10 @@ import styled from "styled-components";
 
 export const AnswerSelectContainer = styled.div`
     position: relative;
-    min-height: 100%;  // 부모 요소의 전체 높이
-    width: 100%;       // 전체 너비
     display: flex;
     flex-direction: column;
     gap: 36px;
-    align-items: flex-start;
-    margin-left: 336px;
+    margin-left: 320px;
 `;
 
 export const AnswerSelectWrap = styled.div`
@@ -45,6 +42,7 @@ export const ScreenSharedBorder = styled.div`
   border: 15px solid #444444;
   pointer-events: none;  // 클릭 이벤트가 뒤 요소로 전달되도록
   z-index: 1;           // 다른 요소들 위에 표시되도록
+  height: 100vh;
 `;
 
 export const ScreenSharedText = styled.div`
@@ -67,4 +65,19 @@ export const ScreenSharedText = styled.div`
         50% { opacity: 0; }
         100% { opacity: 1; }
     }
+`;
+
+export const SelectText = styled.div`
+    font-size: 26px;
+    font-weight: 600;
+`;
+
+export const SelectBox = styled.div`
+    padding: 15px 48px;
+    background-color: #fff;
+    border-radius: 24px;
+`;
+
+export const SelectContainer = styled.div`
+
 `;

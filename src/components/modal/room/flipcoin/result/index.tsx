@@ -20,11 +20,11 @@ export const FirstAttackModal = ({ team, onClose }: FirstAttackModalProps) => {
             open={true}
             onClose={onClose}
             onDone={() => {}} // 필요에 따라 onDone 함수 지정
-            width="300px"
+            $padding='40px 20px'
             backdrop={true}
             backdropcolor={true}
         >
-            <p style={{ textAlign: "center", fontSize: "1.2rem", fontWeight: "bold" }}>
+            <p style={{ textAlign: "center", fontSize: "36px", fontWeight: "bold" }}>
                 {team}이 선공입니다!
             </p>
         </Modal>

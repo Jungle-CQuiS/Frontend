@@ -38,7 +38,7 @@ export default function DefendPage({ teamId , roomId }: TeamUserTagProps) {
                             <MultiAnimationModalContainer>
                                 <MultiAnimationTextWrap>
                                     <MultiAnimationTextSmall>TEAM {teamId}</MultiAnimationTextSmall>
-                                    <MultiAnimationTextLarge>DEFFEND</MultiAnimationTextLarge>
+                                    <MultiAnimationTextLarge>DEFEND</MultiAnimationTextLarge>
                                 </MultiAnimationTextWrap>
                             </MultiAnimationModalContainer>
                         </>

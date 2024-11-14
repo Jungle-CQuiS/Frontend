@@ -13,7 +13,7 @@ const QuizProblemsComponent = ({ quiz, showAnswer = true }: QuizProblemsComponen
                 <ProblemSelectContainer>
                     {[quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4].map((choice, index) => (
                         <ProblemSelectWrap key={index}>
-                            <ProblemSelectImg src={`/icons/number_${index + 1}.svg`} />
+                            <ProblemSelectImg src={`/icons/number_black_${index + 1}.svg`} />
                             <ProblemSelectText>{choice}</ProblemSelectText>
                         </ProblemSelectWrap>
                     ))}
