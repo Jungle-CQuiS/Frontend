@@ -88,7 +88,7 @@ export const MainPageBottom = styled.div`
 `;
 
 export const MainPageText = styled.div`
-  font-size: 52px;
+  font-size: 45px;
   font-weight: 600;
 `;
 
