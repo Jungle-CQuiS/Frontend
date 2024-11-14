@@ -88,7 +88,6 @@ export default function AddProblemPage() {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log("Received data:", data);
 
                 const quizData = data.data || [];
                 const formattedData = quizData.map((quiz: any) => {
@@ -105,7 +104,6 @@ export default function AddProblemPage() {
                     }
                 });
                 setModalData(formattedData);
-                console.log("Quiz data make successfully");
                 return true;
             } else {
                 console.error("Failed to make quiz data:", response.status);

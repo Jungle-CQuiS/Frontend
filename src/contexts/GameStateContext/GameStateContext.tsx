@@ -150,7 +150,6 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 };
             }
 
-            console.log("<QuizAnswers>", parsedQuizResponse);
             setSubmitedUserAnswer(parsedQuizResponse);
 
         } catch (error) {
@@ -160,7 +159,6 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
 
     const getDefenceFinalAnswer = (answer: number) => {
         setDefenceFinalAnswer(answer);
-        console.log("final select 완료", defenceFinalAnswer, answer);
     }
 
     const setRoomUserIdWithState = useCallback((id: string) => {

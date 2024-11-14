@@ -10,11 +10,10 @@ export const readyRoomSocketEvents = {
     // 방 정보 구독 함수
     subscribeToRoom: (client: Client, roomId: string, updateTeams: (users: TeamUser[]) => void) => {
         try {
-            console.log('Attempting to subscribe to room:', roomId);
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.ROOM_INFO(roomId),
                 (message) => {
-                    console.log('Received message:', message);
+          
                     try {
                         interface ServerUser {
                             roomUserId: number;  // string이 아닌 number
@@ -28,8 +27,6 @@ export const readyRoomSocketEvents = {
 
                         const response = JSON.parse(message.body);
 
-                        console.log(response);
-
                         const teamUsers: TeamUser[] = response.usersData.map((user: ServerUser) => ({
                             roomUserId: user.roomUserId,
                             username: user.username,
@@ -41,14 +38,13 @@ export const readyRoomSocketEvents = {
                             isReady: user.isReady ? 'ready' : 'notready'// bool?
                         }));
 
-                        console.log(teamUsers);
                         updateTeams(teamUsers);
                     } catch (err) {
                         console.error('Error processing message:', err);
                     }
                 }
             );
-            console.log('Subscription successful:', subscription);
+
         } catch (err) {
             console.error('Subscription error:', err);
         }
@@ -57,12 +53,11 @@ export const readyRoomSocketEvents = {
     // 준비방 상태 구독 함수
     subscribeRoomStatusMessage: (client: Client, roomId: string, handleReadyRoomEvent: (event: GameReadyEvents) => void) => {
         try {
-            console.log('Attempting to subscribe to room:', roomId);
             // client에 구독 요청
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.READY_STATUS(roomId),
                 (message) => {
-                    console.log('Received message:', message);
+     
                     try {
                         const response = JSON.parse(message.body);
                         handleReadyRoomEvent(response.gameStatus);
@@ -70,24 +65,10 @@ export const readyRoomSocketEvents = {
                         console.error('Error processing message:', err);
                     }
                 });
-            console.log('Subscription successful:', subscription);
 
         } catch (err) {
             console.error('Subscription successful:', err);
         }
-        // message를 받는다.
-        /*
-        {
-            "data": {
-                "isAllReady": 1 or 0(bool)
-                },
-                "message": 성공,
-                "code": S001
-            }
-        
-        */
-        // setUseGameState(response.data.message)
-        // 게임이 시작되면 구독 해지도 해야함.
     },
 
     // ----------------------------------------------------------------------------------------------
@@ -106,11 +87,6 @@ export const readyRoomSocketEvents = {
             roomId: roomId,
         };
 
-        console.log('Sending message:', {
-            destination,
-            message
-        });
-
         client.publish({
             destination,
             body: JSON.stringify(message)
@@ -126,7 +102,6 @@ export const readyRoomSocketEvents = {
             // 입장 메시지 전송만 담당
             if (stompClient.current) {
                 readyRoomSocketEvents.sendJoinMessage(stompClient.current, roomId);
-                console.log('Join message sent successfully');
             }
         } catch (error) {
             console.error('Enter room error:', error);
@@ -146,8 +121,6 @@ export const readyRoomSocketEvents = {
                 console.error('STOMP connection is not active');
                 return;
             }
-
-            console.log(roomUserId, "user change state");
 
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.READY,
@@ -175,7 +148,6 @@ export const readyRoomSocketEvents = {
                 return;
             }
 
-            console.log(roomUserId, "user change team");
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.TEAMSWITCH,
                 body: JSON.stringify({
@@ -200,7 +172,6 @@ export const readyRoomSocketEvents = {
                 return;
             }
            
-            console.log(roomUserId, "user Exit");
             stompClient.current.publish({
                 destination: SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SEND.EXIT,
                 body: JSON.stringify({

@@ -16,7 +16,6 @@ export const TeamComponent = ({ team, teamUsers, handleTeamClick, teamType }: an
     if(user == null) return;
     setIsModalOpen(true);
     setSelectedUser(user);
-    console.log({ x: e.clientX, y: e.clientY });
     setModalPosition({ x: e.clientX, y: e.clientY });
   };
 

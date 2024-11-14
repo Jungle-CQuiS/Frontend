@@ -31,7 +31,6 @@ export const StompProvider = ({ children }: StompProviderProps) => {
         const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
         const accessToken = localStorage.getItem("AccessToken");
         const userUuid = localStorage.getItem("uuid") || "";
-        // console.log(userUuid);
         return new Client({           
             brokerURL: `${wsProtocol}://dev.cquis.net/ws`,
             connectHeaders: {
@@ -39,9 +38,6 @@ export const StompProvider = ({ children }: StompProviderProps) => {
                 Authorization: `Bearer ${accessToken}`,
                 "Authorization-refresh": `${localStorage.getItem("RefreshToken")}`,
                 uuid: userUuid,
-            },
-            debug: (str) => {
-                console.log('STOMP Debug:', str);
             },
             // onConnect는 connect 함수에서 설정하므로 여기서는 제거
             onDisconnect: () => {
@@ -60,7 +56,6 @@ export const StompProvider = ({ children }: StompProviderProps) => {
     }, []);
 
     const handleConnect = useCallback((client: Client) => {
-        console.log('Connected to WebSocket');
         setIsLoading(false);
         setIsConnected(true);
 
@@ -70,7 +65,6 @@ export const StompProvider = ({ children }: StompProviderProps) => {
     const connect = useCallback(() => {
         return new Promise<void>((resolve, reject) => {
             if (stompClient.current?.active && isConnected) {
-                console.log('Already connected');
                 resolve();
                 return;
             }
@@ -80,7 +74,6 @@ export const StompProvider = ({ children }: StompProviderProps) => {
 
                 // 연결 되면 할 것.
                 client.onConnect = () => {
-                    console.log('Connection successful');
                     handleConnect(client);
                     stompClient.current = client;
                     setIsConnected(true);
@@ -98,7 +91,6 @@ export const StompProvider = ({ children }: StompProviderProps) => {
                     reject(new Error('WebSocket connection failed'));
                 };
 
-                console.log('Activating client');
                 stompClient.current = client;
                 client.activate();  // 여기서 activate 호출해야 함
 

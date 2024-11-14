@@ -85,8 +85,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                 }));
             }
         });
-
-        console.log("final select", index);
+ 
         getDefenceFinalAnswer(index);
     };
     const handleOpenModal = () => {
@@ -104,7 +103,6 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
         // 리더가 선택 한 답을 서버로 보낸다.
         gameRoomSocketEvents.defSelectQuiz(stompClient, _roomId, leaderSelect);
     }
-    console.log("ajlsnfoa;eisfjoaisef", answers);
 
     return (
         <>

@@ -56,9 +56,6 @@ export default function QuizGamePage() {
 
         changeGamePhase(GamePlayEvents.SUB_SELECT_END);
 
-
-
-        console.log("<GamePhase Changed>", gamePhase);
     };
 
     // ▶️ 수비팀 모두가 제출 완료 됐다는 구독 메세지를 받는다면 호출된다.
@@ -79,8 +76,6 @@ export default function QuizGamePage() {
                 setDefenceQuizResult(isCorrect);
                 resolve();
             });
-
-            console.log("상태 업데이트 완료");
 
         } catch (error) {
             console.error('정답 결과 수신 중 에러 발생:', error);
@@ -110,8 +105,6 @@ export default function QuizGamePage() {
             // 게임 상태 리셋
             resetGameRoomInfo(event);
 
-            console.log("다음 라운드 준비 완료");
-
             resetGradingResponse();
 
         } catch (error) {
@@ -123,7 +116,6 @@ export default function QuizGamePage() {
     useEffect(() => {
         const loadGameUserInfo = async () => {
             try {
-                console.log("Loading user info...");
                 if (roomUserId === null) {
                     console.error('Room fetched failed: no roomUserId');
                     return;
@@ -133,7 +125,6 @@ export default function QuizGamePage() {
                 if (uInfo) {
                     setIsLoaded();
                     setUserLoaded(true);  // 유저 정보 로딩 완료
-                    console.log("User info loaded:", uInfo);
                     await subscribeTeamInfo(uInfo?.team === 'BLUE' ? 1 : 2);
                 } else {
                     console.error('게임 정보 로딩 실패: null');
@@ -261,18 +252,13 @@ export default function QuizGamePage() {
             await new Promise(resolve => setTimeout(resolve, 0)); // 마이크로태스크 큐에 넣기
             setWaiting(true);
 
-            console.log("waiting 상태 설정됨");
-
             await new Promise(resolve => setTimeout(resolve, 0));
             await handleReadyRoomEvent(GameReadyEvents.GAME_START); // FIXME: 지워도 될지도?
-
-            console.log("게임 준비 이벤트 처리됨");
 
             await new Promise(resolve => setTimeout(resolve, 0));
             await changeGamePhase(GamePlayEvents.DEF_CHECK_ANSWER);
 
             setSelectedQuiz(null);
-            console.log("게임 페이즈 변경됨");
         };
 
         if (gameState === GameStatus.START)

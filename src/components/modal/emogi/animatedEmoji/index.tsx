@@ -1,5 +1,5 @@
 import { useEffect ,useState} from 'react';
-import { floatAndFade, AnimatedImage,StyledAnimatedEmoji } from './styled';
+import { StyledAnimatedEmoji } from './styled';
 
 interface AnimatedEmojiProps {
     src: string;
@@ -26,8 +26,6 @@ export const AnimatedEmoji = ({ src, startX, startY }: AnimatedEmojiProps) => {
             src={src}
             $startX={startX}  // styled-components prop으로 변경
             $startY={startY}  // styled-components prop으로 변경
-            onLoad={() => console.log("이모지 이미지 로드됨")}
-            onError={(e) => console.log("이모지 이미지 로드 실패:", e)}
         />
     );
 };

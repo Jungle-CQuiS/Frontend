@@ -51,8 +51,6 @@ export const GameUserProvider = ({ children }: { children: ReactNode }) => {
                 isLeader: responseData.data.isLeader
             };
 
-            console.log("<GameUserInfo>", userinfo);
-
             // Context의 user 상태 업데이트
             setUser(userinfo);
 
