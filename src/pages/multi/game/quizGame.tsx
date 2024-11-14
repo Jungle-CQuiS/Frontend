@@ -1,13 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import AttackPage from "../../../modules/room/components/attack/attack";
 import { SolvingPage } from "../../../modules/room/components/solving/solving";
+import { WaitingSolvingPage } from "../../../modules/room/components/waitSolving/waitingSolving";
 import { SelectAnswerPage } from "../defend/select/select";
 import { Quiz } from "../../../types/quiz";
-import { TeamHeaderContainer, TeamHeaderTag, TeamHeaderTitle } from "../../../modules/quiz/components/multi/TeamHeader/styled";
-import QuizProblemsComponent from "../../../components/quiz";
-import { SolvingBottom } from "../../../modules/room/components/solving/styled";
-import { WaitingScreen } from "../../../modules/quiz/components/multi/waiting/WaitingScreen";
-import { UserTagsComponent } from "../../../modules/quiz/components/multi/UserTags/UserTags";
 import { useGameState } from "../../../contexts/GameStateContext/useGameState";
 import { GamePhase, GamePlayEvents, GameReadyEvents } from "../../../types/game";
 import { useGameUser } from "../../../contexts/GameUserContext/useGameUser";
@@ -19,7 +15,6 @@ import { GameStatus } from "../../../types/game";
 import { LoadingScreen } from "../../../modules/LoadingScreen";
 import DefendPage from "../defend/defend";
 import useButtonSoundEffect from "../../../hook/useHoverSoundEffect";
-import { MultiBackgroundRoom } from "../room/styled";
 import { useEmoji } from "../../../hook/useEmoji";
 
 export default function QuizGamePage() {
@@ -301,20 +296,7 @@ export default function QuizGamePage() {
                     <AttackPage onSelectionComplete={handleCompleteSelection} />
                 ) : (
                     waiting ? (
-                        <MultiBackgroundRoom>{/*화면 공유 페이지*/}
-                            <TeamHeaderContainer>
-                                <TeamHeaderTag teamId={teamId}>{teamId}팀</TeamHeaderTag>
-                                <TeamHeaderTitle>
-                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                        <div>수비팀이 문제를 푸는 중입니다.</div>
-                                        <div>잠시만 기다려주세요</div>
-                                    </div>
-                                </TeamHeaderTitle>
-                            </TeamHeaderContainer>
-                            <div style={{gap : "100px"}}></div>
-                            <QuizProblemsComponent quiz={selectedQuiz} showAnswer={false} />                
-                            <UserTagsComponent teamId={teamId} roomId={_roomId} /> {/*본인 팀의 팀 뱃지*/}
-                        </MultiBackgroundRoom>
+                        <WaitingSolvingPage selectedQuiz={selectedQuiz}></WaitingSolvingPage>
                     ) : (
                         <SelectAnswerPage
                             selectedQuiz={selectedQuiz}
