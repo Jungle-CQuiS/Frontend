@@ -20,6 +20,20 @@ export const SingleModeQuizBoxWrap = styled.div`
     gap: 36px;
 `;
 
+export const SingleModeQuizBoxTitleWrap =styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: end;
+    gap: 7px;
+`
+
+export const SingleModeQuizBoxUsername = styled.div`
+    font-size: 16px;
+    font-weight: 700;
+    color: #969696;
+`
+
 export const SingleModeQuizBoxTitle = styled.div`
     font-size: 25px;
     font-weight: 700;
@@ -77,5 +91,6 @@ export const SingleModeQuizBoxBottomBadImg = styled.img`
 export const SingleModeQuizBoxBottomBadText = styled.div<{ $hasVoted: boolean}>`
     font-size: 20px;
     font-weight: 500;
+    letter-spacing : -1px;
     color: ${({ $hasVoted}) => ($hasVoted ? "#D3D3D3" : "#969696")};
 `;

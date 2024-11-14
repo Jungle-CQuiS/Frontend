@@ -29,6 +29,7 @@ export const SingleModeQuizSubjective = ({ quizData, onSubmit }: SingleModeQuizP
             <SingleModeQuizBox
                 type="주관식"
                 quizData={{
+                    username: quiz.username,
                     name: quiz.name,
                     quizId: quiz.quizId,
                 }}
