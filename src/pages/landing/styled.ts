@@ -49,7 +49,7 @@ export const LandingPageContainer = styled.div`
 `;
 
 export const LandingPageWrap = styled.div`
-  padding: 0px 72px;
+  padding: 0px 150px;
   display: flex;
   flex-direction: column;
   gap: 16px;
