@@ -3,19 +3,21 @@ import styled from "styled-components";
 export const ProblemsContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 36px;
+    gap: 50px;
 `;
 
 export const ProblemTitle = styled.div`
     font-size: 26px;
     font-weight: 700;
     width: 830px;
+    padding-top: 50px;
 `;
 
 export const ProblemSelectContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
+    padding-bottom: 70px;
 `;
 
 export const ProblemSelectWrap = styled.div`
