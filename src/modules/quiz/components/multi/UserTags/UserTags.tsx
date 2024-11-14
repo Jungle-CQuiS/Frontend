@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect , useState} from "react";
 import { TeamUserTagProps } from "../../../../../types/room";
-import { UserTag, UserTagImg, UserTagsContainer } from "./styled";
+import { UserTag, UserTagImg, UserTagsContainer, EmojiButtonWrapper,CooldownMessage } from "./styled";
 import { useTeamState } from "../../../../../contexts/TeamStateContext/useTeamState";
 import { useGameUser } from "../../../../../contexts/GameUserContext/useGameUser";
 import { EmojiButton } from "../../../../../components/buttons/emoji";
@@ -16,8 +16,8 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
     const { stompClient } = useStompContext();
     const { teamOneUsers, teamTwoUsers } = useTeamState()
     const teamUsers = teamId === 1 ? teamOneUsers : teamTwoUsers;
-
-    const { animatedEmojis } = useEmoji();
+    const [message, setMessage] = useState('');
+    const { animatedEmojis , handleEmojiSelect } = useEmoji();
 
     // refs 설정을 useEffect로 관리
     useEffect(() => {
@@ -60,20 +60,28 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
                         </UserTag>
                     );
                 })}
+            <EmojiButtonWrapper>
             <EmojiButton
                 onEmojiSelect={(emojiType: string) => {
                     if (user?.username) {
-                        gameRoomSocketEvents.sendUserEmoji(
-                            stompClient, 
-                            teamId === 1 ? "BLUE" : "RED",
-                            emojiType, 
-                            roomId, 
-                            user.roomUserId
-                        );
-                    }
+                        const result = handleEmojiSelect();
+                        if(result){
+                            gameRoomSocketEvents.sendUserEmoji(
+                                stompClient, 
+                                teamId === 1 ? "BLUE" : "RED",
+                                emojiType, 
+                                roomId, 
+                                user.roomUserId
+                                );}
+                        }
+                        else{
+                            setMessage('잠시 후 다시 시도해주세요');
+                            setTimeout(() => setMessage(''), 2000);
+                        }
                 }}
             />
-            
+            {message && <CooldownMessage>{message}</CooldownMessage>}
+            </EmojiButtonWrapper>
             {animatedEmojis.map(emoji => {
                 return <AnimatedEmoji
                     key={emoji.id}
@@ -82,6 +90,7 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
                     startY={emoji.y}
                 />
             })}
+            
         </UserTagsContainer>
     );
 };

@@ -1,3 +1,4 @@
+import exp from "constants";
 import styled from "styled-components";
 
 export const UserTagsContainer = styled.div`
@@ -26,4 +27,51 @@ export const UserTag = styled.div<{ teamId: number }>`
 export const UserTagImg = styled.img`
     width: 19px;
     height: 25px;
+`;
+
+export const EmojiButtonWrapper = styled.div`
+     position: relative;
+    z-index: 1;
+    display: inline-block;
+`;
+
+export const CooldownMessage = styled.div`
+   font-size: 14px;
+    z-index: 9999;  // 추가
+   background-color: #333;  // 임시로 변경
+   color: white;
+   padding: 8px 12px;
+   border-radius: 8px;
+   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+   position: absolute;
+   left: 50%;
+   transform: translateX(-50%);
+   bottom: -40px;  // 버튼 아래로 위치 조정
+   
+   // 말풍선 화살표를 위로 변경
+   &:before {
+       content: '';
+       position: absolute;
+       top: -6px;
+       left: 50%;
+       transform: translateX(-50%);
+       width: 0;
+       height: 0;
+       border-left: 6px solid transparent;
+       border-right: 6px solid transparent;
+       border-bottom: 6px solid #333;  // 배경색과 맞춤
+   }
+
+   animation: popIn 0.3s ease-out;
+
+   @keyframes popIn {
+       0% {
+           opacity: 0;
+           transform: translateX(-50%) scale(0.8);
+       }
+       100% {
+           opacity: 1;
+           transform: translateX(-50%) scale(1);
+       }
+   }
 `;
