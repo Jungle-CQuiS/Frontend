@@ -33,6 +33,7 @@ export const SingleModeQuizMultiple = ({ quizData, onSubmit }: SingleModeQuizPro
             <SingleModeQuizBox
                 type="객관식"
                 quizData={{
+                    username: quiz.username,
                     name: quiz.name,
                     choices: [
                         quiz.choice1,

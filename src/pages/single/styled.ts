@@ -69,6 +69,7 @@ export const SingleModeSelectMode = styled.div`
     align-items: center;
     gap: 32px;
     border-radius: 16px;
+    letter-spacing : -3px;
 `;
 
 export const SingleModeSelectModeImg = styled.img`
