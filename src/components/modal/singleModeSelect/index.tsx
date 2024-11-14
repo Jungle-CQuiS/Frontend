@@ -52,6 +52,7 @@ export const SingleModeSelectModal = ({
     
             if (response.ok) {
                 const data = await response.json();
+                console.log(data);
                 navigate("/single/quiz", { state: { selectedMode, quizData: data.data.quizList } });
             } else {
                 console.error("Failed to fetch quiz data");

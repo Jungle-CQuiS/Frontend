@@ -11,12 +11,15 @@ import {
     SingleModeQuizBoxBottomSelectWrap,
     SingleModeQuizBoxcontainer,
     SingleModeQuizBoxTitle,
+    SingleModeQuizBoxTitleWrap,
+    SingleModeQuizBoxUsername,
     SingleModeQuizBoxWrap,
 } from "./styled";
 import { useState } from "react";
 
 interface SingleModeQuizBoxProps extends QuizTypeProps {
     quizData: {
+        username: string;
         name: string;
         choices?: string[];
         quizId: number;
@@ -77,7 +80,10 @@ export const SingleModeQuizBox = ({ type, quizData, onChoiceSelect }: SingleMode
     return (
         <SingleModeQuizBoxcontainer>
             <SingleModeQuizBoxWrap>
-                <SingleModeQuizBoxTitle>{quizData.name}</SingleModeQuizBoxTitle>
+                <SingleModeQuizBoxTitleWrap>
+                    <SingleModeQuizBoxUsername>출제자: {quizData.username}</SingleModeQuizBoxUsername>
+                    <SingleModeQuizBoxTitle>{quizData.name}</SingleModeQuizBoxTitle>
+                </SingleModeQuizBoxTitleWrap>
                 <SingleModeQuizBoxBottom>
                     {type === "객관식" && (
                         <SingleModeQuizBoxBottomSelectContainer>

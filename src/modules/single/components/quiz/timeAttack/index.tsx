@@ -78,6 +78,7 @@ export const SingleModeQuizTimeAttack = ({ quizData, onSubmit }: SingleModeQuizP
             <SingleModeQuizBox
                 type={isMultipleChoice ? "객관식" : "주관식"}
                 quizData={{
+                    username: quiz.username,
                     name: quiz.name,
                     choices: isMultipleChoice ? [
                         quiz.choice1,
