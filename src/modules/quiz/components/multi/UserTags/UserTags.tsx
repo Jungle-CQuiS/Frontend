@@ -41,6 +41,7 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
         };
     }, [teamUsers, userTagRefs]);
 
+
     return (
         <UserTagsContainer>
             {teamUsers
@@ -74,7 +75,6 @@ export const UserTagsComponent = ({ teamId, roomId }: TeamUserTagProps) => {
             />
             
             {animatedEmojis.map(emoji => {
-                console.log("각 이모지 렌더링:", emoji);
                 return <AnimatedEmoji
                     key={emoji.id}
                     src={emoji.src}
