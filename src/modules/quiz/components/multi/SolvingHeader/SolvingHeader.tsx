@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Timer } from "../../../../../components/timer/timer"
-import { HealthBarUnit, SolvingHeaderContainer, SolvingHeaderTitle, SolvingHeaderTitleWrap, SolvingTimer, SolvingTimerText, SolvingTimerWrap, TeamOneHealthBarContainer, TeamOneHealthBarText, TeamOneHealthBarTop, TeamOneHealthBarTopBackground, TeamOneHealthBarTopTitle, TeamOneHealthBarWrap, TeamTwoHealthBarContainer, TeamTwoHealthBarText, TeamTwoHealthBarTop, TeamTwoHealthBarTopBackground, TeamTwoHealthBarTopTitle, TeamTwoHealthBarWrap } from "./styled"
+import { HealthBarUnit, SolvingHeaderContainer, SolvingHeaderTitle, SolvingHeaderTitleWrap, TeamOneHealthBarContainer, TeamOneHealthBarText, TeamOneHealthBarTop, TeamOneHealthBarTopBackground, TeamOneHealthBarTopTitle, TeamOneHealthBarWrap, TeamTwoHealthBarContainer, TeamTwoHealthBarText, TeamTwoHealthBarTop, TeamTwoHealthBarTopBackground, TeamTwoHealthBarTopTitle, TeamTwoHealthBarWrap } from "./styled"
 import { useTeamState } from "../../../../../contexts/TeamStateContext/useTeamState";
 export const SolvingHeaderComponent = () => {
     const { teamOneHealth, teamTwoHealth } = useTeamState();
@@ -32,11 +31,6 @@ export const SolvingHeaderComponent = () => {
             </TeamOneHealthBarContainer>
             <SolvingHeaderTitleWrap>
                 <SolvingHeaderTitle>OS</SolvingHeaderTitle>
-                <SolvingTimerWrap>
-                    <Timer />
-                    <SolvingTimer>30초&nbsp;</SolvingTimer>
-                    <SolvingTimerText>남았습니다!!</SolvingTimerText>
-                </SolvingTimerWrap>
             </SolvingHeaderTitleWrap>
             <TeamTwoHealthBarContainer>
                 <TeamTwoHealthBarTop>

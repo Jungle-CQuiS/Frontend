@@ -6,7 +6,6 @@ import { SecondaryButtonSmall, PrimaryButtonMedium } from "../../../../component
 import CategoryComponent from "../../../../components/Category";
 import { useConfirm } from "../../../../components/confirmPopup";
 import QuizProblemsComponent from "../../../../components/quiz";
-import { Timer } from "../../../../components/timer/timer";
 import { TeamHeaderComponent } from "../../../quiz/components/multi/TeamHeader/TeamHeader";
 import { UserTagsComponent } from "../../../quiz/components/multi/UserTags/UserTags";
 import { Quiz } from "../../../../types/quiz";
@@ -17,7 +16,7 @@ import { useGameUser } from "../../../../contexts/GameUserContext/useGameUser";
 import { useTeamState } from "../../../../contexts/TeamStateContext/useTeamState";
 import { gameRoomSocketEvents } from "../../../../hook/gameRoomSocketEvents";
 import { usePageLeave } from "../../../../hook/pageLeaveHandler";
-import { MultiAnimationBackgroundOverlay, MultiAnimationModalContainer, MultiAnimationTextLarge, MultiAnimationTextSmall, MultiAnimationTextWrap, MultiGameAttackButtonWrap, MultiGameAttackContainer, MultiGameAttackQuiz, MultiGameAttackQuizCheckbox, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameAttackTimer, MultiGameAttackTimerText, MultiGameBackground, MutliGameAttackTimerWrap } from "./styled";
+import { MultiAnimationBackgroundOverlay, MultiAnimationModalContainer, MultiAnimationTextLarge, MultiAnimationTextSmall, MultiAnimationTextWrap, MultiGameAttackButtonWrap, MultiGameAttackContainer, MultiGameAttackQuiz, MultiGameAttackQuizCheckbox, MultiGameAttackQuizContainer, MultiGameAttackQuizWrap, MultiGameBackground} from "./styled";
 import { MultiBackgroundRoom } from "../../../../pages/multi/room/styled";
 
 interface AttackPageProps {
@@ -40,18 +39,6 @@ export default function AttackPage({ onSelectionComplete}: AttackPageProps) {
     const { user } = useGameUser(); // User Info
     const { attackTeam } = useTeamState();
     const teamId = user?.team == 'BLUE' ? 1 : 2;
-
-    useEffect(() => {
-        if (timeLeft > 0) {
-            const timerId = setInterval(() => {
-                setTimeLeft((prev) => prev - 1);
-            }, 1000);
-
-            return () => clearInterval(timerId);
-        } else {
-            handleSelectionComplete();
-        }
-    }, [timeLeft]);
 
     const handleLeaveRoom = async () => {
         const confirmed = await customConfirm("정말 나가시겠습니까?");
@@ -164,11 +151,6 @@ export default function AttackPage({ onSelectionComplete}: AttackPageProps) {
                     )}
                 <TeamHeaderComponent teamId={teamId} isAttackTeam={user?.team == attackTeam ? true : false} />
                 <MultiGameAttackContainer>
-                    <MutliGameAttackTimerWrap>
-                        <Timer />
-                        <MultiGameAttackTimer>{timeLeft}초&nbsp;</MultiGameAttackTimer>
-                        <MultiGameAttackTimerText>남았습니다!!</MultiGameAttackTimerText>
-                    </MutliGameAttackTimerWrap>
                     <MultiGameAttackQuizContainer>
                         <CategoryComponent onSelectCategory={setSelectedCategory} />
                         <MultiGameAttackQuizWrap>
