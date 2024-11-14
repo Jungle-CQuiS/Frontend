@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { BlackButtonSmall } from "../../../../../components/buttons/styled";
 import { AnswerSelectContainer, AnswerSelectWrap, AnswerSelectCheckbox, AnswerSelectText, AnswerSelectRow 
-    , ScreenSharedBorder , ScreenSharedText} from "./styled";
+    , ScreenSharedBorder , ScreenSharedText,
+    SelectText,
+    SelectBox,
+    SelectContainer} from "./styled";
 import { LookQuestionModal } from "../../../../../components/modal/lookQuestion";
 import { QuizResponse } from "../../../../../types/quiz";
 import { Quiz } from "../../../../../types/quiz";
@@ -104,7 +107,6 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
 
     return (
         <>
-         {user?.team === attackTeam && <ScreenSharedBorder><ScreenSharedText>🔴 수비팀 화면입니다 </ScreenSharedText></ScreenSharedBorder>}
         <AnswerSelectContainer>
             <BlackButtonSmall onClick={handleOpenModal}>문제보기</BlackButtonSmall>
             <AnswerSelectWrap>
@@ -123,10 +125,11 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                                     }
                                 }}
                             />
-                            <AnswerSelectText>
-                                답변: {answer.value}<br />
-                                이유: {answer.reason}
-                            </AnswerSelectText>
+                            <SelectBox>
+                                <SelectText>연 : </SelectText>
+                                <SelectText>{answer.value}</SelectText>
+                                <SelectText>- {answer.reason}</SelectText>
+                            </SelectBox>
                         </AnswerSelectRow>
                     ))
                 ) : (
@@ -145,12 +148,12 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                                     }
                                 }}
                             />
-                            <AnswerSelectText>
-                                선택지 {answer.choice}번<br />
+                            <SelectBox>
+                                <img src={`/icons/number_black_${answer.choice}.svg`} />
                                 {answer.reasonList.map((reason, i) => (
-                                    <div key={i}>- {reason}</div>
+                                    <SelectText key={i}> 연 - {reason}</SelectText>
                                 ))}
-                            </AnswerSelectText>
+                            </SelectBox>
                         </AnswerSelectRow>
                     ))
                 )}

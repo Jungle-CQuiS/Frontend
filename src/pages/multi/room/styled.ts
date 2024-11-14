@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const MultiBackgroundRoom = styled.div`
   width: 100%;
-  height: calc(100vh - 32px);
+  height: 100vh;
   display: flex;
   justify-content: flex-start;
   align-items: center;

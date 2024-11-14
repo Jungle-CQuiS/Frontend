@@ -7,7 +7,7 @@ export const ProblemsContainer = styled.div`
 `;
 
 export const ProblemTitle = styled.div`
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 700;
     width: 830px;
 `;
@@ -29,6 +29,6 @@ export const ProblemSelectImg = styled.img`
 `;
 
 export const ProblemSelectText = styled.div`
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
 `;

@@ -23,6 +23,7 @@ import { TeamType } from "../../../../types/teamuser";
 import useButtonSoundEffect from "../../../../hook/useHoverSoundEffect";
 import { MultiAnimationBackgroundOverlay, MultiAnimationTextLarge } from "../../../../modules/room/components/attack/styled";
 import { MultiBackgroundRoom } from "../../room/styled";
+import { ScreenSharedBorder, ScreenSharedText } from "../../../../modules/quiz/components/multi/Answer/styled";
 
 // 수비팀 최종 정답 선택 페이지
 // 이 부분은 화면이 모두 공유된다!
@@ -156,6 +157,8 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound ,
     }, []);
 
     return (
+        <>
+        {user?.team === attackTeam && <ScreenSharedBorder><ScreenSharedText>🔴 수비팀 화면입니다 </ScreenSharedText></ScreenSharedBorder>}
         <MultiBackgroundRoom>
             {modalVisible && (
                 <>
@@ -213,5 +216,6 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound ,
                 <UserTagsComponent teamId={defenceTeam} roomId= {roomId}/>
             </SelectAnswerContainer>
         </MultiBackgroundRoom>
+        </>
     )
 }

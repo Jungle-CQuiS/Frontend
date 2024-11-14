@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { IModalProps, Modal } from "../..";
 import { UserControlWrap } from "./styled";
 import { PrimaryButtonMedium } from "../../../buttons/styled";
+import { SelectText } from "../../../../modules/quiz/components/multi/Answer/styled";
 
 interface CountDownModalProps extends IModalProps {
     count: number;
@@ -30,14 +31,13 @@ export const GameStartCountDownModal = ({
     return (
         <Modal
             {...props}
-            width="250px"
-            height="auto"
+            $padding="40px 20px"
             position="absolute"
-            $transform="translate(-50%, -200%)">
+            $transform="translate(-50%, -50%)">
             <UserControlWrap {...props}>
-                <div>
+                <SelectText>
                     게임 시작까지 {count} 초 남았습니다!
-                </div>
+                </SelectText>
                 <PrimaryButtonMedium onClick={stopReadyHandler}>취소하기</PrimaryButtonMedium>
             </UserControlWrap>
         </Modal>
