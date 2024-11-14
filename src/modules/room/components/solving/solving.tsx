@@ -44,7 +44,6 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
     const handleSubmitAnswer = async () => {
         const confirmed = await customConfirm("제출 하시겠습니까?");
         if (confirmed && roomUserId) {
-            console.log("제출");
             gameRoomSocketEvents.submitQuizAnswer(stompClient, _roomId, roomUserId, answer, reason);
             setIsSubmit(true); // 제출했다. true
         }
@@ -53,7 +52,6 @@ export const SolvingPage = ({ selectedQuiz }: SolvingPageProps) => {
     const handleLeaveRoom = async () => {
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed && roomUserId) {
-            console.log("나감");  // 방 나감
             readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
 
             navigate(SERVICES.MULTI);

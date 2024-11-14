@@ -44,8 +44,6 @@ export const AddProblemModal = ({
         } else {
             setSelectedProblems([...selectedProblems, quiz]);
         }
-
-        console.log("Updated selectedProblems:", selectedProblems);
     };
 
     const handleSelectAll = () => {
@@ -65,7 +63,6 @@ export const AddProblemModal = ({
         const userAccessToken = localStorage.getItem("AccessToken");
         const userUuid = localStorage.getItem("uuid");
         const API_URL = selectedType === "객관식" ? "/api/util/quiz-insertion/multiple-choice/multiple" : "/api/util/quiz-insertion/short-answer/multiple";
-        console.log("Submitting selected problems:", selectedProblems);
 
         try {
             const requestBody = selectedProblems.map((quiz) => {

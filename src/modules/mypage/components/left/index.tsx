@@ -52,9 +52,7 @@ export default function MyPageLeftSection() {
             const userAccessToken = localStorage.getItem("AccessToken");
             const userUuid = localStorage.getItem("uuid");
             const API_URL = `api/users/quiz-statistics`;
-
-            console.log("UUID:", userUuid);
-            console.log("AccessToken:", userAccessToken);
+;
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: {
@@ -86,8 +84,6 @@ export default function MyPageLeftSection() {
             const userUuid = localStorage.getItem("uuid");
             const API_URL = `api/users/category-levels`;
 
-            console.log("UUID:", userUuid);
-            console.log("AccessToken:", userAccessToken);
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: {

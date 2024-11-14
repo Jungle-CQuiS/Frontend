@@ -56,7 +56,6 @@ export default function AttackPage({ onSelectionComplete}: AttackPageProps) {
     const handleLeaveRoom = async () => {
         const confirmed = await customConfirm("정말 나가시겠습니까?");
         if (confirmed && roomUserId) {
-            console.log("나감");  // TODO: 방 나감
             readyRoomSocketEvents.userExitRoom(stompClient, _roomId, roomUserId);
 
             navigate(SERVICES.MULTI);
@@ -91,7 +90,6 @@ export default function AttackPage({ onSelectionComplete}: AttackPageProps) {
                     if (osQuizzes.length > 0) {
                         initLeaderSelectQuizeId(osQuizzes[0].quizId);
                     }
-                    console.log("<AttackPage>새로운 문제 패치 완료");
                 } else {
                     console.error("Failed to fetch quiz data:", response.status);
                 }

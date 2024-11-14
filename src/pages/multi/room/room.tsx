@@ -113,7 +113,6 @@ export default function Room() {
           setFirstAttackTeam(selectedTeam);
         }
         else {
-          console.log('Response error:', response);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 

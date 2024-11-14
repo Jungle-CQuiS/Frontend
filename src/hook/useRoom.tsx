@@ -25,7 +25,6 @@ export const useRoom = (roomId: string) => {
 
     // 구독 로직
     const setupSubscriptions = useCallback((client: Client) => {
-        console.log('Setting up room subscriptions');
         readyRoomSocketEvents.subscribeToRoom(client, roomId, updateTeams);
         readyRoomSocketEvents.subscribeRoomStatusMessage(client, roomId, handleReadyRoomEvent);
 
@@ -52,7 +51,6 @@ export const useRoom = (roomId: string) => {
                 });
 
                 if (!response.ok) {
-                    console.log('Response error:', response);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
@@ -61,8 +59,6 @@ export const useRoom = (roomId: string) => {
                 setRoomUserIdWithState(data.data.roomUserId);
                 setRoomId(roomId);
                 setIsRoomInfoSetting(true);
-
-                console.log("<Response> roomUSerID :", data.data.roomUserId);
 
             } catch (e) {
                 const errorMessage = e instanceof Error ? e.message : String(e);

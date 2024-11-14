@@ -7,8 +7,6 @@ export const LookQuestionModal = ({
     selectedQuiz,
     ...props
 }: IModalProps) => {
-    // console.log(selectedQuiz);
-
     const [isMultiple, setIsMultiple] = useState(false);
 
     useEffect(() => {

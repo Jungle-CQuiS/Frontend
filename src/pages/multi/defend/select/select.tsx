@@ -62,7 +62,6 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound ,
         }
 
     }
-    console.log(userAnswers);
 
     // quizResult가 변경되면 실행.
     useEffect(() => {
@@ -111,7 +110,6 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound ,
 
                 // 2. Subscribe unconnected
                 if (winnerTeam == null) {
-                    console.log("이긴 팀 정보가 없습니다.");
                     return;
                 }
 

@@ -26,11 +26,9 @@ export const gameRoomSocketEvents = {
 
                         switch (eventType) {
                             case GamePlayEvents.ALL_SUBMIT: // 문제 선택(공격팀 리더)
-                                console.log(eventType);
                                 onDefenseTeamAllSubmitted();
                                 break;
                             case GamePlayEvents.GAME_END:
-                                console.log('서버에서 게임 종료 메세지 수신');
                                 handleGameEndEvent(response.teamColor);
                                 break;
                             case GamePlayEvents.EMOJI_SELECT:
@@ -49,7 +47,6 @@ export const gameRoomSocketEvents = {
                     }
                 }
             );
-            console.log('Subscription successful:', subscription);
         } catch (err) {
             console.error('Subscription error:', err);
         }
@@ -74,11 +71,9 @@ export const gameRoomSocketEvents = {
 
                         switch (eventType) {
                             case GamePlayEvents.ALL_SUBMIT: // 문제 선택(공격팀 리더)
-                                console.log(eventType);
                                 onDefenseTeamAllSubmitted();
                                 break;
                             case GamePlayEvents.GAME_END:
-                                console.log('서버에서 게임 종료 메세지 수신');
                                 handleGameEndEvent(response.teamColor);
                                 break;
                             case GamePlayEvents.EMOJI_SELECT:
@@ -97,7 +92,6 @@ export const gameRoomSocketEvents = {
                     }
                 }
             );
-            console.log('Subscription successful:', subscription);
         } catch (err) {
             console.error('Subscription error:', err);
         }
@@ -110,7 +104,6 @@ export const gameRoomSocketEvents = {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.LEADER_SELECT_QUIZE(roomId),
                 (message) => {
-                    console.log('<SUB:Leader Select/ Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
 
@@ -118,11 +111,9 @@ export const gameRoomSocketEvents = {
 
                         switch (eventType) {
                             case GamePlayEvents.QUIZ_SELECT: // 문제 선택(공격팀 리더)
-                                console.log(response.number);
                                 initLeaderSelectQuizeId(response.number);
                                 break;
                             case GamePlayEvents.DEF_QUIZ_SELECT:
-                                console.log(response.number);
                                 initLeaderSelectQuizeId(response.number);
                                 break;
                             default:
@@ -134,7 +125,6 @@ export const gameRoomSocketEvents = {
                     }
                 }
             );
-            console.log('Subscription successful:', subscription);
         } catch (err) {
             console.error('Subscription error:', err);
         }
@@ -147,7 +137,6 @@ export const gameRoomSocketEvents = {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.LEADER_FINAL_SELECT(roomId),
                 (message) => {
-                    console.log('<SUB:Leader Final Select/ Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
 
@@ -171,14 +160,12 @@ export const gameRoomSocketEvents = {
                             englishAnswer: response.type === '주관식' ? '' : undefined
                         };
 
-                        console.log('Converted Quiz object:', quiz);
                         handleCompleteSelection(quiz);
                     } catch (err) {
                         console.error('Error processing message:', err);
                     }
                 }
             );
-            console.log('Subscription successful:', subscription);
         } catch (err) {
             console.error('Subscription error:', err);
         }
@@ -196,7 +183,6 @@ export const gameRoomSocketEvents = {
             const subscription = client.subscribe(
                 SOCKET_DESTINATIONS.QUIZ_MULTI.ROOMS.SUBSCRIBE.GRADING_RESULT(roomId),
                 (message) => {
-                    console.log('<SUB:Leader Select/ Received message:', message);
                     try {
                         const response = JSON.parse(message.body);
 
@@ -213,7 +199,6 @@ export const gameRoomSocketEvents = {
                     }
                 }
             );
-            console.log('Subscription successful:', subscription);
         } catch (err) {
             console.error('Subscription error:', err);
         }
