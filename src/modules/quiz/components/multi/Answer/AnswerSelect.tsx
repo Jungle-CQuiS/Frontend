@@ -104,6 +104,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
         // 리더가 선택 한 답을 서버로 보낸다.
         gameRoomSocketEvents.defSelectQuiz(stompClient, _roomId, leaderSelect);
     }
+    console.log("ajlsnfoa;eisfjoaisef", answers);
 
     return (
         <>
@@ -126,7 +127,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                                 }}
                             />
                             <SelectBox>
-                                <SelectText>연 : </SelectText>
+                                <SelectText> </SelectText>
                                 <SelectText>{answer.value}</SelectText>
                                 <SelectText>- {answer.reason}</SelectText>
                             </SelectBox>
@@ -151,7 +152,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                             <SelectBox>
                                 <img src={`/icons/number_black_${answer.choice}.svg`} />
                                 {answer.reasonList.map((reason, i) => (
-                                    <SelectText key={i}> 연 - {reason}</SelectText>
+                                    <SelectText key={i}> - {reason}</SelectText>
                                 ))}
                             </SelectBox>
                         </AnswerSelectRow>

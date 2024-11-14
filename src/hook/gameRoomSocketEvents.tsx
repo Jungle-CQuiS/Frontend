@@ -152,6 +152,7 @@ export const gameRoomSocketEvents = {
                         const response = JSON.parse(message.body);
 
                         const quiz: Quiz = {
+                            userName: response.username,
                             quizId: response.quizId,
                             name: response.name,
                             categoryType: response.categoryType,

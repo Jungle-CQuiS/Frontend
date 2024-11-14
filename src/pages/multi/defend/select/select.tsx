@@ -62,6 +62,7 @@ export const SelectAnswerPage = ({ selectedQuiz, userAnswers, prepareNextRound ,
         }
 
     }
+    console.log(userAnswers);
 
     // quizResult가 변경되면 실행.
     useEffect(() => {

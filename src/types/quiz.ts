@@ -1,4 +1,5 @@
 export interface Quiz {
+    userName?: string;
     quizName: any;
     quizId: number;
     name: string;
