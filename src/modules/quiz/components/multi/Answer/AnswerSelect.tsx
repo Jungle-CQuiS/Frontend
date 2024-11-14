@@ -46,6 +46,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
         if (userAnswers.quizType === "주관식") {
             return userAnswers.answerList.map(item => ({
                 value: item.answer,
+                username: item.username,
                 reason: item.reason,
                 roomUserId: item.roomUserId,
                 isSelected: false
@@ -53,6 +54,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
         } else {
             return userAnswers.answerList.map(item => ({
                 choice: item.choice,
+                usernameList: item.usernameList,
                 reasonList: item.reasonList,
                 indexList: item.indexList,
                 isSelected: false
@@ -127,6 +129,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                             <SelectBox>
                                 <SelectText> </SelectText>
                                 <SelectText>{answer.value}</SelectText>
+                                <SelectText>{answer.username}</SelectText>
                                 <SelectText>- {answer.reason}</SelectText>
                             </SelectBox>
                         </AnswerSelectRow>
@@ -150,7 +153,7 @@ export default function AnswerSelectComponent({ selectedQuiz, userAnswers }: Sel
                             <SelectBox>
                                 <img src={`/icons/number_black_${answer.choice}.svg`} />
                                 {answer.reasonList.map((reason, i) => (
-                                    <SelectText key={i}> - {reason}</SelectText>
+                                    <SelectText key={i}> {answer.usernameList[i]}- {reason}</SelectText>
                                 ))}
                             </SelectBox>
                         </AnswerSelectRow>
