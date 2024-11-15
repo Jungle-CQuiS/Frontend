@@ -45,7 +45,7 @@ export const UserControlInRoom = ({
     >
       <UserControlWrap>
         <div style={{ fontWeight: 'bold' }}>{user?.name}</div>
-        <input type="range" min={0} max={1} step={0.01} value={volume} onChange={(event) =>{ setVolume(event.target.valueAsNumber);}} />
+        <input type="range" min={0} max={1} step={0.1} value={volume} onChange={(event) =>{ setVolume(event.target.valueAsNumber);}} />
         {<UserControlBtn onClick={handleTeamLeaderDelegation}>팀장 위임하기</UserControlBtn>}
         {<UserControlBtn onClick={handleTeamLeaderDelegation}>방장 위임하기</UserControlBtn>}
         <UserControlKickBtn onClick={handleKick}>강퇴</UserControlKickBtn>
