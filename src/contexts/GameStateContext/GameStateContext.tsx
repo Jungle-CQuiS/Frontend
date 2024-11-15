@@ -134,6 +134,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 parsedQuizResponse = {
                     quizType: "주관식",
                     answerList: quizData.answerList.map(item => ({
+                        username: item.username,
                         roomUserId: item.roomUserId,
                         answer: item.answer,
                         reason: item.reason
@@ -143,6 +144,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
                 parsedQuizResponse = {
                     quizType: "객관식",
                     answerList: quizData.answerList.map(item => ({
+                        usernameList: item.usernameList,
                         choice: item.choice,
                         reasonList: item.reasonList,
                         indexList: item.indexList
