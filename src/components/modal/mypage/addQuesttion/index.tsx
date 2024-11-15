@@ -91,7 +91,7 @@ export const AddProblemModal = ({
             const confirmResult = await customConfirm("제출 하시겠습니까?");
             if (!confirmResult) {
                 return;
-            }else{
+            } else {
                 customAlert("제출이 완료되었습니다.");
             }
 
@@ -146,7 +146,7 @@ export const AddProblemModal = ({
                 {isQuizDataValid && (
                     <>
                         <div>선택된 문제 유형: {selectedType}</div>
-                        <div>출제하고 싶은 문제를 선택해주세요! (중복가능)</div>
+                        <div style={{ fontWeight: 'bold', fontSize: '24px' }}>출제하고 싶은 문제를 선택해주세요! (중복가능)</div>
                         <BlackButtonSmall onClick={handleSelectAll}>전체 선택</BlackButtonSmall>
                         <CreateQuizContainer>
                             <CreateQuizWrap>
@@ -157,7 +157,7 @@ export const AddProblemModal = ({
                                             src={selectedProblems.some(q => q.quizName === quiz.quizName) ? "/icons/checkbox_filled.svg" : "/icons/checkbox_base.svg"}
                                             onClick={() => handleQuizSelection(quiz)}
                                         />
-                                        <div>
+                                        <div style={{ fontSize: '30px' }}>
                                             {selectedType === "객관식" ? (
                                                 <>
                                                     {quiz.quizName}
@@ -178,7 +178,7 @@ export const AddProblemModal = ({
                                     </CreateQuiz>
                                 ))
                                 ) : (
-                                    <div>해당 주제에 대한 문제가 없습니다.</div>
+                                    <div style={{ fontSize: '20px' }}>해당 주제에 대한 문제가 없습니다.</div>
                                 )}
                             </CreateQuizWrap>
                         </CreateQuizContainer>
