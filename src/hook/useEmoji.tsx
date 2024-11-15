@@ -29,6 +29,10 @@ export const useEmoji = () => {
         return true;
     }
 
+    const cleanAnimatedEmojis = ()=>{
+        setAnimatedEmojis([]); 
+    }
+
     const removeEmoji = useCallback((id: number) => {
         setAnimatedEmojis(prev => prev.filter(emoji => emoji.id !== id));
     }, [setAnimatedEmojis]);
@@ -75,5 +79,6 @@ export const useEmoji = () => {
         animatedEmojis,
         handleReceivedEmoji,
         handleEmojiSelect,
+        cleanAnimatedEmojis
     };
 };

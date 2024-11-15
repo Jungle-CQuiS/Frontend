@@ -37,7 +37,11 @@ export default function QuizGamePage() {
     const teamId = user?.team == 'BLUE' ? 1 : 2;
     useButtonSoundEffect()
 
-    const {handleReceivedEmoji} = useEmoji();
+    const {cleanAnimatedEmojis, handleReceivedEmoji} = useEmoji();
+
+    useEffect(() => {
+        cleanAnimatedEmojis(); // 이모지 배열 초기화
+    }, [waiting,attackTeam,gamePhase]);
     // SUBSCRIBE EVENT ----------------------------------
 
     // ▶️ 공격팀의 문제 선택 제출되면 호출된다.
