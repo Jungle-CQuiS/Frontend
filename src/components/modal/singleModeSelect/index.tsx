@@ -22,9 +22,9 @@ export const SingleModeSelectModal = ({
 
     const categoryMapping: { [key: string]: number } = {
         "OS": 1,
-        "알고리즘": 2,
-        "자료구조": 3,
-        "네트워크": 4,
+        "알고리즘": 3,
+        "자료구조": 4,
+        "네트워크": 2,
         "데이터베이스": 5,
       };
 

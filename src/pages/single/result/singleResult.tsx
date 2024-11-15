@@ -38,9 +38,9 @@ interface CategoryResultProps {
 
 const categoryTypes: { [key: string]: string } = {
     "1": "OS",
-    "2": "알고리즘",
-    "3": "자료구조",
-    "4": "네트워크",
+    "3": "알고리즘",
+    "4": "자료구조",
+    "2": "네트워크",
     "5": "데이터베이스"
 };
 
