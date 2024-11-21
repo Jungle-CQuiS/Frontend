@@ -1,4 +1,4 @@
-# 🦑 Cquis
+# 🦑 CquiS
 
 성장을 위한 맞춤형 CS 퀴즈, 즐거움과 함께!
 
@@ -85,7 +85,7 @@ _우리 서비스에 대한 가치 설명 추가할 예정_
 <table>
     <tr>
         <td  align="center" width="150px">
-        <strong>팀장</strong>
+        <strong>Leader</strong>
         </td>
         <td  align="center" width="150px">
         <strong>FrontEnd</strong>
