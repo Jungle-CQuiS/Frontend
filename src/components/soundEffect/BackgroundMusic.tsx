@@ -48,7 +48,7 @@ export const BackgroundMusicProvider: React.FC<{ children: React.ReactNode }> = 
       if (location.pathname.startsWith("/single")) {
         setNewAudioSource("/sounds/Aquaroad.mp3");
       } else if (location.pathname.startsWith("/room/") || location.pathname.startsWith("/multi/")) {
-        setNewAudioSource("/sounds/where_stars_rest.mp3");
+        setNewAudioSource("/sounds/sinking_things.mp3");
       } else {
         setNewAudioSource("/sounds/where_stars_rest.mp3");
       }
