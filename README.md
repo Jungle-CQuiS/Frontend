@@ -37,7 +37,7 @@ CquiS와 함께 성장의 즐거움을 만끽하세요!
 
 ## 📌 발표 영상
 ![Main](https://github.com/user-attachments/assets/0b94502d-6222-420e-a28e-a5db24ec74d7)
-<a link ="https://youtu.be/K5RNksCyp6g">발표영상 보러가기/a>
+<a href="https://youtu.be/K5RNksCyp6g">발표영상 보러가기</a>
 
 <div>
 
